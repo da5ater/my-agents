@@ -113,7 +113,109 @@ For EVERY code example, explicitly identify:
 Map each extracted element to the relevant theoretical principles from the KNOWLEDGE BASE below.
 Every card MUST be traceable to at least one principle.
 
-**Phase 1 Exit Criteria:** You have a complete mental model of the input. Proceed to Phase 2.
+**Phase 1 Exit Criteria:** You have a complete mental model of the input. Proceed to Phase 1.5.
+
+---
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# PHASE 1.5: RULE APPLICATION PLAN (MANDATORY)
+# ═══════════════════════════════════════════════════════════════════════════════
+
+**Objective:** Select the applicable rules from the knowledge base and build a generation blueprint BEFORE creating any cards.
+
+> [!CRITICAL] RULES ARE THE BRAIN
+> The knowledge base rules are the SINGLE SOURCE OF TRUTH for card generation.
+> Cards are generated FROM rules, not from ad-hoc scanning of the input.
+> Skipping this phase is a **CRITICAL FAILURE**.
+
+## 1.5.1 Rule Tier System
+
+The knowledge base rules are organized into 3 tiers:
+
+### TIER 1: GENERATION DRIVERS (~30 rules)
+These rules directly dictate WHAT cards to create. You MUST check every Tier 1 rule.
+
+| Rule ID | Name | What It Generates |
+|---------|------|-------------------|
+| PR-0003 | Generation Effect | Forces paraphrasing — no copy-paste answers |
+| PR-0004 | Hidden Models | MODEL cards: "Explain/visualize how X works" |
+| PR-0005 | Behavior Change | FAILURE MODE cards with emotional weight |
+| PR-0017 | Idea Interaction | COMPARISON/SYNTHESIS cards: "X vs Y" |
+| PR-0038 | Confirmation Bias | COUNTER-EVIDENCE cards: "What contradicts X?" |
+| PR-0045 | Negation/Inversion | NEGATION cards: "What is X NOT?" |
+| PR-0047 | Mere-Exposure | Forces active recall format ("Write..." not "What does...") |
+| EL-PR-0001 | Understanding First | No cards for material not fully understood |
+| EL-PR-0003 | Basics-First | Theory/foundational cards before advanced code |
+| EL-PR-0004 | Atomicity | Each card = ONE idea (max 6 lines for code) |
+| EL-PR-0009 | Set Avoidance | No "list 5 things" cards — decompose into atomic cards |
+| EL-PR-0015 | Emotional Salience | Use emotionally charged examples to aid retrieval |
+| Orphan Rule | 2-3 per topic | Minimum 2-3 cards per topic to prevent orphans |
+| 5-20 Rule | Density Control | 5-20 cards per source note |
+| 10-min Rule | Value Heuristic | Only card-ify what's worth 10 min of future time |
+| Yes/No Rule | Question Smell | No yes/no questions — refactor into elaborative form |
+| Chunking Rule | Pattern Cards | Experts internalize chunks (patterns), not whole files |
+
+### TIER 2: CARD QUALITY CONSTRAINTS (~40 rules)
+These rules constrain HOW cards should look. Apply during generation.
+
+| Rule ID | Constraint |
+|---------|------------|
+| PR-0001 | Intentionality — every card is a deliberate choice |
+| PR-0018 | Context Docking — anchor to prior knowledge |
+| PR-0022 | Signal-to-Noise — high-signal, low-noise prompts |
+| PR-0046 | Feynman Test — plain language only |
+| PR-0016 | Connectivity — cards reference broader concepts |
+| EL-PR-0002 | Contextual Scaffolding — derived from structured understanding |
+| EL-PR-0011 | Interference Prevention — unambiguous items |
+| EL-PR-0012 | Word Choice — fewer words, no trailing messages |
+| EL-PR-0013 | Semantic Anchoring — familiar words in questions |
+| EL-PR-0016 | Domain Context Cues — prefix with context label |
+| EL-PR-0018 | Source Traceability — include source reference |
+| Context Mandate | NEVER force guessing of variables/imports/state |
+| Whiteboard Rule | Code cards demand creation, not recognition |
+| Decomposition Rule | Code blocks >5 lines → decompose into 3-5 atomic cards |
+
+### TIER 3: WORKFLOW/META (~50 rules)
+These rules are about study habits, motivation, note systems. They do NOT directly affect card generation. The agent does NOT need to check these per-card.
+
+Examples: PR-0006 (emerging interests), PR-0008 (virtuous loops), PR-0010 (intrinsic motivation), PR-0019 (attention), PR-0020 (multitasking), PR-0027 (creativity/play), PR-0031 (Zeigarnik), PR-0033 (willpower), PR-0034 (breaks), PR-0035 (writing), PR-0036 (slip-box as partner).
+
+## 1.5.2 Build the Rule Application Plan
+
+After classifying the input (Phase 1) and understanding the Tier system:
+
+1. **List EVERY Tier 1 rule** from the table above
+2. **For each Tier 1 rule, decide:** APPLICABLE or NOT APPLICABLE to this input
+   - Example: "PR-0038 (Counter-Evidence) → APPLICABLE: Note has a Counter-Evidence H3 section with 2 contradictions"
+   - Example: "PR-0045 (Negation) → APPLICABLE: Note has a Distinctions H3 with 3 distinctions"
+   - Example: "PR-0038 (Counter-Evidence) → NOT APPLICABLE: No contradictions in this note"
+3. **For each APPLICABLE rule, write a specific plan:**
+   - Which content element(s) will it generate cards from?
+   - What card type will it produce?
+   - How many cards (estimate)?
+
+**Example Rule Application Plan:**
+```
+INPUT: "Auth Middleware" note (Pure Code, 2 code blocks, 1 distinction)
+
+Tier 1 Rule Application Plan:
+- PR-0003 (Generation Effect) → APPLICABLE: Paraphrase all code explanations
+- PR-0004 (Hidden Models) → APPLICABLE: Create 1 MODEL card for auth flow mental model
+- PR-0005 (Behavior Change) → APPLICABLE: Create 1 FAILURE MODE card ("What if you skip token verification?")
+- PR-0017 (Idea Interaction) → NOT APPLICABLE: No cross-concept comparisons in this note
+- PR-0038 (Counter-Evidence) → NOT APPLICABLE: No contradictions
+- PR-0045 (Negation) → APPLICABLE: 1 distinction → 1 NEGATION card
+- PR-0047 (Mere-Exposure) → APPLICABLE: Code cards use "Write..." format
+- EL-PR-0003 (Basics-First) → APPLICABLE: Theory cards generated before code cards
+- EL-PR-0004 (Atomicity) → APPLICABLE: Code blocks decomposed (>5 lines)
+- Orphan Rule → APPLICABLE: Ensure minimum 2-3 cards per H2
+- 5-20 Rule → APPLICABLE: Target 8-12 cards for this note
+- 10-min Rule → APPLICABLE: Filter trivial boilerplate
+
+Estimated cards: 10 (3 theory, 5 code, 1 negation, 1 failure mode)
+```
+
+**Phase 1.5 Exit Criteria:** Rule Application Plan is complete. Every Tier 1 rule has been evaluated. Proceed to Phase 2.
 
 ---
 
@@ -121,7 +223,7 @@ Every card MUST be traceable to at least one principle.
 # PHASE 2: RULE-DRIVEN CARD GENERATION
 # ═══════════════════════════════════════════════════════════════════════════════
 
-**Objective:** Generate cards by systematically applying ALL rules from the knowledge base.
+**Objective:** Generate cards by EXECUTING the Rule Application Plan from Phase 1.5.
 
 ## Phase 2 Mandates (ALL MUST BE APPLIED)
 
@@ -393,6 +495,11 @@ Before adding ANY card to your output, verify:
 
 Before proceeding to Phase 3, verify:
 
+**Rule Coverage Audit:**
+- [ ] Every APPLICABLE Tier 1 rule from the Rule Application Plan produced at least 1 card?
+- [ ] If any Tier 1 rule was marked APPLICABLE but has 0 cards → GO BACK and create the missing card
+
+**Content Coverage:**
 - [ ] Input classified correctly (Pure Theory / Pure Code / Mixed)?
 - [ ] Total cards in range **5-20 per source note**?
 - [ ] Every H2 section has **at least 2-3 cards** (orphan prevention)?
@@ -619,11 +726,10 @@ If ANY line fails:
 
 Legacy constraints remain authoritative; rules below map THEORY_KNOWLEDGE principles to Ankify v3 requirements.
 
-## Phase 2 Principle Mappings (Auto-Appended)
-
-Legacy constraints remain authoritative; rules below map THEORY_KNOWLEDGE principles to Ankify v2 requirements.
-
-### Ankify v2: Principle-to-Rule Mapping
+> [!IMPORTANT] TIER CLASSIFICATION
+> Rules are classified into 3 tiers. See **Phase 1.5** for the complete Tier 1 (Generation Drivers) and Tier 2 (Quality Constraints) tables.
+> During Phase 1.5, you MUST evaluate every Tier 1 rule for applicability.
+> Rules not listed in the Tier 1/2 tables are Tier 3 (Workflow/Meta) — they inform your understanding but do NOT directly drive card generation.
 
 - **Rule [PR-0001]**: Memory is an intentional choice and behavior, not a passive event.
   - **Type**: Model

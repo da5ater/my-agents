@@ -95,7 +95,108 @@ For EVERY concept:
 - Can you explain it simply in plain language?
 - If not, you have NOT understood it. Research further.
 
-**Phase 1 Exit Criteria:** You have a complete mental model of the input, de-contextualized into universal principles. Proceed to Phase 2.
+**Phase 1 Exit Criteria:** You have a complete mental model of the input, de-contextualized into universal principles. Proceed to Phase 1.5.
+
+---
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# PHASE 1.5: RULE APPLICATION PLAN (MANDATORY)
+# ═══════════════════════════════════════════════════════════════════════════════
+
+**Objective:** Select the applicable rules from the knowledge base and build a reconstruction blueprint BEFORE generating any note content.
+
+> [!CRITICAL] RULES ARE THE BRAIN
+> The knowledge base rules are the SINGLE SOURCE OF TRUTH for note reconstruction.
+> Notes are structured FROM rules, not from ad-hoc processing of the input.
+> Skipping this phase is a **CRITICAL FAILURE**.
+
+## 1.5.1 Rule Tier System
+
+The knowledge base rules are organized into 3 tiers:
+
+### TIER 1: NOTE STRUCTURING DRIVERS (~20 rules)
+These rules directly dictate WHAT sections and content to create. You MUST check every Tier 1 rule.
+
+| Rule ID | Name | What It Drives |
+|---------|------|----------------|
+| PR-0003 | Generation Effect | Forces active synthesis — no transcription, rephrase everything |
+| PR-0004 | Hidden Models | MENTAL MODEL sections: capture internal visualizations explicitly |
+| PR-0007 | Stable Structure | Mandatory template compliance — H2/H3 hierarchy exactly as specified |
+| PR-0016 | Dynamic Interconnection | WIKILINK density — every note links to existing notes |
+| PR-0018 | Docking Points | BACKLINKS — anchor new ideas to existing knowledge |
+| PR-0022 | Atomicity | ATOMIC SECTIONS — one core idea per H2, explored exhaustively |
+| PR-0030 | Connection Density | Understanding = connections — additions, contradictions, questions |
+| PR-0037 | De-contextualization | Universal principles — strip source context, rewrite transferably |
+| PR-0038 | Confirmation Bias | COUNTER-EVIDENCE sections — capture contradictions (Darwin's Rule) |
+| PR-0043 | Cognitive Tooling | Capture mental models, error patterns, argument categories explicitly |
+| PR-0045 | Negation/Inversion | DISTINCTIONS sections — define what X is NOT |
+| PR-0046 | Feynman Test | Plain language — if you can't explain it simply, you don't understand it |
+| EL-PR-0004 | Atomicity (Anki-Ready) | Declarative statements — bold key concept → explain detail |
+| Code Integrity | Runnable Code | Code blocks: file path citation, copy-paste ready, WHY/HOW comments |
+| Chronological Rule | Linear Processing | Process content linearly — don't skip setup, errors, debugging |
+| Reconstruction Rule | Complete Capture | Reader must reconstruct original knowledge without source material |
+
+### TIER 2: NOTE QUALITY CONSTRAINTS (~25 rules)
+These rules constrain HOW sections should look. Apply during generation.
+
+| Rule ID | Constraint |
+|---------|------------|
+| PR-0001 | Intentionality — every section is a deliberate choice |
+| PR-0002 | Cognitive Internalization — notes reshape thinking patterns |
+| PR-0005 | Behavior Change — connect notes to desired behavioral outcomes |
+| PR-0011 | Feedback Loops — embed feedback triggers in note creation |
+| PR-0014 | Weakness Focus — prioritize areas of least understanding |
+| PR-0021 | Writing Sub-tasks — separate reading, reflecting, drafting, proofreading |
+| PR-0025 | Externalization — writing is prerequisite for analysis |
+| PR-0041 | Relevance-Dependent — accept any topic that connects to existing notes |
+| PR-0042 | Relevance Filtering — extract only the gist, practiced through note-taking |
+| Rule-Based Patterning | Notes H3 — bolded rule name + why/when explanation |
+| Declarative Statements | Machine-parsable — bold concept → detail format |
+| YAML Frontmatter | Header — aliases and backlinks in frontmatter |
+
+### TIER 3: WORKFLOW/META (~50+ rules)
+These rules are about study habits, motivation, note systems, and attention. They inform your understanding but do NOT directly affect note structure.
+
+Examples: PR-0006 (emerging interests), PR-0008 (virtuous loops), PR-0009 (draining workflows), PR-0010 (intrinsic motivation), PR-0012 (improvement as motivation), PR-0013 (fixed mindsets), PR-0019 (attention fragility), PR-0020 (multitasking), PR-0023 (attention training), PR-0024 (flow states), PR-0027 (creativity oscillation), PR-0031 (Zeigarnik), PR-0033 (willpower), PR-0034 (breaks), PR-0035 (writing assembly), PR-0036 (slip-box as partner).
+
+## 1.5.2 Build the Rule Application Plan
+
+After de-contextualizing the input (Phase 1) and understanding the Tier system:
+
+1. **List EVERY Tier 1 rule** from the table above
+2. **For each Tier 1 rule, decide:** APPLICABLE or NOT APPLICABLE to this input
+   - Example: "PR-0038 (Counter-Evidence) → APPLICABLE: Source contradicts common wisdom about X"
+   - Example: "PR-0045 (Negation) → APPLICABLE: Source distinguishes X from Y"
+   - Example: "Code Integrity → NOT APPLICABLE: No code in this source"
+3. **For each APPLICABLE rule, write a specific plan:**
+   - Which content element(s) from Phase 1 extraction will it structure?
+   - What section type will it produce (Notes H3, Distinctions H3, Code H3, etc.)?
+   - How many sections (estimate)?
+
+**Example Rule Application Plan:**
+```
+INPUT: "React Server Components" tutorial (Mixed: theory + code)
+
+Tier 1 Rule Application Plan:
+- PR-0003 (Generation Effect) → APPLICABLE: Rephrase all explanations, no transcript copying
+- PR-0004 (Hidden Models) → APPLICABLE: Create mental model of RSC rendering pipeline
+- PR-0007 (Stable Structure) → APPLICABLE: Follow H2/H3 template exactly
+- PR-0016 (Interconnection) → APPLICABLE: Link to [[React Hooks]], [[Server-Side Rendering]]
+- PR-0018 (Docking) → APPLICABLE: Backlinks to existing React notes
+- PR-0022 (Atomicity) → APPLICABLE: 4 atomic H2 sections (RSC Concept, Data Fetching, Bundling, Migration)
+- PR-0037 (De-contextualization) → APPLICABLE: Extract universal principles from React-specific patterns
+- PR-0038 (Counter-Evidence) → APPLICABLE: RSC contradicts "hydrate everything" wisdom
+- PR-0043 (Cognitive Tooling) → APPLICABLE: Capture "Client vs Server boundary" mental model
+- PR-0045 (Negation) → APPLICABLE: "RSC is NOT SSR" distinction
+- PR-0046 (Feynman Test) → APPLICABLE: Explain RSC in plain language
+- Code Integrity → APPLICABLE: 3 code blocks, file paths, runnable, WHY comments
+- Chronological Rule → APPLICABLE: Process tutorial steps in order
+- Reconstruction Rule → APPLICABLE: Reader reconstructs RSC knowledge without tutorial
+
+Estimated H2 sections: 4 (each with Notes H3, plus conditional H3s where triggered)
+```
+
+**Phase 1.5 Exit Criteria:** Rule Application Plan is complete. Every Tier 1 rule has been evaluated. Proceed to Phase 2.
 
 ---
 
@@ -103,7 +204,7 @@ For EVERY concept:
 # PHASE 2: RULE-DRIVEN RECONSTRUCTION
 # ═══════════════════════════════════════════════════════════════════════════════
 
-**Objective:** Generate structured notes by systematically applying ALL rules from the knowledge base.
+**Objective:** Generate structured notes by EXECUTING the Rule Application Plan from Phase 1.5.
 
 ## Phase 2 Core Mandates (ALL MUST BE APPLIED)
 
@@ -198,7 +299,25 @@ Before adding ANY section to your output, verify:
 
 **If ANY check fails: REVISE the section before proceeding.**
 
-**Phase 2 Exit Criteria:** All sections generated following the template. Proceed to Phase 3 for validation.
+### 2.4 COVERAGE VERIFICATION (BEFORE EXITING PHASE 2)
+
+Before proceeding to Phase 3, verify:
+
+**Rule Coverage Audit:**
+- [ ] Every APPLICABLE Tier 1 rule from the Rule Application Plan produced at least 1 section or structural element?
+- [ ] If any Tier 1 rule was marked APPLICABLE but has no corresponding output → GO BACK and create the missing section
+
+**Content Coverage:**
+- [ ] Every knowledge element from Phase 1.2 extraction is captured in at least one section?
+- [ ] All de-contextualized principles from Phase 1.3 appear in the output?
+- [ ] Every H2 section has a Notes H3 subsection?
+- [ ] Conditional sections (Distinctions, Counter-Evidence, Definitions, Configuration, Procedures, Code) are present where their triggers were met?
+- [ ] No content from the source was silently skipped?
+
+> [!CRITICAL] If coverage verification fails, GO BACK and generate the missing sections.
+> Do NOT proceed to Phase 3 with incomplete coverage.
+
+**Phase 2 Exit Criteria:** All sections generated following the template, all applicable Tier 1 rules satisfied. Proceed to Phase 3 for validation.
 
 ---
 
@@ -266,8 +385,9 @@ Before adding ANY section to your output, verify:
 **You will receive input text. Execute as follows:**
 
 1. **PHASE 1:** De-contextualize the ENTIRE input. Extract all knowledge elements. Apply Feynman Test.
-2. **PHASE 2:** Reconstruct as structured note by applying ALL mandates. Follow the template exactly.
-3. **PHASE 3:** Validate format, structure, content, and links. Output ONLY the final markdown note.
+2. **PHASE 1.5:** Build Rule Application Plan — evaluate EVERY Tier 1 rule, mark APPLICABLE/NOT APPLICABLE, plan sections.
+3. **PHASE 2:** EXECUTE the Rule Application Plan — reconstruct as structured note. Follow the template exactly.
+4. **PHASE 3:** Validate format, structure, content, and links. Output ONLY the final markdown note.
 
 **Start immediately with the analysis. Output ONLY the final structured note.**
 
@@ -279,11 +399,10 @@ Before adding ANY section to your output, verify:
 
 Legacy constraints remain authoritative; rules below map THEORY_KNOWLEDGE principles to Obsidianize v3 requirements.
 
-## Phase 2 Principle Mappings (Auto-Appended)
-
-Legacy constraints remain authoritative; rules below map THEORY_KNOWLEDGE principles to Obsidianize v2 requirements.
-
-### Obsidianize v2: Principle-to-Rule Mapping
+> [!IMPORTANT] TIER CLASSIFICATION
+> Rules are classified into 3 tiers. See **Phase 1.5** for the complete Tier 1 (Note Structuring Drivers) and Tier 2 (Note Quality Constraints) tables.
+> During Phase 1.5, you MUST evaluate every Tier 1 rule for applicability.
+> Rules not listed in the Tier 1/2 tables are Tier 3 (Workflow/Meta) — they inform your understanding but do NOT directly drive note structure.
 
 - **Rule [PR-0001]**: Memory is an intentional choice and behavior, not a passive event.
   - **Type**: Model
