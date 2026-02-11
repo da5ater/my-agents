@@ -46,9 +46,16 @@ When processing a folder:
 
 1. **Scan** the target directory for all `.md` files (recursive by default)
 2. **Exclude** any files/folders specified by user (or default exclusions: `node_modules`, `.git`, `.obsidian`)
-3. **Process** each file through the 3-phase pipeline
-4. **Append** all cards to ONE unified `.tsv` file
-5. **Track** the source file internally for Obsidian URL generation (DO NOT add `[Source: ...]` to the card FRONT or BACK — source info goes ONLY into the Obsidian URL column)
+3. **BUILD FILE MANIFEST** — List ALL discovered `.md` files by name. This is your checklist.
+4. **Process** each file through the 3-phase pipeline, one at a time
+5. **Mark** each file as PROCESSED on your manifest after completing it
+6. **Append** all cards to ONE unified `.tsv` file
+7. **Track** the source file internally for Obsidian URL generation (DO NOT add `[Source: ...]` to the card FRONT or BACK — source info goes ONLY into the Obsidian URL column)
+
+> [!CRITICAL] ZERO-SKIP POLICY
+> You MUST process EVERY `.md` file in the manifest. Skipping a file is a **CRITICAL FAILURE**.
+> Before writing the final TSV, verify your manifest: every file must be marked PROCESSED.
+> If a file has no card-worthy content (e.g., empty file, index page), explicitly note: "Skipped [file]: [reason]" in your report.
 
 ### Output File Rules
 
@@ -62,10 +69,11 @@ When processing a folder:
 ```bash
 # The agent should execute these steps automatically:
 # 1. Identify input (file or folder)
-# 2. Scan for .md files
-# 3. Process each file
+# 2. Scan for .md files → BUILD MANIFEST
+# 3. Process each file (mark PROCESSED on manifest)
 # 4. Write unified TSV to current directory
 # 5. Report: "Created ankify_output.tsv with X cards from Y files"
+# 6. Print manifest: list all files with status (PROCESSED / SKIPPED + reason)
 ```
 
 **DO NOT ASK FOR CONFIRMATION. EXECUTE IMMEDIATELY.**
@@ -161,14 +169,107 @@ The deck must prepare the user for a senior technical interview.
 
 Focus on Technical/Code Concepts. Demand creation, not just definition. Ask user to 'Write the code/config' or 'Draw the diagram'.
 
-### 2.3 GENERATION STRATEGY
+### 2.3 GENERATION STRATEGY (OBSIDIANIZE-AWARE)
 
-#### Input Processing
+The input notes follow the **Obsidianize** structure. You MUST understand this structure to generate complete coverage.
 
-1.  **Scan for Definitions:** -> Create **Concept Cards** (PR-0004).
-2.  **Scan for Code:** -> Create **Constructive Cards** (Whiteboard Rule). MUST INJECT CONTEXT (PR-0018).
-3.  **Scan for Contrasts:** -> Create **Comparison Cards** (PR-0017).
-4.  **Scan for "Recalls":** -> Translate `> [!question]` cues directly.
+#### Obsidianize Note Structure Map
+
+Each note contains **H2 sections** (atomic concepts). Each H2 has these possible **H3 subsections**:
+
+| H3 Subsection | Card Generation Rule |
+|---------------|---------------------|
+| **Notes** | → **Theory Cards.** Each bolded rule/pattern = 1 card minimum. Ask "What is the rule for X?" or "Explain why X works" |
+| **Distinctions & Negations** | → **Negation Cards.** Each distinction = 1 card. "What is X NOT?" or "X vs Y" |
+| **Counter-Evidence** | → **Counter-Evidence Cards.** Each contradiction = 1 card. "What contradicts X?" |
+| **Definitions** | → **Definition Cards.** Each term = 1 card. "What is [term]?" |
+| **Configuration** | → **Procedure Cards.** Setup steps = 1 card. "How do you configure X?" |
+| **Technical Procedures** | → **Procedure Cards.** Each workflow = 1 card. "What are the steps to X?" |
+| **Code Implementation** | → **Constructive Cards.** EVERY code block = 1 card minimum. "Write the code for X" (with full context) |
+
+#### CONTENT-ADAPTIVE CARD STRATEGY (RULE-DERIVED)
+
+The balance between theory and code cards is NOT a fixed ratio. It **adapts to the input content** (PR-0028: strategies must be adaptive to the density and value of the source).
+
+> [!CRITICAL] CORE PRINCIPLE
+> **Theory is ALWAYS present.** Even pure code notes have underlying mental models (PR-0004).
+> **Code cards are present ONLY when the input contains code.**
+> The strategy adapts — not the rules.
+
+**Step 1: Classify the input note**
+
+| Input Type | Description | Strategy |
+|-----------|-------------|----------|
+| **Pure Theory** | No code blocks. Concepts, definitions, principles. | 100% Theory cards. Focus on definitions, mental models, distinctions, counter-evidence. |
+| **Pure Code** | Mostly code blocks with minimal explanation. | Theory cards for the WHY behind each code pattern (PR-0004: make mental models explicit) + Constructive cards for every code block. |
+| **Documentation/Mixed** | Both theory and code. Tutorials, guides. | Theory cards for foundational concepts (basics-first, PR-0003) + Constructive cards for every code block. Theory FIRST, then code. |
+
+**Step 2: Apply the 10-Minute Value Heuristic**
+
+For EVERY potential card, ask: **"Is this worth 10 minutes of future time?"** (Knowledge Base Rule)
+- YES, or it seems striking/important → Create the card
+- NO, and it's trivial/obvious → Skip it
+- UNSURE → Create it (err on the side of inclusion)
+
+**Step 3: Ensure minimum density (prevent orphans)**
+
+- **Per source/note:** Generate **5-20 cards** (Knowledge Base Rule: fewer than 5 creates orphan knowledge, more than 20 dilutes focus)
+- **Per topic (H2 section):** Generate **at least 2-3 cards** to form a knowledge nucleus (orphan prevention rule)
+- **Per code block:** Generate **at least 1 Constructive card** — no code block may be skipped
+
+**Step 4: Apply Basics-First ordering**
+
+Theory cards that explain foundational concepts (the WHY) should be generated BEFORE constructive cards that test application (the HOW). This ensures the user understands the principle before being asked to apply it.
+
+#### Card Type Rules (What to generate from each content type)
+
+```
+CONTENT ELEMENT → CARD TYPE
+
+Code block         → CONSTRUCTIVE card ("Write the code for...")
+                     Include ALL context: imports, variables, state shapes
+                     This is MANDATORY — no code block may be skipped
+
+Bolded rule/pattern → THEORY card ("What is the rule for..." / "Explain why...")
+in Notes H3          Focus on the WHY and WHEN, not just the WHAT
+                     This is foundational knowledge (basics-first)
+
+Distinction         → NEGATION card ("What is X NOT?" / "X vs Y")
+(X is NOT Y)         Every explicit distinction must produce a card (PR-0045)
+
+Counter-evidence    → COUNTER-EVIDENCE card ("What contradicts X?")
+                     Prioritize these — they're the most valuable (PR-0038, Darwin's Golden Rule)
+
+Definition          → DEFINITION card ("What is [term]?")
+(critical terms)     Only for terms that would block understanding if unknown
+
+Configuration       → PROCEDURE card ("How do you set up X?")
+                     Only card-ify if worth 10 min of future time
+
+Mental model        → MODEL card ("Explain/visualize how X works")
+                     Make hidden expertise explicit (PR-0004)
+
+Common mistake      → FAILURE MODE card ("What goes wrong if you do X?")
+                     Instinctual responses carry more weight (PR-0005)
+```
+
+#### Declarative vs Procedural (Knowledge Base Rule)
+
+> Anki builds **declarative knowledge** (facts/theory), but **procedural mastery** requires practicing in context.
+
+- **Theory cards** = Declarative. They test: "Do you KNOW the principle?"
+- **Code cards** = Procedural. They test: "Can you WRITE the code?" — This means code cards must demand creation ("Write a function that..."), not just recognition ("What does this code do?")
+- **Both are needed** for complete understanding. Theory without practice is hollow. Code without theory is fragile.
+
+#### Input Processing (Updated)
+
+1.  **Walk each H2 section** in order → identify all H3 subsections present
+2.  **For each Code Implementation H3:** → Create **Constructive Cards** (Whiteboard Rule). MUST INJECT CONTEXT (PR-0018). **Every code block gets a card.**
+3.  **For each Notes H3:** → Create **Theory Cards** for each bolded rule/pattern (PR-0004)
+4.  **For each Distinctions H3:** → Create **Negation/Comparison Cards** (PR-0017, PR-0045)
+5.  **For each Counter-Evidence H3:** → Create **Counter-Evidence Cards** (PR-0038)
+6.  **Scan for `> [!question]` callouts:** → Translate directly into cards
+7.  **Final check:** Does every H2 have at least 1 card? If not, add one.
 
 #### Question Rotation (MANDATORY QUOTAS)
 
@@ -198,6 +299,22 @@ Before adding ANY card to your output, verify:
 
 **If ANY check fails: REJECT the card and revise it.**
 
+### 2.5 COVERAGE VERIFICATION (BEFORE EXITING PHASE 2)
+
+Before proceeding to Phase 3, verify:
+
+- [ ] Input classified correctly (Pure Theory / Pure Code / Mixed)?
+- [ ] Total cards in range **5-20 per source note**?
+- [ ] Every H2 section has **at least 2-3 cards** (orphan prevention)?
+- [ ] Every code block has at least 1 Constructive card?
+- [ ] Every explicit distinction has a Negation card?
+- [ ] Counter-evidence cards created for contradictions (PR-0038)?
+- [ ] Each card passes the 10-minute value heuristic?
+- [ ] Card type quotas met (per-10 minimums)?
+- [ ] No section of the note was silently skipped?
+
+> [!CRITICAL] If coverage verification fails, GO BACK and generate the missing cards.
+> Do NOT proceed to Phase 3 with incomplete coverage.
 **Phase 2 Exit Criteria:** All cards generated. Proceed to Phase 3 for format validation.
 
 ---
@@ -394,14 +511,15 @@ If ANY line fails:
 # EXECUTION SUMMARY
 # ═══════════════════════════════════════════════════════════════════════════════
 
-**You will receive input text (markdown). Execute as follows:**
+**You will receive input (markdown file or folder). Execute as follows:**
 
-1. **PHASE 1:** Analyze the ENTIRE input. Extract all knowledge elements. Map context dependencies.
-2. **PHASE 2:** Generate cards by applying ALL mandates. Validate each card against the checklist. **Verify card type quotas are met.**
+1. **PHASE 1:** If folder → BUILD FILE MANIFEST. Analyze the ENTIRE input. Extract all knowledge elements. Map context dependencies.
+2. **PHASE 2:** Generate cards using the **Obsidianize-aware structure map**. Walk each H2 → process each H3. Apply **80/20 Coverage Rule**: every code block, every H2, every bolded rule gets a card. Run **Coverage Verification** before exiting.
 3. **PHASE 3:** Format as TSV. Apply CODE BLOCK SERIALIZATION for every code answer. Validate EVERY line. Write to `.tsv` file.
-4. **PHASE 3b:** Run post-generation validation script. Fix any failures. Report results.
+4. **PHASE 3b:** Run post-generation validation script. Fix any failures.
+5. **REPORT:** Print file manifest (all files with PROCESSED/SKIPPED status). Report total cards and files.
 
-**Start immediately with the analysis. Output ONLY the final TSV file.**
+**Start immediately. Process ALL files. Output ONLY the final TSV file.**
 
 ---
 
