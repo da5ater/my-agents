@@ -185,7 +185,7 @@ Each note contains **H2 sections** (atomic concepts). Each H2 has these possible
 | **Definitions** | → **Definition Cards.** Each term = 1 card. "What is [term]?" |
 | **Configuration** | → **Procedure Cards.** Setup steps = 1 card. "How do you configure X?" |
 | **Technical Procedures** | → **Procedure Cards.** Each workflow = 1 card. "What are the steps to X?" |
-| **Code Implementation** | → **Constructive Cards.** EVERY code block = 1 card minimum. "Write the code for X" (with full context) |
+| **Code Implementation** | → **Constructive Cards.** Small blocks (≤5 lines) = 1 card. Large blocks (>5 lines) = DECOMPOSE into 3-5 atomic cards (2-6 lines each). See CODE BLOCK DECOMPOSITION. |
 
 #### CONTENT-ADAPTIVE CARD STRATEGY (RULE-DERIVED)
 
@@ -226,9 +226,12 @@ Theory cards that explain foundational concepts (the WHY) should be generated BE
 ```
 CONTENT ELEMENT → CARD TYPE
 
-Code block         → CONSTRUCTIVE card ("Write the code for...")
-                     Include ALL context: imports, variables, state shapes
-                     This is MANDATORY — no code block may be skipped
+Code block (≤5 lines) → 1 CONSTRUCTIVE card ("Write the code for...")
+                        Include ALL context in the FRONT
+
+Code block (>5 lines) → DECOMPOSE into 3-5 atomic cards (see CODE BLOCK DECOMPOSITION below)
+                        Each card tests ONE concept from the block (2-6 lines max per answer)
+                        NO card may copy the entire block as-is
 
 Bolded rule/pattern → THEORY card ("What is the rule for..." / "Explain why...")
 in Notes H3          Focus on the WHY and WHEN, not just the WHAT
@@ -253,6 +256,90 @@ Common mistake      → FAILURE MODE card ("What goes wrong if you do X?")
                      Instinctual responses carry more weight (PR-0005)
 ```
 
+#### CODE BLOCK DECOMPOSITION (MANDATORY FOR >5 LINES)
+
+> [!CRITICAL] ANTI-MONOLITH RULE
+> A code block with >5 lines MUST be decomposed into multiple atomic cards.
+> Copying an entire code block as a single card answer is a **CRITICAL FAILURE**.
+> It violates Atomicity (PR-0004), Generation Effect (PR-0003), and Chunking.
+
+**How to decompose a large code block:**
+
+1. **Identify the distinct concepts** in the block (e.g., DOM selection, event handling, API call, error handling)
+2. **Create 1 card per concept**, each with only the 2-6 lines of code that implement it
+3. **Each card's FRONT** must scope the question narrowly ("Write the error handler for...", not "Write the whole script")
+4. **Each card's BACK** must contain ONLY the lines being tested, not surrounding code
+
+**Answer length rules:**
+- **1-6 lines:** Atomic. Good as-is.
+- **7-15 lines:** MUST be split into 2-3 cards
+- **16+ lines:** MUST be split into 4-5+ cards
+
+#### CONTEXT INJECTION (MANDATORY FOR ALL CODE CARDS)
+
+> [!CRITICAL] CONTEXT MANDATE
+> Every code card FRONT must provide ALL context the user needs to write the answer.
+> A card that forces the user to guess variable names, imports, element IDs, or state shapes is a **CRITICAL FAILURE** (Section 2.2).
+
+**The FRONT of every code card MUST include:**
+
+- **Given variables/objects** that the code uses (e.g., "Given `const user = await User.findById(id)`...")
+- **Available imports/modules** (e.g., "Assume `bcrypt` and `User` are imported")
+- **The specific scope** of what to write (e.g., "Write the error handling block", NOT "Write the whole route")
+- **Expected behavior** (e.g., "...that returns 401 on failure")
+
+#### WORKED EXAMPLE: Bad Card → Good Decomposition
+
+**❌ BAD CARD (monolithic, no context):**
+
+```
+FRONT: Write the client-side script that fetches /weather?address=... and updates message elements.
+BACK: [20 lines of code]
+```
+
+**✅ GOOD DECOMPOSITION (4 atomic cards):**
+
+```
+Card 1 — DOM Selection:
+FRONT: Given an HTML page with a <form>, an <input>, and two elements
+       with ids #message-1 and #message-2, write the DOM query lines.
+BACK:  const weatherForm = document.querySelector('form');
+       const search = document.querySelector('input');
+       const messageOne = document.querySelector('#message-1');
+       const messageTwo = document.querySelector('#message-2');
+
+Card 2 — Submit Handler Setup:
+FRONT: Given weatherForm (a form element) and search (an input element),
+       write the submit event listener that prevents default and
+       sets messageOne to 'Loading...'.
+BACK:  weatherForm.addEventListener('submit', (e) => {
+         e.preventDefault();
+         const location = search.value;
+         messageOne.textContent = 'Loading...';
+       });
+
+Card 3 — Fetch + Display:
+FRONT: Inside a submit handler, given a location variable and
+       messageOne/messageTwo elements, write the fetch call to
+       /weather?address=... that displays location and weather data.
+BACK:  fetch('/weather?address=' + encodeURIComponent(location))
+         .then(response => response.json())
+         .then(data => {
+           messageOne.textContent = data.location;
+           messageTwo.textContent = data.weather_descriptions[0];
+         });
+
+Card 4 — Error Handling:
+FRONT: Add a .catch() to the fetch chain that sets messageOne to
+       the error message and clears messageTwo.
+BACK:  .catch((error) => {
+         messageOne.textContent = 'An error occurred: ' + error.message;
+         messageTwo.textContent = '';
+       });
+```
+
+**Notice:** Each card is 3-6 lines, tests ONE concept, and the FRONT provides all context needed.
+
 #### Declarative vs Procedural (Knowledge Base Rule)
 
 > Anki builds **declarative knowledge** (facts/theory), but **procedural mastery** requires practicing in context.
@@ -264,7 +351,7 @@ Common mistake      → FAILURE MODE card ("What goes wrong if you do X?")
 #### Input Processing (Updated)
 
 1.  **Walk each H2 section** in order → identify all H3 subsections present
-2.  **For each Code Implementation H3:** → Create **Constructive Cards** (Whiteboard Rule). MUST INJECT CONTEXT (PR-0018). **Every code block gets a card.**
+2.  **For each Code Implementation H3:** → **DECOMPOSE** large code blocks into atomic cards (2-6 lines each). INJECT CONTEXT into every FRONT. Small blocks (≤5 lines) = 1 card. Large blocks (>5 lines) = 3-5 cards.
 3.  **For each Notes H3:** → Create **Theory Cards** for each bolded rule/pattern (PR-0004)
 4.  **For each Distinctions H3:** → Create **Negation/Comparison Cards** (PR-0017, PR-0045)
 5.  **For each Counter-Evidence H3:** → Create **Counter-Evidence Cards** (PR-0038)
@@ -296,6 +383,9 @@ Before adding ANY card to your output, verify:
 - [ ] Does code include ALL required context?
 - [ ] Is the answer NOT a copy-paste from input?
 - [ ] Would this appear in a Senior Interview?
+- [ ] **CODE CARD: Is the answer ≤6 lines?** If not → decompose into smaller cards
+- [ ] **CODE CARD: Does the FRONT provide all variables, imports, and context?** If not → add them
+- [ ] **CODE CARD: Does the FRONT scope the question narrowly?** (NOT "Write the whole X", but "Write the Y part of X")
 
 **If ANY check fails: REJECT the card and revise it.**
 
@@ -514,7 +604,7 @@ If ANY line fails:
 **You will receive input (markdown file or folder). Execute as follows:**
 
 1. **PHASE 1:** If folder → BUILD FILE MANIFEST. Analyze the ENTIRE input. Extract all knowledge elements. Map context dependencies.
-2. **PHASE 2:** Generate cards using the **Obsidianize-aware structure map**. Walk each H2 → process each H3. Apply **80/20 Coverage Rule**: every code block, every H2, every bolded rule gets a card. Run **Coverage Verification** before exiting.
+2. **PHASE 2:** Generate cards using the **Obsidianize-aware structure map**. Walk each H2 → process each H3. Apply **Content-Adaptive Strategy**: classify input, apply 10-minute heuristic, ensure 5-20 cards per source. **DECOMPOSE large code blocks** into atomic cards (2-6 lines each). Run **Coverage Verification** before exiting.
 3. **PHASE 3:** Format as TSV. Apply CODE BLOCK SERIALIZATION for every code answer. Validate EVERY line. Write to `.tsv` file.
 4. **PHASE 3b:** Run post-generation validation script. Fix any failures.
 5. **REPORT:** Print file manifest (all files with PROCESSED/SKIPPED status). Report total cards and files.
