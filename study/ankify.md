@@ -48,7 +48,7 @@ When processing a folder:
 2. **Exclude** any files/folders specified by user (or default exclusions: `node_modules`, `.git`, `.obsidian`)
 3. **Process** each file through the 3-phase pipeline
 4. **Append** all cards to ONE unified `.tsv` file
-5. **Add source marker** to each card's context: `[Source: filename.md]`
+5. **Track** the source file internally for Obsidian URL generation (DO NOT add `[Source: ...]` to the card FRONT or BACK — source info goes ONLY into the Obsidian URL column)
 
 ### Output File Rules
 
@@ -170,14 +170,19 @@ Focus on Technical/Code Concepts. Demand creation, not just definition. Ask user
 3.  **Scan for Contrasts:** -> Create **Comparison Cards** (PR-0017).
 4.  **Scan for "Recalls":** -> Translate `> [!question]` cues directly.
 
-#### Question Rotation
+#### Question Rotation (MANDATORY QUOTAS)
 
-Rotate between:
+Rotate between these types. **You MUST meet the minimum quotas per 10 cards:**
 
-1.  **Conceptual:** Define/Explain.
-2.  **Constructive:** Write Code (Context Required).
-3.  **Predictive:** What is the console output?
-4.  **Negative/Boundary:** What is this NOT? / What contradicts this? (PR-0045).
+1.  **Conceptual:** Define/Explain. (No quota — this is the default type)
+2.  **Constructive:** Write Code (Context Required). **(Minimum 3 per 10 cards)**
+3.  **Predictive:** What is the console output? / What happens if...? **(Minimum 1 per 10 cards)**
+4.  **Negative/Boundary:** What is this NOT? / What contradicts this? (PR-0045, PR-0038). **(Minimum 1 per 10 cards)**
+5.  **Comparison/Synthesis:** X vs Y — what's the difference? (PR-0017). **(Minimum 1 per 10 cards)**
+
+> [!CRITICAL] CARD TYPE ENFORCEMENT
+> If you generate 10+ cards and have ZERO Negative, Predictive, or Comparison cards, this is a **CRITICAL FAILURE**.
+> Review your card set and add the missing types BEFORE proceeding to Phase 3.
 
 ### 2.4 Per-Card Validation Checklist
 
@@ -240,6 +245,38 @@ FRONT<TAB>BACK<TAB>OBSIDIAN_URL
 - **No Tabs in Content:** Replace tabs with `&nbsp;&nbsp;&nbsp;&nbsp;`
 - **Code Indentation:** Replace spaces with `&nbsp;`
 - **Code Wrapping:** Always use `<pre><code>` wrapper for code answers
+- **No Source Metadata in Cards:** NEVER put `[Source: ...]` in FRONT or BACK columns
+
+### CODE BLOCK SERIALIZATION PROCEDURE (MANDATORY)
+
+> [!CRITICAL] THE #1 CAUSE OF TSV BREAKAGE
+> Multi-line code in BACK column causes lines to split. This destroys the card in Anki.
+> You MUST follow this procedure for EVERY code answer:
+
+**Step-by-step for EVERY code block answer:**
+
+1. **Write** the code normally in your working memory
+2. **Replace** every newline character (`\n`) with the literal string `<br>`
+3. **Replace** every space used for indentation with `&nbsp;`
+4. **Replace** every tab character with `&nbsp;&nbsp;&nbsp;&nbsp;`
+5. **Wrap** the entire single-line result in `<pre style='text-align:left; font-family:monospace;'><code>...</code></pre>`
+6. **Verify** the final BACK column is ONE continuous string with ZERO real newlines
+
+**Correct example (multi-line code as ONE TSV line):**
+```
+<pre style='text-align:left; font-family:monospace;'><code>void swap(int *a, int *b) {<br>&nbsp;&nbsp;int temp = *a;<br>&nbsp;&nbsp;*a = *b;<br>&nbsp;&nbsp;*b = temp;<br>}</code></pre>
+```
+
+**WRONG example (code with REAL newlines — THIS BREAKS THE TSV):**
+```
+<pre style='text-align:left; font-family:monospace;'><code>void swap(int *a, int *b) {
+    int temp = *a;
+    *a = *b;
+    *b = temp;
+}</code></pre>
+```
+
+> The WRONG example above creates 6 lines in the TSV file instead of 1. Anki will see 6 broken cards instead of 1 valid card. This is a **SYSTEM FAILURE**.
 
 ## 3.2 OBSIDIAN URL SPECIFICATION (ABSOLUTE)
 
@@ -284,6 +321,8 @@ Before outputting ANY line, verify:
 - [ ] URL file path is URL-encoded (uses `%2F` for slashes, `%20` for spaces)
 - [ ] Code blocks use proper `<pre><code>` wrapping
 - [ ] No raw tabs appear in FRONT or BACK content
+- [ ] No `[Source: ...]` text appears in FRONT or BACK columns
+- [ ] All code blocks are serialized (ZERO real newlines inside `<pre><code>` — only `<br>` and `&nbsp;`)
 
 ## 3.4 FAILURE PROTOCOL
 
@@ -300,22 +339,54 @@ Before outputting ANY line, verify:
 ## 3.6 EXAMPLE VALID OUTPUT
 
 ```tsv
-<strong>JS: Closures</strong><br>Write a function that...	<pre style='text-align:left; font-family:monospace;'><code>function x() { ... }</code></pre>	obsidian://open?vault=mohamed&file=javascript%2Fclosures
+<strong>JS: Closures</strong><br>Write a function that...	<pre style='text-align:left; font-family:monospace;'><code>function x() {<br>&nbsp;&nbsp;let count = 0;<br>&nbsp;&nbsp;return function() { return ++count; };<br>}</code></pre>	obsidian://open?vault=mohamed&file=javascript%2Fclosures
 <strong>React: useEffect</strong><br>When does the cleanup run?	It runs on unmount AND before re-running the effect.	obsidian://open?vault=mohamed&file=react%2Fhooks
+<strong>JS: typeof null</strong><br>What is this NOT? typeof null returns "object" — is null actually an object?	<strong>No.</strong> null is a primitive. This is a legacy bug in JS that was never fixed for backward compatibility.	obsidian://open?vault=mohamed&file=javascript%2Ftypes
 ```
 
 ### INVALID Examples (DO NOT DO THIS)
 
 ```tsv
-# WRONG - Contains Rule/Evidence in FRONT:
+# WRONG 1 - Contains Rule/Evidence in FRONT:
 <strong>MongoDB: Schema</strong><br>How do you create a Mongoose model?<br><br><strong>Rule:</strong> TOPIC_active_recall<br><strong>Evidence:</strong> some code	...	obsidian://...
 
-# WRONG - Vault is not 'mohamed':
+# WRONG 2 - Vault is not 'mohamed':
 ...	obsidian://open?vault=programming&file=...
 
-# WRONG - File path not URL-encoded:
+# WRONG 3 - File path not URL-encoded:
 ...	obsidian://open?vault=mohamed&file=node/mosh/mongodb
+
+# WRONG 4 - [Source:] metadata in FRONT column:
+<strong>JS Arrays</strong><br>[Source: basics/arrays.md]<br>How do you add an element?	...	obsidian://...
+
+# WRONG 5 - REAL NEWLINES IN CODE (THIS BREAKS THE CARD):
+<strong>C++: Swap</strong><br>Write a swap function.	<pre><code>void swap(int *a, int *b) {
+    int temp = *a;
+    *a = *b;
+    *b = temp;
+}</code></pre>	obsidian://...
+# ^ The above code has REAL newlines. Anki will see 6 broken lines instead of 1 card.
+# CORRECT version of the same card:
+<strong>C++: Swap</strong><br>Write a swap function.	<pre style='text-align:left; font-family:monospace;'><code>void swap(int *a, int *b) {<br>&nbsp;&nbsp;int temp = *a;<br>&nbsp;&nbsp;*a = *b;<br>&nbsp;&nbsp;*b = temp;<br>}</code></pre>	obsidian://open?vault=mohamed&file=cpp%2Fswap
 ```
+
+## 3.7 POST-GENERATION VALIDATION (MANDATORY)
+
+After writing the `.tsv` file, you MUST run this validation command:
+
+```bash
+awk -F'\t' '{
+  if (NF != 3) print "FAIL line " NR ": " NF " columns (expected 3)"
+  if ($1 ~ /\[Source:/) print "FAIL line " NR ": [Source:] in FRONT column"
+}' "$OUTPUT_FILE"
+```
+
+If ANY line fails:
+1. Read the failing lines
+2. Fix the broken card(s)
+3. Re-write the file
+4. Re-run validation
+5. Only report success when validation passes with ZERO failures
 
 ---
 
@@ -326,10 +397,11 @@ Before outputting ANY line, verify:
 **You will receive input text (markdown). Execute as follows:**
 
 1. **PHASE 1:** Analyze the ENTIRE input. Extract all knowledge elements. Map context dependencies.
-2. **PHASE 2:** Generate cards by applying ALL mandates. Validate each card against the checklist.
-3. **PHASE 3:** Format as TSV. Validate EVERY line. Output ONLY the TSV code block.
+2. **PHASE 2:** Generate cards by applying ALL mandates. Validate each card against the checklist. **Verify card type quotas are met.**
+3. **PHASE 3:** Format as TSV. Apply CODE BLOCK SERIALIZATION for every code answer. Validate EVERY line. Write to `.tsv` file.
+4. **PHASE 3b:** Run post-generation validation script. Fix any failures. Report results.
 
-**Start immediately with the analysis. Output ONLY the final TSV code block.**
+**Start immediately with the analysis. Output ONLY the final TSV file.**
 
 ---
 
