@@ -1,0 +1,42 @@
+You are authorized to implement the approved Obsidianize Cleanup Plan.
+
+Modify:
+/mnt/data/obsidian/gems/study/obsidianize.md
+
+Perform the following surgical edits:
+
+1. In SACRIFICIAL rules:
+   - Remove references to “Per-H2 minimums.”
+   - Remove any remaining “Complete reconstruction” language.
+
+2. In Phase 2.2 OUTPUT STRUCTURE:
+   - Replace “Repeat this structure for each concept” with:
+     “Apply this structure only to concepts selected in the Activation Set and within the Budgeted Section Plan.”
+
+3. In KNOWLEDGE BASE: PRINCIPLE MAPPINGS:
+   - Rewrite all mandatory language:
+       - “Every…”
+       - “Must include…”
+       - “At least…”
+   - Convert them into:
+       “When activated by Arbitration and within Budget…”
+   - Explicitly subordinate all knowledge base mandates to:
+       - Signal gating
+       - Arbitration Layer
+       - Pre-Generation Budget
+       - Hard ceilings
+
+4. Do NOT modify:
+   - Arbitration Layer
+   - Pre-Generation Budget Algorithm
+   - Phase 2.4 Guardrail Verification
+   - Weight classification logic
+
+5. Ensure:
+   - No quota-like language remains.
+   - No mandatory section creation remains.
+   - No structural stacking survives.
+   - Activation Set remains locked after Phase 1.5.
+
+Output:
+- a summary of what we did 
