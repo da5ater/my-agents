@@ -138,10 +138,11 @@ R-POD-004:  # PrincipleMapping
   ActivationCondition: R-POD-002.passed
   RequiredArtifact: principle_map
   ValidationMethod: for_all(elem): elem.mapped_principles.length >= 1
-  FailureBehavior: warn
+  FailureBehavior: reject
   PrecedenceWeight: 70
   Dependencies: [R-POD-002]
   ConflictsWith: []
+  # v2.2: upgraded from warn→reject — principle mapping is prerequisite for synthesis
 
 R-POD-005:  # Tier1RuleEvaluation
   Scope: POST_DISCOVERY
@@ -161,10 +162,16 @@ R-POD-006:  # RuleApplicationPlanBuild
   ValidationMethod: >
     for_all(r in tier1_rules where r.verdict == APPLICABLE):
       r.plan.has_fields([target_content, card_type, estimated_count])
+    AND
+    (note.concept_count >= 2 IMPLIES
+      rule_application_plan.contains(planned_card WHERE
+        card_type == SYNTHESIS AND
+        target_content.referenced_concepts.count >= 2))
   FailureBehavior: reject
   PrecedenceWeight: 95
   Dependencies: [R-POD-005]
   ConflictsWith: []
+  # v2.2: added synthesis plan mandate — when note has ≥2 concepts, plan must budget ≥1 synthesis card
 
 R-POD-007:  # InputClassification
   Scope: POST_DISCOVERY
@@ -304,10 +311,11 @@ R-C-005:  # Connectivity_NoBroaderIsolation
   ActivationCondition: always
   RequiredArtifact: card_set
   ValidationMethod: card.related_cards_in_same_note >= 1
-  FailureBehavior: warn
+  FailureBehavior: regenerate
   PrecedenceWeight: 60
   Dependencies: []
   ConflictsWith: []
+  # v2.2: upgraded from warn→regenerate — connectivity is a depth requirement
 
 R-C-006:  # SignalToNoise
   Scope: PER_CARD
@@ -652,6 +660,36 @@ R-PN-007:  # ErrorSurfacePresence
   Dependencies: [R-POD-002]
   ConflictsWith: []
 
+R-PN-008:  # ProactiveMisconceptionInjection
+  Scope: POST_NOTE
+  ActivationCondition: >
+    note.contains_abstract_concepts == true AND
+    note.card_count >= 3
+  RequiredArtifact: note_cards
+  ValidationMethod: >
+    note_cards.any(type in [NEGATION, COUNTER, FAILURE_MODE] AND
+    addresses_common_misconception == true)
+  FailureBehavior: regenerate
+  PrecedenceWeight: 80
+  Dependencies: [R-POD-002]
+  ConflictsWith: []
+  # v2.2: NEW — proactive misconception injection for abstract concepts
+
+R-PN-009:  # ClusterSynthesisMandate
+  Scope: POST_NOTE
+  ActivationCondition: >
+    note.concept_count >= 3
+  RequiredArtifact: note_cards
+  ValidationMethod: >
+    note_cards.any(type == SYNTHESIS AND
+    referenced_concepts.count >= 2 AND
+    card_connects_different_sections == true)
+  FailureBehavior: regenerate
+  PrecedenceWeight: 85
+  Dependencies: [R-POD-002]
+  ConflictsWith: []
+  # v2.2: NEW — mandatory synthesis card for notes with ≥3 concepts
+
 # ═══════════════════════════════════════
 # GLOBAL_NOTE_INVARIANTS — folder-local invariants
 # ═══════════════════════════════════════
@@ -661,35 +699,40 @@ R-GNI-001:  # MicroTopicComplementarity
   ActivationCondition: micro_topic.structural_elements_count >= 2
   RequiredArtifact: micro_topic_cards
   ValidationMethod: >
-    micro_topic.relational_cards.any(references_concepts_in_current_folder == true) OR
+    micro_topic.relational_cards.any(references_concepts_in_current_folder == true) AND
     micro_topic.card_types.distinct_count >= 2
   FailureBehavior: regenerate
   PrecedenceWeight: 85
   Dependencies: [R-POD-002, R-G-005]
   ConflictsWith: []
+  # v2.2: OR→AND — type diversity is necessary but insufficient; relational cards required
 
 R-GNI-002:  # MultiConceptSynthesis
   Scope: GLOBAL_NOTE_INVARIANTS
   ActivationCondition: note.concept_count >= 2
   RequiredArtifact: note_cards
   ValidationMethod: >
-    synthesis_cards.any(referenced_concepts.count >= 2 AND
-    references_concepts_in_current_folder == true)
+    synthesis_cards.count >= 1 AND
+    synthesis_cards.any(referenced_concepts.count >= 2)
   FailureBehavior: regenerate
   PrecedenceWeight: 80
-  Dependencies: [R-POD-002, R-G-005]
+  Dependencies: [R-POD-002, R-POD-006, R-G-005]
   ConflictsWith: []
+  # v2.2: simplified validation + added R-POD-006 dependency for synthesis plan mandate
 
 R-GNI-003:  # NonTrivialNoteDepth
   Scope: GLOBAL_NOTE_INVARIANTS
   ActivationCondition: input_classification.type in [PURE_THEORY, MIXED]
   RequiredArtifact: note_cards
   ValidationMethod: >
-    NOT (note.card_types.is_subset_of([DEFINITION, PROCEDURE, CONSTRUCTIVE]))
+    NOT (note.card_types.is_subset_of([DEFINITION, PROCEDURE, CONSTRUCTIVE])) AND
+    note.depth_types_count / note.total_card_count >= 0.15
   FailureBehavior: regenerate
   PrecedenceWeight: 75
   Dependencies: [R-POD-007]
   ConflictsWith: []
+  # v2.2: added proportional depth check — ≥15% of cards must be depth types
+  # depth_types = {THEORY, MODEL, NEGATION, COUNTER, SYNTHESIS, FAILURE_MODE}
 
 R-GNI-004:  # DefinitionSupportCheck
   Scope: GLOBAL_NOTE_INVARIANTS
@@ -707,14 +750,14 @@ R-GNI-005:  # ModelExplicationWhenImplied
   Scope: GLOBAL_NOTE_INVARIANTS
   ActivationCondition: >
     input_classification.type in [PURE_THEORY, MIXED] AND
-    element_inventory.contains(model_implication_signals) == true AND
-    mental_models.count == 0
+    element_inventory.contains(abstract_concept_signals) == true
   RequiredArtifact: note_cards
   ValidationMethod: note_cards.any(type == MODEL AND references_implied_structure == true)
   FailureBehavior: regenerate
   PrecedenceWeight: 80
   Dependencies: [R-POD-002]
   ConflictsWith: []
+  # v2.2: removed mental_models.count == 0 gate — fixes activation paradox
 
 # ═══════════════════════════════════════
 # SERIALIZATION — TSV formatting rules
@@ -893,7 +936,7 @@ R-G-005:  # CompilationBoundaryContract
                 [R-C-009 ∥ R-C-002 ∥ R-C-010 ∥ R-C-001] →
                 [R-C-003 ∥ R-C-004 ∥ R-C-005 ∥ R-C-012 ∥ R-C-014 ∥ R-C-015 ∥ R-C-017 ∥ R-C-020 ∥ R-C-022]
 5_PostCard:     R-POC-003 → R-POC-002 → R-POC-001 ∥ R-POC-006 → R-POC-004 → R-POC-005 → R-POC-007 → R-POC-008 → R-POC-009
-6_PostNote:     R-PN-002 → R-PN-003 → R-PN-006 → R-PN-007 → R-PN-001 → R-PN-004
+6_PostNote:     R-PN-002 → R-PN-003 → R-PN-006 → R-PN-007 → R-PN-008 → R-PN-009 → R-PN-001 → R-PN-004
 7_GlobalNoteInvariants: R-GNI-001 → R-GNI-002 → R-GNI-003 → R-GNI-004 → R-GNI-005
 8_Serialization: [R-S-001..R-S-003] → R-S-004 → R-S-005 → R-S-006 → R-S-010..R-S-011 → R-S-012 → R-S-013
 9_Global:       R-G-002 → R-G-003 → R-G-001 → R-G-004 → R-G-005
@@ -913,12 +956,41 @@ R-G-005:  # CompilationBoundaryContract
 Structural Integrity Rules → Activation Boundary Rules → Atomicity Rules → Relational / Connection Density Rules →
 Validation Rules → Global Note Invariants → Attention & Signal Rules → Formatting Rules → Serialization Rules
 
-VERSION_LOCK: v2.1
+VERSION_LOCK: v2.2
 Any structural modification requires:
 1. Precedence review
 2. Coverage recalculation
 3. Rule count delta report
 4. Drift impact summary
+
+### v2.2 Change Log
+| Change | Target | Description |
+|--------|--------|-------------|
+| A | R-GNI-001 | OR→AND in validation (relational cards now required alongside type diversity) |
+| B | R-POD-006 | Synthesis plan mandate (≥2 concepts → plan must include synthesis card) |
+| B | R-GNI-002 | Simplified validation + R-POD-006 dependency |
+| C | R-GNI-003 | Proportional depth check (≥15% depth types) |
+| D | R-GNI-005 | Removed mental_models.count==0 gate (fixes activation paradox) |
+| E | R-PN-008 | NEW: ProactiveMisconceptionInjection |
+| F | R-PN-009 | NEW: ClusterSynthesisMandate |
+| G | R-C-005 | warn→regenerate (connectivity is enforcement, not suggestion) |
+| H | R-POD-004 | warn→reject (principle mapping is mandatory) |
+| I | Contract | Depth Amplification Mode toggle (optional) |
+| — | Count | 77 → 79 rules (+2), 9 scopes (unchanged) |
+
+### Depth Amplification Mode (v2.2)
+
+```
+DEPTH_AMPLIFICATION_MODE: [OFF | ON]
+  Default: OFF
+  When ON:
+    - R-GNI-003 depth_ratio threshold: 0.15 → 0.25
+    - R-PN-008 activates at card_count >= 2 (instead of 3)
+    - R-PN-009 activates at concept_count >= 2 (instead of 3)
+    - R-C-005 PrecedenceWeight: 60 → 85
+  Toggle: Set via user invocation flag or loader override
+  Constraint: Does NOT create new scope, does NOT add rules
+```
 
 ---
 
@@ -951,10 +1023,10 @@ STAGE 3 — GENERATION
   Loop:   If POST_CARD fails → regenerate missing cards → re-validate
 
 STAGE 4 — VALIDATION
-  Scope: POST_NOTE (R-PN-001 through R-PN-007)
+  Scope: POST_NOTE (R-PN-001 through R-PN-009)
   Input:  complete card set for note
-  Output: coverage report, SDI check
-  Gate:   R-PN-002 (Tier1 coverage) + R-PN-004 (SDI) must pass
+  Output: coverage report, SDI check, misconception audit, synthesis audit
+  Gate:   R-PN-002 (Tier1 coverage) + R-PN-004 (SDI) + R-PN-008 (misconceptions) + R-PN-009 (synthesis) must pass
   Loop:   If validation fails → return to STAGE 3 → regenerate → re-validate
 
 STAGE 4.5 — GLOBAL NOTE INVARIANTS
