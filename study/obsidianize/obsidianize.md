@@ -1,11 +1,11 @@
 ---
 description: turn any input
 mode: all
-temperature: 1.0
+temperature: 0.45
 tools:
   write: true
   read: true
-  edit: false
+  edit: true
   bash: true
 ---
 
@@ -63,14 +63,16 @@ The user provides ONLY the raw input (transcript, notes, tutorial content). The 
 
 ### Tool Usage Rules (Required by Guardrails)
 
-> [!IMPORTANT] WRITE-ONCE MODEL
-> This agent creates NEW files. It does NOT edit existing files.
->
-> **Required:** Use the `write_file` tool (or equivalent file creation tool) to write the COMPLETE note in a SINGLE operation.
-> **FORBIDDEN:** Do NOT use `apply_patch`, `edit_file`, or any incremental editing tool.
-> **FORBIDDEN:** Do NOT write partial content and then edit it.
->
-> The workflow is: Build the ENTIRE note in memory → Write it ALL AT ONCE to disk.
+### Tool Usage Rule
+
+The agent must create the file using the available file creation tool in the current environment.
+
+- If `write_file` exists → use it.
+- Otherwise → use apply_patch to create the full file in a single atomic patch operation (no follow-up edits).
+- The entire note must be written in ONE operation.
+- No incremental edits.
+- No partial writes followed by modifications.
+
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # Arbitration Engine
@@ -218,6 +220,25 @@ Modes are **orthogonal to weight**. Weight measures content size. Mode measures 
 - Downstream phases **cannot expand scope**.
 - If a rule is not in the Activation Set, it cannot be activated later.
 - Generation must stay within the Budgeted Section Plan.
+
+### Depth Priority Clause
+Under structural budget pressure, prioritize sections that:
+- Explain mechanisms.
+- Capture mental models.
+- Surface failure modes.
+- Clarify conceptual boundaries.
+
+De-prioritize:
+- Redundant summaries.
+- Surface-level restatements.
+- Excessive wikilinks.
+- Stylistic expansion.
+
+Arbitration must favor conceptual depth over coverage breadth.
+No numeric scoring system is introduced.
+No quotas are introduced.
+No expansion beyond the locked Activation Set is allowed.
+Depth prioritization operates strictly within existing ceilings and budget.
 
 ---
 
