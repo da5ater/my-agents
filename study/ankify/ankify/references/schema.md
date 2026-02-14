@@ -5,6 +5,13 @@ Doctrine is the source of truth for what cards to create and how they should rea
 If any rule here conflicts with doctrine, follow doctrine and treat the schema rule as stale.
 Execute scopes in order: PRE_DISCOVERY -> POST_DISCOVERY -> PRE_CARD -> PER_CARD -> POST_CARD -> POST_NOTE -> SERIALIZATION -> GLOBAL.
 
+Computed field conventions used by rules:
+- overlap_ratio(a, b): common_token_count(a, b) / max(1, token_count(a))
+- front.word_count: count of whitespace-delimited tokens in front
+- front.jargon_terms_count: count of tokens in front with length >= 12 or containing 2+ uppercase letters
+- read_complete: true if the input read operation finished
+- chat_output_contains_tsv: true if the assistant output includes TSV rows
+
 ```yaml
 # PRE_DISCOVERY - before any file is read
 
@@ -12,7 +19,7 @@ R-PD-001:  # SilentExecution
   Scope: PRE_DISCOVERY
   ActivationCondition: agent_invoked == true
   RequiredArtifact: none
-  ValidationMethod: zero_chat_messages_before_file_write
+  ValidationMethod: chat_output_contains_tsv == false
   FailureBehavior: reject
   PrecedenceWeight: 100
   Dependencies: []
@@ -22,7 +29,7 @@ R-PD-002:  # AutoFileCreation
   Scope: PRE_DISCOVERY
   ActivationCondition: agent_invoked == true
   RequiredArtifact: output_path
-  ValidationMethod: file_exists(output_path) AND chat_output_count == 0
+  ValidationMethod: output_path_set == true
   FailureBehavior: reject
   PrecedenceWeight: 100
   Dependencies: []
@@ -74,7 +81,7 @@ R-POD-001:  # CompleteInputRead
   Scope: POST_DISCOVERY
   ActivationCondition: file_loaded == true
   RequiredArtifact: full_document_text
-  ValidationMethod: read_position == EOF
+  ValidationMethod: read_complete == true AND full_document_text != null
   FailureBehavior: reject
   PrecedenceWeight: 100
   Dependencies: []
@@ -148,6 +155,21 @@ R-POD-007:  # InputClassification
   Dependencies: [R-POD-001]
   ConflictsWith: []
 
+R-POD-008:  # InternalizationReport
+  Scope: POST_DISCOVERY
+  ActivationCondition: R-POD-001.passed
+  RequiredArtifact: internalization_report
+  ValidationMethod: >
+    internalization_report.has_fields([summary, boundaries, misconceptions, links]) AND
+    internalization_report.summary.sentences_count >= 3 AND
+    internalization_report.boundaries.count >= 1 AND
+    internalization_report.misconceptions.count >= 1 AND
+    internalization_report.links.count >= 1
+  FailureBehavior: reject
+  PrecedenceWeight: 90
+  Dependencies: [R-POD-007]
+  ConflictsWith: []
+
 # PRE_CARD - before generating each card
 
 R-PC-001:  # TenMinuteValueHeuristic
@@ -218,7 +240,7 @@ R-C-001:  # GenerationEffect_NoPassiveCopy
   Scope: PER_CARD
   ActivationCondition: always
   RequiredArtifact: card
-  ValidationMethod: levenshtein_similarity(card.back, source_text) < 0.85
+  ValidationMethod: overlap_ratio(card.back, source_text) <= 0.35
   FailureBehavior: regenerate
   PrecedenceWeight: 90
   Dependencies: []
@@ -238,7 +260,7 @@ R-C-003:  # FeynmanTest_PlainLanguage
   Scope: PER_CARD
   ActivationCondition: always
   RequiredArtifact: card
-  ValidationMethod: readability_score(front) <= GRADE_10 AND jargon_without_context == 0
+  ValidationMethod: front.word_count <= 35 AND front.jargon_terms_count <= 2
   FailureBehavior: regenerate
   PrecedenceWeight: 85
   Dependencies: []
@@ -268,7 +290,7 @@ R-C-006:  # SignalToNoise
   Scope: PER_CARD
   ActivationCondition: always
   RequiredArtifact: card
-  ValidationMethod: front.word_count <= 50 AND front.contains_only_question
+  ValidationMethod: front.word_count <= 50 AND front.ends_with("?") AND NOT front.contains(".")
   FailureBehavior: regenerate
   PrecedenceWeight: 75
   Dependencies: []
@@ -330,7 +352,7 @@ R-C-012:  # MereExposure_ActiveRecall
   Scope: PER_CARD
   ActivationCondition: always
   RequiredArtifact: card
-  ValidationMethod: front.requires_active_recall AND NOT answerable_by_recognition_only
+  ValidationMethod: front.verb in [Write, Explain, Describe, Implement, Build, Create, Add]
   FailureBehavior: regenerate
   PrecedenceWeight: 80
   Dependencies: []
@@ -358,9 +380,11 @@ R-C-014:  # SetAvoidance
 
 R-C-015:  # InterferencePrevention
   Scope: PER_CARD
-  ActivationCondition: always
+  ActivationCondition: card.type != CODE
   RequiredArtifact: card
-  ValidationMethod: answer_is_unambiguous AND possible_correct_answers == 1
+  ValidationMethod: >
+    NOT front.contains(" or ") AND NOT back.contains(" or ") AND
+    NOT front.contains(" / ") AND NOT back.contains(" / ")
   FailureBehavior: regenerate
   PrecedenceWeight: 80
   Dependencies: []
@@ -380,7 +404,7 @@ R-C-017:  # SemanticAnchoring
   Scope: PER_CARD
   ActivationCondition: always
   RequiredArtifact: card
-  ValidationMethod: front.uses_familiar_anchor_words
+  ValidationMethod: front.contains_context_label OR front.contains(":")
   FailureBehavior: warn
   PrecedenceWeight: 50
   Dependencies: []
@@ -558,18 +582,22 @@ R-PN-006:  # DoctrineComplianceGate
   ValidationMethod: >
     doctrine_compliance_report.has_fields([
       all_checks_passed,
+      internalization_ok,
       mapping_ok,
       elements_ok,
       coverage_ok,
       tier1_ok,
+      minimums_ok,
       quality_ok,
       output_purity_ok,
       failures
     ]) AND
+    doctrine_compliance_report.internalization_ok == true AND
     doctrine_compliance_report.mapping_ok == true AND
     doctrine_compliance_report.elements_ok == true AND
     doctrine_compliance_report.coverage_ok == true AND
     doctrine_compliance_report.tier1_ok == true AND
+    doctrine_compliance_report.minimums_ok == true AND
     doctrine_compliance_report.quality_ok == true AND
     doctrine_compliance_report.output_purity_ok == true AND
     doctrine_compliance_report.all_checks_passed == true AND
@@ -713,6 +741,16 @@ R-S-013:  # FailureProtocol_StopAndFix
   Dependencies: [R-S-012]
   ConflictsWith: []
 
+R-S-014:  # OutputFileCreated
+  Scope: SERIALIZATION
+  ActivationCondition: tsv_file_written
+  RequiredArtifact: output_path
+  ValidationMethod: file_exists(output_path) == true
+  FailureBehavior: reject
+  PrecedenceWeight: 95
+  Dependencies: [R-S-012]
+  ConflictsWith: []
+
 # GLOBAL - run-level checks
 
 R-G-001:  # ManifestCompletionCheck
@@ -754,20 +792,30 @@ R-G-004:  # ExecutionReport
   PrecedenceWeight: 60
   Dependencies: [R-G-001]
   ConflictsWith: []
+
+R-G-005:  # MaxRegenerationAttempts
+  Scope: GLOBAL_RUN
+  ActivationCondition: regeneration_tracking_enabled == true
+  RequiredArtifact: regeneration_attempts
+  ValidationMethod: regeneration_attempts <= 3
+  FailureBehavior: reject
+  PrecedenceWeight: 90
+  Dependencies: []
+  ConflictsWith: []
 ```
 
 ## Schema Execution Order
 
 ```
 1_Discovery:    R-PD-001 || R-PD-002 -> R-PD-004 -> R-PD-005 -> R-PD-003 -> R-PD-006
-2_Analysis:     R-POD-001 -> R-POD-007 || R-POD-002 -> R-POD-003 -> R-POD-004 -> R-POD-005 -> R-POD-006
+2_Analysis:     R-POD-001 -> R-POD-007 -> R-POD-008 || R-POD-002 -> R-POD-003 -> R-POD-004 -> R-POD-005 -> R-POD-006
 3_PreCard:      R-PC-006 || R-PC-003 || R-PC-001 -> R-PC-002 -> R-PC-004 || R-PC-005
 4_PerCard:      [R-C-007 || R-C-008 || R-C-011] -> [R-C-001 || R-C-002 || R-C-009 || R-C-010] ->
                [R-C-003..R-C-015] -> [R-C-016..R-C-020] -> [R-C-019 || R-C-021]
 5_PostCard:     R-POC-003 -> R-POC-002 -> R-POC-001 || R-POC-006 -> R-POC-004 -> R-POC-005
 6_PostNote:     R-PN-002 -> R-PN-003 || R-PN-005 -> R-PN-006 -> R-PN-001 -> R-PN-004
-7_Serialization: [R-S-001..R-S-003] -> R-S-004 -> R-S-005 -> R-S-006..R-S-008 -> R-S-009..R-S-011 -> R-S-012 -> R-S-013
-8_Global:       R-G-002 -> R-G-003 -> R-G-001 -> R-G-004
+7_Serialization: [R-S-001..R-S-003] -> R-S-004 -> R-S-005 -> R-S-006..R-S-008 -> R-S-009..R-S-011 -> R-S-012 -> R-S-013 -> R-S-014
+8_Global:       R-G-002 -> R-G-003 -> R-G-001 -> R-G-004 -> R-G-005
 ```
 
 ## Conflict Resolutions

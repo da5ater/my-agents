@@ -1,0 +1,428 @@
+# ═══════════════════════════════════════════════════════════════════════════════
+# Rule Library (Tiered, advisory)
+# ═══════════════════════════════════════════════════════════════════════════════
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# KNOWLEDGE BASE: PRINCIPLE MAPPINGS
+# ═══════════════════════════════════════════════════════════════════════════════
+
+Legacy constraints remain authoritative; rules below map THEORY_KNOWLEDGE principles to Obsidianize v3 requirements.
+
+All Knowledge Base implications are conditional. When activated by Arbitration and within Budget, apply them only if signal gating is satisfied and hard ceilings allow.
+
+> [!IMPORTANT] TIER CLASSIFICATION
+> Rules are classified into 3 tiers. See **Phase 1.5** for the complete Tier 1 (Note Structuring Drivers) and Tier 2 (Note Quality Constraints) tables.
+> During Phase 1.5, evaluate ELIGIBLE Tier 1 rules for signal presence; skip those without signal.
+> Rules not listed in the Tier 1/2 tables are Tier 3 (Workflow/Meta) — they inform your understanding but do NOT directly drive note structure.
+
+- **Rule [PR-0001]**: Memory is an intentional choice and behavior, not a passive event.
+  - **Type**: Model
+  - **Topics**: TOPIC_spaced_repetition, TOPIC_workflow
+  - **Implication (obsidian)**: Position notes as deliberate tools for thinking, not passive storage.
+  - **Source EV IDs**: EV-0001, EV-0126, EV-0420, EV-0993
+- **Rule [PR-0002]**: Cognitive tools (like SRS) must be internalized to reshape intuitive (System 1) thinking.
+  - **Type**: Model
+  - **Topics**: TOPIC_spaced_repetition, TOPIC_workflow
+  - **Implication (obsidian)**: Frame notes as cognitive tools to internalize thinking patterns.
+  - **Source EV IDs**: EV-0002, EV-0183, EV-0391, EV-0396, EV-0400, EV-0401, EV-0403, EV-0406, EV-0407, EV-0414, EV-0419
+- **Rule [PR-0003]**: Passive consumption (reading/delegation/lectures) fails; learning requires active engagement and rephrasing (Generation Effect). Always read with a pen in hand.
+  - **Type**: Failure mode
+  - **Topics**: TOPIC_transmissionism, TOPIC_elaboration
+  - **Implication (obsidian)**: Avoid transcription-only notes; require active rephrasing, handwriting/gist capture, and synthesis.
+  - **Source EV IDs**: EV-0003, EV-0015, EV-0019, EV-0149, EV-0151, EV-0152, EV-0154, EV-0155, EV-0156, EV-0160, EV-0161, EV-0162, EV-0164, EV-0165, EV-0166, EV-0174, EV-0193, EV-0234, EV-0291, EV-0292, EV-0294, EV-0302, EV-0305, EV-0443, EV-0444, EV-0485, EV-0502, EV-0591, EV-0594, EV-0639, EV-0640, EV-0730, EV-0731, EV-0770, EV-0851, EV-0852, EV-0853, EV-0855, EV-0856, EV-0860, EV-0875, EV-0961, EV-0973, EV-0995
+- **Rule [PR-0004]**: Expertise relies on hidden internal models that must be made explicit for effective learning.
+  - **Type**: Model
+  - **Topics**: TOPIC_elaboration
+  - **Implication (obsidian)**: Capture internal mental models explicitly and tie to minimal canonical examples.
+  - **Source EV IDs**: EV-0004, EV-0122, EV-0404
+- **Rule [PR-0005]**: Learning targets behavior change and instincts, often reinforced by emotional stakes.
+  - **Type**: Model
+  - **Topics**: TOPIC_spaced_repetition, TOPIC_workflow
+  - **Implication (obsidian)**: Connect notes to desired behavioral outcomes and emotional hooks.
+  - **Source EV IDs**: EV-0754, EV-0755, EV-0756, EV-0757, EV-0758, EV-0759, EV-0761, EV-0762, EV-0766, EV-0767, EV-0769, EV-0778, EV-0779, EV-0783, EV-0784, EV-0785, EV-0786, EV-0787, EV-0788, EV-0791, EV-0795, EV-0796, EV-0798
+- **Rule [PR-0006]**: Insights and topics emerge organically from consistent work on existing interests, rather than from upfront planning or forced directions.
+  - **Type**: Model
+  - **Topics**: TOPIC_workflow
+  - **Implication (obsidian)**: Allow notes to cluster naturally; capture why questions fail as insights. Trust bottom-up emergence over top-down planning.
+  - **Source EV IDs**: EV-0805, EV-0806, EV-0807, EV-0808, EV-0809, EV-0933, EV-0939, EV-0940, EV-0942, EV-0944
+- **Rule [PR-0007]**: A clear and stable structure is necessary to manage and navigate a non-linear thinking and writing process.
+  - **Type**: Rule
+  - **Topics**: TOPIC_workflow, TOPIC_writing
+  - **Implication (obsidian)**: Maintain a reliable core structure (e.g., Zettelkasten) to host non-linear notes.
+  - **Source EV IDs**: EV-0811
+- **Rule [PR-0008]**: Workflows should be designed to create self-sustaining virtuous loops where success builds skill, enjoyment, and momentum, reducing reliance on willpower.
+  - **Type**: Model
+  - **Topics**: TOPIC_workflow
+  - **Implication (obsidian)**: Design note-taking habits that feel rewarding and provide quick wins.
+  - **Source EV IDs**: EV-0812, EV-0813, EV-0814, EV-0816, EV-0817, EV-0818, EV-0819, EV-0826, EV-0828, EV-0829, EV-0857, EV-0858, EV-0859, EV-0991
+- **Rule [PR-0009]**: Draining or stagnant workflows create negative feedback loops (vicious circles) that lead to demotivation and procrastination.
+  - **Type**: Failure mode
+  - **Topics**: TOPIC_workflow
+  - **Implication (obsidian)**: Identify and pivot away from note-taking practices that feel increasingly draining.
+  - **Source EV IDs**: EV-0810, EV-0815, EV-0820, EV-0821
+- **Rule [PR-0010]**: Motivation must be rooted in the intrinsic reward of the work itself; external reward structures are fragile and often lead to avoidance of the actual task.
+  - **Type**: Constraint
+  - **Topics**: TOPIC_workflow
+  - **Implication (obsidian)**: Focus on the inherent value of the writing process rather than external validation.
+  - **Source EV IDs**: EV-0822, EV-0823, EV-0824, EV-0825, EV-0827, EV-0830
+- **Rule [PR-0011]**: Feedback loops are foundational for growth and learning.
+  - **Type**: Rule
+  - **Topics**: TOPIC_workflow, TOPIC_elaboration
+  - **Implication (obsidian)**: Embed frequent feedback triggers in note creation.
+  - **Source EV IDs**: EV-0831, EV-0833, EV-0834, EV-0836, EV-0846, EV-0847, EV-0848, EV-0849, EV-0850, EV-0854, EV-0861, EV-0862, EV-0863
+- **Rule [PR-0012]**: Improvement itself is the primary engine of motivation.
+  - **Type**: Model
+  - **Topics**: TOPIC_workflow
+  - **Implication (obsidian)**: Surface progress and refinement metrics to keep writing motivating.
+  - **Source EV IDs**: EV-0832, EV-0840
+- **Rule [PR-0013]**: Identity-based praise and fixed mindsets hinder growth by encouraging the avoidance of challenge.
+  - **Type**: Failure mode
+  - **Topics**: TOPIC_workflow
+  - **Implication (obsidian)**: Avoid identity traps that prevent revisiting and improving notes.
+  - **Source EV IDs**: EV-0835, EV-0837, EV-0838, EV-0839, EV-0841, EV-0844, EV-0845
+- **Rule [PR-0014]**: Growth requires focusing attention on the areas of greatest weakness.
+  - **Type**: Rule
+  - **Topics**: TOPIC_workflow, TOPIC_elaboration
+  - **Implication (obsidian)**: Prioritize drafting and connecting notes where the topic is least understood.
+  - **Source EV IDs**: EV-0842, EV-0843
+- **Rule [PR-0015]**: The slip-box (note system) grows in knowledge and utility (exponentially) in lockstep with the user's own competency, providing increasing connections and smart suggestions as it scales.
+  - **Type**: Model
+  - **Topics**: TOPIC_zettelkasten, TOPIC_workflow
+  - **Implication (obsidian)**: Treat the note system as a growing repository of evolving thought that mirrors your intellectual development.
+  - **Source EV IDs**: EV-0864, EV-0865, EV-0866, EV-0869, EV-0870, EV-0871, EV-0872
+- **Rule [PR-0016]**: A note system must be treated as a dynamic, interconnected structure rather than a static collection or storage space for isolated notes.
+  - **Type**: Constraint
+  - **Topics**: TOPIC_zettelkasten
+  - **Implication (obsidian)**: Prioritize link density and graph structure over folder hierarchy.
+  - **Source EV IDs**: EV-0867
+- **Rule [PR-0017]**: The primary utility of a note-taking system is to provide a space for ideas to mingle and generate new insights, rather than merely retrieving specific facts.
+  - **Type**: Principle
+  - **Topics**: TOPIC_zettelkasten, TOPIC_elaboration
+  - **Implication (obsidian)**: Use "random note" or "unlinked mentions" to spark insight through mingling.
+  - **Source EV IDs**: EV-0868
+- **Rule [PR-0018]**: Effective learning requires anchoring new information to a rich, interconnected latticework of prior knowledge ("docking points") to facilitate understanding and retrieval.
+  - **Type**: Model
+  - **Topics**: TOPIC_elaboration, TOPIC_context
+  - **Implication (obsidian)**: When activated by Arbitration and within Budget, link new notes to well-understood existing notes when signal and ceilings allow.
+  - **Source EV IDs**: EV-0873, EV-0874, EV-0876
+- **Rule [PR-0019]**: Sustained attention is a limited and fragile cognitive resource, increasingly threatened by sensationalist media and interruptions that significantly degrade productivity and judgment.
+  - **Type**: Failure mode
+  - **Topics**: TOPIC_attention
+  - **Implication (obsidian)**: Use "minimalist" plugins/themes to reduce visual distraction while writing.
+  - **Source EV IDs**: EV-0880, EV-0881, EV-0882, EV-0883, EV-0884, EV-0885, EV-0886, EV-0887, EV-0888, EV-0889, EV-0890, EV-0891
+- **Rule [PR-0020]**: Multitasking is a cognitive illusion of simultaneous focus; it is actually rapid attention switching that causes significant drops in productivity and quality, increases fatigue, and impairs the ability to manage multiple tasks, despite a subjective feeling of competence driven by the mere-exposure effect.
+  - **Type**: Failure mode
+  - **Topics**: TOPIC_attention, TOPIC_workflow
+  - **Implication (obsidian)**: Discourage jumping between notes/tasks; use dedicated focus sessions for single-note drafting to avoid the productivity costs of switching.
+  - **Source EV IDs**: EV-0892, EV-0893, EV-0894, EV-0895, EV-0896, EV-0897, EV-0898, EV-0899, EV-0900, EV-0901, EV-0902, EV-0903, EV-0904, EV-0905, EV-0906, EV-0907
+- **Rule [PR-0021]**: Writing is a composite process of distinct sub-tasks (reading, reflecting, drafting, proofreading) that require fundamentally different attention modes; these must be separated consciously to prevent cognitive interference.
+  - **Type**: Rule
+  - **Topics**: TOPIC_writing, TOPIC_attention
+  - **Implication (obsidian)**: Explicitly tag or separate notes by their phase (e.g., "Draft", "Proofread", "Reflect") to signal the required attention mode.
+  - **Source EV IDs**: EV-0908, EV-0909, EV-0910, EV-0911, EV-0925, EV-0926, EV-0927, EV-0928, EV-0929, EV-0930, EV-0932
+- **Rule [PR-0022]**: Human attention is physiologically limited: focused attention is target-exclusive and extremely brief, while sustained attention (necessary for learning) is fragile and prone to degradation by increasing external distractions and historical trends toward shorter focus.
+  - **Type**: Constraint
+  - **Topics**: TOPIC_attention
+  - **Implication (obsidian)**: Design note-taking sessions around the reality of brief focus; break work into "atomic" units that fit within natural attention spans.
+  - **Source EV IDs**: EV-0912, EV-0916, EV-0917, EV-0918, EV-0919, EV-0920
+- **Rule [PR-0023]**: Attention capacity is not fixed but can be trained and stabilized by a clear work structure (like the slip-box) that decomposes complex work into manageable, closable tasks, thereby reducing cognitive interference and providing a "haven" for focus.
+  - **Type**: Rule
+  - **Topics**: TOPIC_attention, TOPIC_workflow
+  - **Implication (obsidian)**: Use the vault structure to define "closable" tasks (e.g., finishing a specific permanent note) to clear the mind for the next task.
+  - **Source EV IDs**: EV-0921, EV-0922, EV-0923, EV-0924, EV-0947, EV-0953, EV-0954
+- **Rule [PR-0024]**: Traditional models of attention as willpower-driven "focus" are being superseded by models recognizing effortless states like "flow" as superior modes of engagement.
+  - **Type**: Model
+  - **Topics**: TOPIC_attention
+  - **Implication (obsidian)**: Optimize the workspace to reduce the willpower required to start writing, aiming to lower the barrier to entering a flow state.
+  - **Source EV IDs**: EV-0913, EV-0914, EV-0915
+- **Rule [PR-0025]**: Complex ideas cannot be fully structured or critiqued within working memory; externalization (writing) is a prerequisite for improvement and analysis.
+  - **Type**: Principle
+  - **Topics**: TOPIC_elaboration, TOPIC_workflow
+  - **Implication (obsidian)**: Encourage "thinking on paper" (in the note) rather than trying to perfect ideas before writing.
+  - **Source EV IDs**: EV-0931, EV-0999
+- **Rule [PR-0026]**: Expertise is the result of sedimented experience and feedback loops, allowing for intuitive action ("gut feeling") that transcends explicit rule-following.
+  - **Type**: Definition
+  - **Topics**: TOPIC_workflow, TOPIC_elaboration
+  - **Implication (obsidian)**: Use the Zettelkasten to provide the feedback loops (connecting ideas) that build intuition over time.
+  - **Source EV IDs**: EV-0941, EV-0943, EV-0945, EV-0946, EV-0948
+- **Rule [PR-0027]**: Creativity and problem-solving require oscillating between open, associative play and narrow, analytical focus.
+  - **Type**: Principle
+  - **Topics**: TOPIC_zettelkasten, TOPIC_workflow
+  - **Implication (obsidian)**: Structure the workspace to support both focused writing and playful, random exploration (graph walk).
+  - **Source EV IDs**: EV-0934, EV-0937, EV-0938
+- **Rule [PR-0028]**: Reading and note-taking strategies must be adaptive to the density and value of the source text, avoiding rigid uniform application (like SQ3R).
+  - **Type**: Strategy
+  - **Topics**: TOPIC_workflow
+  - **Implication (obsidian)**: Not all sources deserve equal treatment; adapt note density to text value.
+  - **Source EV IDs**: EV-0935, EV-0936, EV-0969, EV-0971
+- **Rule [PR-0029]**: Working memory is severely limited (7+/-2 items) and volatile; information must be offloaded to external storage to free up cognitive resources.
+  - **Type**: Constraint
+  - **Topics**: TOPIC_attention, TOPIC_active_recall
+  - **Implication (obsidian)**: Offload thoughts immediately to fleeting notes; don't hold them in memory.
+  - **Source EV IDs**: EV-0949
+- **Rule [PR-0030]**: Understanding is functionally equivalent to the density of connections between ideas; the slip-box acts as a machine for building these connections and thus understanding. Contribution types include additions, contradictions, and questions.
+  - **Type**: Definition
+  - **Topics**: TOPIC_elaboration, TOPIC_zettelkasten
+  - **Implication (obsidian)**: Measure understanding by connectivity; unconnected notes represent a lack of understanding.
+  - **Source EV IDs**: EV-0950, EV-0951, EV-0984, EV-0985
+- **Rule [PR-0031]**: Incomplete tasks (open loops) occupy short-term memory (Zeigarnik effect); writing them down ("closing" the task) clears cognitive load.
+  - **Type**: Mechanism
+  - **Topics**: TOPIC_attention, TOPIC_workflow
+  - **Implication (obsidian)**: Use "Fleeting Notes" to immediately dump open loops and clear the mind.
+  - **Source EV IDs**: EV-0952
+- **Rule [PR-0032]**: Deliberately keeping questions unanswered ("open loops") allows the brain to process them in the background (diffuse mode) for creative problem solving.
+  - **Type**: Strategy
+  - **Topics**: TOPIC_workflow, TOPIC_active_recall
+  - **Implication (obsidian)**: Maintain a "Questions" note or tag to deliberately track open problems for background processing.
+  - **Source EV IDs**: EV-0955
+- **Rule [PR-0033]**: Willpower (decision-making energy) is a finite resource that depletes quickly; effective workflows rely on standardization and habits to minimize decision points and preserve energy for high-value thinking. A good system forces virtuous behavior via constraints.
+  - **Type**: Constraint
+  - **Topics**: TOPIC_attention, TOPIC_workflow
+  - **Implication (obsidian)**: Standardize note formats, tags, and processes to minimize decision fatigue.
+  - **Source EV IDs**: EV-0956, EV-0957, EV-0958, EV-0959, EV-0980
+- **Rule [PR-0035]**: Writing should be the assembly of existing notes into a draft, rather than a linear process of facing a blank page; the goal is the note series, not the draft itself.
+  - **Type**: Process
+  - **Topics**: TOPIC_writing, TOPIC_zettelkasten
+  - **Implication (obsidian)**: Focus on creating note series; the draft is just an assembly step.
+  - **Source EV IDs**: EV-0962
+- **Rule [PR-0036]**: The slip-box acts as a semi-autonomous dialogue partner that generates surprise and feedback, rather than just a passive storage device.
+  - **Type**: Metaphor
+  - **Topics**: TOPIC_zettelkasten, TOPIC_workflow
+  - **Implication (obsidian)**: Expect the system to "talk back" by revealing unexpected connections.
+  - **Source EV IDs**: EV-0963, EV-0964
+- **Rule [PR-0037]**: Notes must strip ideas of their original source context (de-contextualization) and translate them into the user's own language to allow them to be re-embedded into new contexts; copying quotes without this process destroys meaning.
+  - **Type**: Mechanism
+  - **Topics**: TOPIC_zettelkasten, TOPIC_elaboration
+  - **Implication (obsidian)**: Always de-contextualize ideas from the source; avoid quote dumps; re-contextualize in the web of notes.
+  - **Source EV IDs**: EV-0965, EV-0966, EV-0967
+- **Rule [PR-0038]**: Confirmation bias is the primary enemy of research; the system must actively prioritize capturing contradictory/disconfirming evidence ("Darwin's Golden Rule") because it generates the most valuable connections and prevents echo chambers.
+  - **Type**: Principle
+  - **Topics**: TOPIC_attention, TOPIC_workflow
+  - **Implication (obsidian)**: Explicitly tag or section notes for "Counter-evidence" or "Disagreements". Prioritize capturing contradictions.
+  - **Source EV IDs**: EV-0976, EV-0977, EV-0978, EV-0979, EV-0986, EV-0987
+- **Rule [PR-0039]**: Linear processes that start with a fixed hypothesis encourage confirmation bias; the workflow must separate accurate understanding from hypothesizing and prioritize insight over adherence to the original plan.
+  - **Type**: Principle
+  - **Topics**: TOPIC_workflow, TOPIC_writing
+  - **Implication (obsidian)**: Avoid folder structures that enforce a linear argument early; use tags/links to allow structure to emerge.
+  - **Source EV IDs**: EV-0981, EV-0982, EV-0983
+- **Rule [PR-0040]**: Literature notes are a transient tool for understanding and preparing ideas for the slip-box; they should not be polished as final products but used to capture the essence and 'practice' understanding.
+  - **Type**: Principle
+  - **Topics**: TOPIC_zettelkasten, TOPIC_workflow
+  - **Implication (obsidian)**: Don't over-polish literature notes (reference notes); focus effort on the permanent notes they generate.
+  - **Source EV IDs**: EV-0968, EV-0970, EV-0972, EV-0975
+- **Rule [PR-0041]**: The note system is content-agnostic but relevance-dependent; it accepts any topic provided it connects to existing notes.
+  - **Type**: System Property
+  - **Topics**: TOPIC_zettelkasten, TOPIC_context
+  - **Implication (obsidian)**: Any topic is fair game if relevant.
+  - **Source EV IDs**: EV-0988
+- **Rule [PR-0042]**: Relevance filtering and gist extraction are skills that must be cultivated through the daily practice of note-taking itself.
+  - **Type**: Skill Acquisition
+  - **Topics**: TOPIC_workflow
+  - **Implication (obsidian)**: Treat note-taking as 'practice', not just storage.
+  - **Source EV IDs**: EV-0989, EV-0997
+- **Rule [PR-0043]**: Mental models, error patterns, and categories act as navigation aids for understanding texts.
+  - **Type**: Cognitive Tooling
+  - **Topics**: TOPIC_elaboration, TOPIC_context
+  - **Implication (obsidian)**: Create notes for 'Mental Models', 'Common Mistakes', 'Argument Categories'.
+  - **Source EV IDs**: EV-0990, EV-0992
+- **Rule [PR-0044]**: Intellectual maturity requires the courage to use one's own understanding rather than relying on guidance (Sapere aude).
+  - **Type**: Core Value
+  - **Topics**: TOPIC_workflow
+  - **Implication (obsidian)**: When activated by Arbitration and within Budget, notes reflect your own understanding, not just quotes.
+  - **Source EV IDs**: EV-0994
+- **Rule [PR-0045]**: True understanding of a claim requires explicitly defining its boundaries and what it excludes (Negation/Inversion).
+  - **Type**: Mental Model
+  - **Topics**: TOPIC_elaboration
+  - **Implication (obsidian)**: Add 'Distinctions' or 'Excluded' section to note template.
+  - **Source EV IDs**: EV-0996
+- **Rule [PR-0046]**: Understanding is validated only by the ability to explain ideas simply in plain language (The Feynman Test).
+  - **Type**: Validation
+  - **Topics**: TOPIC_elaboration
+  - **Implication (obsidian)**: Write notes as if explaining to a novice.
+  - **Source EV IDs**: EV-0998
+- **Rule [PR-0047]**: Familiarity (often from rereading) creates a dangerous illusion of competence (Mere-Exposure Effect); only active testing or writing prevents self-deception.
+  - **Type**: Failure Mode
+  - **Topics**: TOPIC_active_recall, TOPIC_attention
+  - **Implication (obsidian)**: Never trust 'reading'. Only trust 'writing'.
+  - **Source EV IDs**: EV-1000
+- **Rule []**: Spaced repetition systems manage review schedules by expanding intervals after correct answers and resetting after failures, optimizing long-term retention.
+  - **Type**: Mechanism
+  - **Topics**: TOPIC_spaced_repetition
+  - **Implication (obsidian)**: Document the algorithm mechanics for understanding the tool; reference the Ebbinghaus curve when explaining review schedules.
+  - **Source EV IDs**: EV-0005
+- **Rule []**: Spaced repetition provides 20x+ efficiency gains compared to conventional flashcards, reducing total review time from hours to minutes over multi-year periods.
+  - **Type**: Model
+  - **Topics**: TOPIC_spaced_repetition
+  - **Implication (obsidian)**: Include efficiency metrics when discussing spaced repetition tools; compare time investments across different methods.
+  - **Source EV IDs**: EV-0006
+- **Rule []**: Only memorize facts worth 10 minutes of future time, unless they seem striking or intuitively important, cultivating taste in what to remember.
+  - **Type**: Rule
+  - **Topics**: TOPIC_spaced_repetition, TOPIC_workflow
+  - **Implication (obsidian)**: Create a decision framework for what to Ankify; document criteria for striking vs. routine facts.
+  - **Source EV IDs**: EV-0007
+- **Rule []**: Spaced repetition transforms memory from a haphazard, chance-dependent event into an intentional, guaranteed process with minimal effort.
+  - **Type**: Principle
+  - **Topics**: TOPIC_spaced_repetition, TOPIC_elaboration
+  - **Implication (obsidian)**: Emphasize the shift from passive to intentional memory in notes on learning systems.
+  - **Source EV IDs**: EV-0008
+- **Rule []**: First-pass reading should be a quick skim to identify key ideas and easy facts without aiming for complete understanding, building background gradually.
+  - **Type**: Pattern
+  - **Topics**: TOPIC_transmissionism
+  - **Implication (obsidian)**: Document multi-pass reading strategies; distinguish between shallow and deep engagement.
+  - **Source EV IDs**: EV-0009
+- **Rule []**: Anki is most effective when tied to personal creative projects; emotional investment improves question quality and prevents purposeless knowledge stockpiling.
+  - **Type**: Principle
+  - **Topics**: TOPIC_spaced_repetition, TOPIC_elaboration
+  - **Implication (obsidian)**: Link Anki questions to active projects and interests in project notes.
+  - **Source EV IDs**: EV-0010
+- **Rule []**: Extract 5-20 questions per paper; fewer than 5 creates orphan knowledge disconnected from memory, while too many dilutes focus.
+  - **Type**: Rule
+  - **Topics**: TOPIC_spaced_repetition, TOPIC_orphan_questions
+  - **Implication (obsidian)**: Prefer question prompts when signal supports it; avoid forcing quotas.
+  - **Source EV IDs**: EV-0011
+- **Rule []**: When Ankifying claims from sources, frame questions to attribute claims to specific papers rather than stating them as absolute facts, protecting against misleading work.
+  - **Type**: Rule
+  - **Topics**: TOPIC_spaced_repetition, TOPIC_context
+  - **Implication (obsidian)**: Track source reliability and claim attribution in literature notes.
+  - **Source EV IDs**: EV-0012
+- **Rule []**: Completionism—feeling obligated to finish papers even when better value exists elsewhere—is a counter-productive habit; practice abandoning low-value material.
+  - **Type**: Failure Mode
+  - **Topics**: TOPIC_transmissionism
+  - **Implication (obsidian)**: Create criteria for abandoning papers and books in reading workflows.
+  - **Source EV IDs**: EV-0013
+- **Rule []**: Deep engagement with important papers provides tacit knowledge about field standards and quality markers, more valuable than individual facts.
+  - **Type**: Model
+  - **Topics**: TOPIC_transmissionism, TOPIC_elaboration
+  - **Implication (obsidian)**: Document field-specific quality markers and norms in discipline notes.
+  - **Source EV IDs**: EV-0014
+- **Rule []**: Reading across a literature (syntopic reading) builds comprehensive understanding of what has been done and enables identification of open problems and research gaps.
+  - **Type**: Pattern
+  - **Topics**: TOPIC_transmissionism
+  - **Implication (obsidian)**: Maintain lists of open problems and research gaps in literature review notes.
+  - **Source EV IDs**: EV-0015
+- **Rule []**: Questions and answers should express just one idea; breaking complex questions into atomic pieces improves retention and enables precise error diagnosis.
+  - **Type**: Rule
+  - **Topics**: TOPIC_spaced_repetition, TOPIC_elaboration
+  - **Implication (obsidian)**: Refactor complex ideas into atomic components in notes.
+  - **Source EV IDs**: EV-0016, EV-0017
+- **Rule []**: Anki use should be conceptualized as a virtuoso skill for understanding almost anything, not just memorizing simple facts; skills reflect and improve one's theory of understanding.
+  - **Type**: Principle
+  - **Topics**: TOPIC_spaced_repetition, TOPIC_elaboration
+  - **Implication (obsidian)**: Approach Anki as a craft to be mastered, not just a tool to use.
+  - **Source EV IDs**: EV-0018
+- **Rule []**: Prefer one big deck over multiple separated decks; cross-domain question mixing may stimulate creative connections and avoids artificial knowledge boundaries.
+  - **Type**: Rule
+  - **Topics**: TOPIC_spaced_repetition, TOPIC_workflow
+  - **Implication (obsidian)**: Keep notes interconnected across domains rather than siloed.
+  - **Source EV IDs**: EV-0019
+- **Rule []**: Questions disconnected from other knowledge (orphans) are weak; when activated by Arbitration and within Budget, prefer 2-3 questions per topic if signal supports a connected nucleus.
+  - **Type**: Failure Mode
+  - **Topics**: TOPIC_orphan_questions, TOPIC_spaced_repetition
+  - **Implication (obsidian)**: When activated by Arbitration and within Budget, link new notes to existing notes (Zettelkasten principle) when signal and ceilings allow.
+  - **Source EV IDs**: EV-0020
+- **Rule []**: Anki decks should not be shared because they contain personal information and context-sensitive judgments not appropriate for distribution.
+  - **Type**: Rule
+  - **Topics**: TOPIC_spaced_repetition, TOPIC_workflow
+  - **Implication (obsidian)**: Keep sensitive personal notes private; distinguish between shareable and private knowledge.
+  - **Source EV IDs**: EV-0021
+- **Rule []**: Making cards is an act of understanding itself; the process provides elaborative encoding benefits that pre-made decks forgo.
+  - **Type**: Principle
+  - **Topics**: TOPIC_spaced_repetition, TOPIC_elaboration
+  - **Implication (obsidian)**: Emphasize the process of note-taking as thinking, not just recording.
+  - **Source EV IDs**: EV-0022, EV-0023
+- **Rule []**: Using multiple variants of the same question with different phrasing creates different memory triggers and strengthens associations through elaborative encoding.
+  - **Type**: Strategy
+  - **Topics**: TOPIC_spaced_repetition, TOPIC_elaboration
+  - **Implication (obsidian)**: Create multiple entry points to the same concept through different phrasings.
+  - **Source EV IDs**: EV-0024
+- **Rule []**: Case studies like Shereshevsky indicate that human memory capacity and durability may be effectively unlimited, serving as an existence proof for memory augmentation.
+  - **Type**: Model
+  - **Topics**: TOPIC_spaced_repetition
+  - **Implication (obsidian)**: Document theoretical limits of memory to frame augmentation goals.
+  - **Source EV IDs**: EV-0001
+- **Rule []**: Memory is not a passive storage bin but a fundamental component of thinking and cognitive function; improving memory improves thought.
+  - **Type**: Principle
+  - **Topics**: TOPIC_elaboration
+  - **Implication (obsidian)**: Treat memory enhancement as a primary intellectual goal.
+  - **Source EV IDs**: EV-0002
+- **Rule []**: The Memex (Vannevar Bush, 1945) represents the vision of an enlarged, intimate, mechanized supplement to memory for storing and retrieving all records with speed.
+  - **Type**: Model
+  - **Topics**: TOPIC_workflow
+  - **Implication (obsidian)**: Link personal knowledge management efforts to the historical Memex vision.
+  - **Source EV IDs**: EV-0003
+- **Rule []**: Personal memory systems are distinct from collective archives, designed specifically to improve the long-term retention of a single individual.
+  - **Type**: Definition
+  - **Topics**: TOPIC_workflow
+  - **Implication (obsidian)**: Distinguish personal notes from public documentation.
+  - **Source EV IDs**: EV-0004
+- **Rule []**: Memory palaces and method of loci are extreme forms of elaborative encoding best suited for trivia/sequences, but less effective or potentially distracting for abstract concepts.
+  - **Type**: Constraint
+  - **Topics**: TOPIC_spaced_repetition, TOPIC_elaboration
+  - **Implication (obsidian)**: Use spatial/visual organization for concrete facts, not abstract concepts.
+  - **Source EV IDs**: EV-0025
+- **Rule []**: 95% of Anki's value comes from basic features (Q&A, Cloze); optimizing for the remaining 5% features is a failure mode that risks abandoning the massive core benefits.
+  - **Type**: Failure Mode
+  - **Topics**: TOPIC_spaced_repetition, TOPIC_workflow
+  - **Implication (obsidian)**: Document that basic features are sufficient; advanced features are optional.
+  - **Source EV IDs**: EV-0026
+- **Rule []**: Using memory aids for personal facts about friends can feel disingenuous and violate social norms that associate remembering with genuine interest.
+  - **Type**: Constraint
+  - **Topics**: TOPIC_context, TOPIC_workflow
+  - **Implication (obsidian)**: Be cautious about using memory aids for personal relationships; respect social norms.
+  - **Source EV IDs**: EV-0027
+- **Rule []**: Anki builds declarative knowledge (facts), but procedural mastery (skills) requires practicing the process in context and solving real problems.
+  - **Type**: Model
+  - **Topics**: TOPIC_spaced_repetition, TOPIC_active_recall
+  - **Implication (obsidian)**: Distinguish between factual notes and procedural skill development.
+  - **Source EV IDs**: EV-0028
+- **Rule []**: While names alone aren't understanding, they provide the necessary foundation for building a network of knowledge and deeper understanding.
+  - **Type**: Principle
+  - **Topics**: TOPIC_elaboration
+  - **Implication (obsidian)**: Include names/terminology as foundation, but always connect to deeper understanding.
+  - **Source EV IDs**: EV-0029
+- **Rule []**: Recover from Anki backlogs by setting gradually increasing daily quotas (e.g., 100->150->200) rather than trying to clear everything at once.
+  - **Type**: Pattern
+  - **Topics**: TOPIC_workflow, TOPIC_spaced_repetition
+  - **Implication (obsidian)**: Document recovery strategies for when systems fall behind.
+  - **Source EV IDs**: EV-0030
+- **Rule []**: Setting specific question quotas for events (e.g., 3 per seminar, 1 per conversation) increases attention and ensures strategic retention.
+  - **Type**: Rule
+  - **Topics**: TOPIC_workflow, TOPIC_active_recall
+  - **Implication (obsidian)**: Set quotas for note-taking from events and conversations.
+  - **Source EV IDs**: EV-0031
+- **Rule []**: Yes/No questions are a 'question smell' indicating poor design; they should be refactored into more elaborative questions that test specific details.
+  - **Type**: Rule
+  - **Topics**: TOPIC_spaced_repetition, TOPIC_writing
+  - **Implication (obsidian)**: Flag yes/no questions in notes as candidates for refactoring.
+  - **Source EV IDs**: EV-0032
+- **Rule []**: Internalized understanding enables rapid associative thought and pattern intuition that is impossible if one must constantly look up information in external aids.
+  - **Type**: Principle
+  - **Topics**: TOPIC_elaboration, TOPIC_active_recall
+  - **Implication (obsidian)**: Balance external references with internalized knowledge for creative work.
+  - **Source EV IDs**: EV-0033
+- **Rule []**: Adoption is hindered by underestimation of spacing benefits, the 'desirable difficulty' of the process, and the ease of using the systems poorly.
+  - **Type**: Model
+  - **Topics**: TOPIC_spaced_repetition
+  - **Implication (obsidian)**: Document why effective learning systems face adoption challenges.
+  - **Source EV IDs**: EV-0034
+- **Rule []**: Memory of basics is often the single largest barrier to understanding complex subjects; removing this barrier facilitates higher-level cognition.
+  - **Type**: Principle
+  - **Topics**: TOPIC_elaboration
+  - **Implication (obsidian)**: Treat memory as a prerequisite for understanding, not separate from it.
+  - **Source EV IDs**: EV-0035
+- **Rule []**: Experts internalize thousands of complex 'chunks' (patterns), which functions like a domain-specific IQ boost and expands effective working memory.
+  - **Type**: Model
+  - **Topics**: TOPIC_elaboration
+  - **Implication (obsidian)**: Focus on identifying and building 'chunk' libraries in your domain.
+  - **Source EV IDs**: EV-0036
+- **Rule []**: Distributed practice works by flattening the Ebbinghaus forgetting curve; each review slows the exponential decay of memory.
+  - **Type**: Mechanism
+  - **Topics**: TOPIC_spaced_repetition
+  - **Implication (obsidian)**: Reference the Ebbinghaus curve when explaining review schedules.
+  - **Source EV IDs**: EV-0037
+- **Rule []**: Effective memory system design should be bold and imaginative, informed by cognitive science but not limited by its current lack of comprehensive theories.
+  - **Type**: Principle
+  - **Topics**: TOPIC_workflow
+  - **Implication (obsidian)**: Acknowledge scientific uncertainty while building practical systems.
+  - **Source EV IDs**: EV-0038
+

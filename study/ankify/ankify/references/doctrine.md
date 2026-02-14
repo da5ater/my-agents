@@ -54,6 +54,40 @@ Common mistake          -> FAILURE MODE ("What goes wrong if you do X?")
 - Every distinction/contradiction yields its matching card type.
 - No section is silently skipped; skipped content must have a reason.
 
+## Concept Internalization (Required)
+
+Before generating cards, produce a short internalization report that includes:
+
+- A 3-6 sentence summary of the core concept in your own words.
+- Explicit boundaries (what the concept is NOT or does not cover).
+- At least one likely misconception.
+- At least one cross-concept link within the note.
+
+Do not proceed to card generation without this report.
+
+### Internalization Report Format
+
+```
+internalization_report:
+  summary: <3-6 sentences>
+  boundaries: <1-3 bullet points>
+  misconceptions:
+    - <short misconception>
+  links:
+    - <short cross-concept link>
+```
+
+## Quantitative Minimums
+
+When the triggering elements exist in the note, enforce minimum counts:
+
+- concept_count >= 2 -> synthesis_cards >= 1
+- concept_count >= 4 -> synthesis_cards >= 2
+- mental_models present -> model_cards >= 1
+- failure_modes present -> failure_mode_cards >= 1
+- contradictions present -> counter_evidence_cards >= 1
+- distinctions present -> negation_cards >= 1
+
 ## Tier 1 Doctrine Coverage
 
 Before serialization, verify these doctrine-driven intents are represented when the note contains the triggering elements:
@@ -74,6 +108,8 @@ Use this checklist before TSV serialization:
 - Elements: content elements mapped to required card types.
 - Coverage: every structural element yields >=1 card.
 - Tier 1: MODEL, FAILURE MODE, NEGATION, COUNTER-EVIDENCE, SYNTHESIS present when triggered.
+- Minimums: quantitative minimums satisfied when triggered.
+- Internalization: internalization report present and complete.
 - Quality: atomic, active recall, contextualized, unambiguous.
 - Output: no rule metadata leaked into card text.
 
@@ -84,10 +120,12 @@ Provide a structured report artifact with these fields:
 ```
 doctrine_compliance_report:
   all_checks_passed: <true|false>
+  internalization_ok: <true|false>
   mapping_ok: <true|false>
   elements_ok: <true|false>
   coverage_ok: <true|false>
   tier1_ok: <true|false>
+  minimums_ok: <true|false>
   quality_ok: <true|false>
   output_purity_ok: <true|false>
   failures:

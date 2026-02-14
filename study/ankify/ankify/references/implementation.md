@@ -20,6 +20,14 @@ STAGE 2 - ANALYSIS
   Output: element_inventory, context_map, rule_application_plan, classification
   Gate:   R-POD-006 must pass - plan built for all Tier 1 rules
 
+STAGE 2.5 - CONCEPT INTERNALIZATION
+  Scope: POST_DISCOVERY
+  Input:  element_inventory + classification
+  Output: internalization_report (summary, boundaries, misconceptions, links)
+  Gate:   internalization_report must be present before STAGE 3
+
+Produce `internalization_report` in the format specified in `references/doctrine.md`.
+
 STAGE 3 - GENERATION
   Scope: PRE_CARD (R-PC-001 through R-PC-006)
        + PER_CARD (R-C-001 through R-C-021)
@@ -49,6 +57,15 @@ Before STAGE 5, run the doctrine compliance checklist from `references/doctrine.
 If any doctrine requirement fails, return to STAGE 3 and regenerate.
 
 Produce `doctrine_compliance_report` in the format specified in `references/doctrine.md`.
+
+## Regeneration Limits
+
+Track regeneration attempts per note and per run.
+If attempts exceed 3, abort with an explicit failure and do not loop.
+
+## Validation Script
+
+Use `scripts/validate_tsv.sh` after serialization.
 
 ## Input Modes
 
