@@ -54,7 +54,7 @@ These rules constrain HOW sections should look. Apply during generation.
 | PR-0042 | Relevance Filtering — extract only the gist, practiced through note-taking |
 | Rule-Based Patterning | Notes H3 — bolded rule name + why/when explanation |
 | Declarative Statements | Machine-parsable — bold concept → detail format |
-| YAML Frontmatter | Header — aliases and backlinks in frontmatter |
+| YAML Frontmatter | Header — YAML at top (aliases/tags/related links when used) |
 
 ### TIER 3: WORKFLOW/META (~50+ rules)
 These rules are about study habits, motivation, note systems, and attention. They inform your understanding but do NOT directly affect note structure.
@@ -130,7 +130,7 @@ Eligible Tier 1 Rules for W2:
 - PR-0046 (Feynman Test) → SIGNAL-PRESENT: Plain language
 - Code Integrity → SIGNAL-PRESENT: 2 code blocks
 
-NOT eligible at W2: PR-0030, PR-0038, Chronological Rule, Reconstruction Rule
+NOT eligible at W2: PR-0030, PR-0038
 
 Estimated H2 sections: 3 (each with Notes H3, plus Distinctions where triggered)
 ```
@@ -150,7 +150,96 @@ Eligible Tier 1 Rules for W1:
 Estimated H2 sections: 1 (Notes inline, no conditional H3s)
 ```
 
-**Phase 1.5 Exit Criteria:** Activation Set and Budgeted Section Plan are locked. Eligible Tier 1 rules were evaluated for signal presence. Estimated structure does not exceed ceilings (after reductions). Proceed to Phase 2.
+## Doctrine-Depth Mode (Required Pre-Generation Artifacts)
+
+Add these blocks as mandatory pre-generation artifacts. Do NOT generate the final output until they exist. Emit a summarized view before the note using a table.
+
+summary_artifacts (table format):
+
+| Section | Summary |
+|---|---|
+| Element Inventory | H2: <list>; Per H2: <h2 -> h3 sections -> extracted elements (short labels)> |
+| Classification | Type: PURE_THEORY | PURE_CODE | MIXED |
+| Tier-1 Plan | PR-0003: <APPLICABLE/NOT> (<count>); PR-0004: <...> |
+| Internalization | Summary: <3-6 sentences>; Boundaries: <1-3 bullets>; Misconceptions: <1-3 bullets>; Links: <1-3 bullets> |
+| Card Budget | Total: <int>; Synthesis: <int>; Cross-H2: <int>; Model: <int>; Failure: <int>; Negation: <int>; Counter: <int>; Constructive: <min-max>; Theory: <int>; Def Max: <int>; Proc Max: <int> |
+| Compliance | All checks passed: <true|false>; Failures: <short list> |
+
+stage2_analysis_artifacts:
+  element_inventory:
+    h2_concepts: [...]
+    per_h2:
+      - h2: "<title>"
+        h3_sections_present: [...]
+        extracted_elements:
+          bold_rules: [...]
+          definitions: [...]
+          distinctions: [...]
+          contradictions: [...]
+          failure_triggers: [...]
+          mental_models: [...]
+          procedures: [...]
+          code_blocks:
+            - lines: <int>
+              key_context_needed: [imports, variables, state_shapes, external_deps]
+  classification:
+    type: PURE_THEORY | PURE_CODE | MIXED
+  tier1_rule_application_plan:
+    - rule_id: PR-0003
+      verdict: APPLICABLE|NOT_APPLICABLE
+      target_content: "<what triggers it>"
+      card_type: "<THEORY/MODEL/etc>"
+      estimated_count: <int>
+    - rule_id: PR-0004 ...
+    - rule_id: PR-0005 ...
+    - rule_id: PR-0017 ...
+    - rule_id: PR-0038 ...
+    - rule_id: PR-0045 ...
+    - rule_id: PR-0047 ...
+
+internalization_report:
+  summary: <3-6 sentences in your own words>
+  boundaries:
+    - <what it is NOT / does NOT cover>
+  misconceptions:
+    - <likely misconception>
+  links:
+    - <cross-concept link within the note>
+
+card_budget_plan:
+  target_total_cards: <int>
+  target_synthesis: <int>
+  target_cross_h2_synthesis: <int>
+  target_model: <int>
+  target_failure_mode: <int>
+  target_negation: <int>
+  target_counter_evidence: <int>
+  target_constructive_min: <int>
+  target_constructive_max: <int>
+  target_theory: <int>
+  target_definition_max: <int>
+  target_procedure_max: <int>
+
+doctrine_compliance_report:
+  all_checks_passed: <true|false>
+  internalization_ok: <true|false>
+  internalization_linkage_ok: <true|false>
+  mapping_ok: <true|false>
+  elements_ok: <true|false>
+  coverage_ok: <true|false>
+  tier1_ok: <true|false>
+  minimums_ok: <true|false>
+  connectivity_ok: <true|false>
+  caps_ok: <true|false>
+  global_failure_mode_ok: <true|false>
+  budget_ok: <true|false>
+  quality_ok: <true|false>
+  output_purity_ok: <true|false>
+  failures:
+    - <short_reason>
+
+If any doctrine check fails, regenerate missing classes only, max 3 attempts. Do not full-rewrite unless TSV validation fails.
+
+**Phase 1.5 Exit Criteria:** Activation Set and Budgeted Section Plan are locked. Eligible Tier 1 rules were evaluated for signal presence. Estimated structure does not exceed ceilings (after reductions). Required pre-generation artifacts are complete. Proceed to Phase 2.
 
 ---
-

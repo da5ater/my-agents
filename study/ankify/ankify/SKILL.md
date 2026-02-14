@@ -11,10 +11,12 @@ Transform Obsidian notes into a single TSV file that follows the ANKIFY schema, 
 ## Core Workflow
 
 1. Identify input mode and output naming.
-2. Load the ANKIFY executable schema.
+2. Load doctrine first, then schema, then implementation, then examples.
 3. Extract structural elements and map to card types.
-4. Generate cards that satisfy coverage and quality constraints.
-5. Serialize into a TSV that passes validation.
+4. Produce internalization_report and card_budget_plan.
+5. Generate cards that satisfy coverage, depth, and budget constraints.
+6. Run doctrine compliance checks and targeted regeneration if needed.
+7. Serialize into a TSV that passes validation.
 
 ## References
 
@@ -34,11 +36,22 @@ Read these in order based on need:
 - Always include the Obsidian deep link in column 3, with the vault name and URL encoding per schema.
 - For code answers, serialize with HTML-safe `<pre><code>` and replace newlines/spaces as specified.
 - Run the doctrine compliance checklist before TSV serialization.
+- Use targeted regeneration only: add missing classes or convert excess cards per doctrine; do not rewrite valid cards unless TSV validation fails.
+- Apply POST-GEN PRUNE before serialization to enforce per-note caps and remove redundancy.
+
+## Required Artifacts
+
+- file_manifest
+- element_inventory
+- rule_application_plan
+- internalization_report
+- card_budget_plan
+- doctrine_compliance_report
 
 ## Serialization and Validation
 
 - TSV must have exactly 3 columns per line, no raw newlines, and no literal tabs in content.
-- Run the schema-provided awk validation logic and fix any failures before final output.
+- Run `scripts/validate_tsv.sh` and fix any failures before final output.
 
 ## Output
 

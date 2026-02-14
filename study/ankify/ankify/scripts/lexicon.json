@@ -1,0 +1,66 @@
+{
+  "mental_model_phrases": [
+    "how it works",
+    "architecture",
+    "flow",
+    "lifecycle",
+    "pipeline",
+    "data flow",
+    "control flow"
+  ],
+  "failure_trigger_phrases": [
+    "common mistake",
+    "pitfall",
+    "warning",
+    "gotcha",
+    "avoid",
+    "edge case"
+  ],
+  "contradiction_phrases": [
+    "contradiction",
+    "counter-evidence",
+    "counter evidence",
+    "disprove"
+  ],
+  "distinction_phrases": [
+    "distinction",
+    "negation",
+    "differs from"
+  ],
+  "relational_operators": [
+    "compare",
+    "differ",
+    "tradeoff",
+    "impact",
+    "influence",
+    "interact",
+    "dependency",
+    "contrast",
+    "affects"
+  ],
+  "active_recall_verbs": [
+    "Write",
+    "Explain",
+    "Describe",
+    "Implement",
+    "Build",
+    "Create",
+    "Add"
+  ],
+  "model_phrases": [
+    "Explain/visualize how",
+    "What are the stages"
+  ],
+  "failure_mode_phrases": [
+    "What goes wrong",
+    "breaks if"
+  ],
+  "negation_phrases": [
+    "NOT",
+    "differs from"
+  ],
+  "counter_evidence_phrases": [
+    "What contradicts",
+    "NOT apply"
+  ]
+}

@@ -10,7 +10,17 @@ Computed field conventions used by rules:
 - front.word_count: count of whitespace-delimited tokens in front
 - front.jargon_terms_count: count of tokens in front with length >= 12 or containing 2+ uppercase letters
 - read_complete: true if the input read operation finished
+- file_text_length: length of full_document_text
+- parse_success: true if parsing completed without fatal errors
+- partial_read: true if parsing failed but text length > 0
 - chat_output_contains_tsv: true if the assistant output includes TSV rows
+- relational_operator_present: true if front contains relational operator words
+- references_two_distinct_concepts: true if front references two distinct H2 concepts
+- validate_tsv_passed: true if scripts/validate_tsv.sh reports zero failures
+- front_label_length: number of characters inside the leading <strong>...</strong>
+- run_stats_present: true if run-level stats are available
+- require_run_stats: true if run-level stats are required
+- max_cards_per_note: clamp(10 + code_blocks*2, 12, 18)
 
 ```yaml
 # PRE_DISCOVERY - before any file is read
@@ -69,7 +79,7 @@ R-PD-006:  # ZeroSkipPolicy
   Scope: PRE_DISCOVERY
   ActivationCondition: input_mode in [folder, cwd]
   RequiredArtifact: file_manifest
-  ValidationMethod: for_all(f in manifest): f.status in [PROCESSED, SKIPPED_WITH_REASON]
+  ValidationMethod: for_all(f in manifest): f.status in [PROCESSED, SKIPPED_WITH_REASON, PARTIAL_READ]
   FailureBehavior: reject
   PrecedenceWeight: 100
   Dependencies: [R-PD-003]
@@ -81,7 +91,7 @@ R-POD-001:  # CompleteInputRead
   Scope: POST_DISCOVERY
   ActivationCondition: file_loaded == true
   RequiredArtifact: full_document_text
-  ValidationMethod: read_complete == true AND full_document_text != null
+  ValidationMethod: file_text_length > 0 AND full_document_text != null
   FailureBehavior: reject
   PrecedenceWeight: 100
   Dependencies: []
@@ -168,6 +178,39 @@ R-POD-008:  # InternalizationReport
   FailureBehavior: reject
   PrecedenceWeight: 90
   Dependencies: [R-POD-007]
+  ConflictsWith: []
+
+R-POD-009:  # PartialReadAllowed
+  Scope: POST_DISCOVERY
+  ActivationCondition: parse_success == false AND file_text_length > 0
+  RequiredArtifact: file_status
+  ValidationMethod: file_status == PARTIAL_READ
+  FailureBehavior: warn
+  PrecedenceWeight: 60
+  Dependencies: [R-POD-001]
+  ConflictsWith: []
+
+R-POD-010:  # CardBudgetPlan
+  Scope: POST_DISCOVERY
+  ActivationCondition: R-POD-001.passed
+  RequiredArtifact: card_budget_plan
+  ValidationMethod: >
+    card_budget_plan.has_fields([
+      target_total_cards,
+      target_synthesis,
+      target_cross_h2_synthesis,
+      target_model,
+      target_failure_mode,
+      target_negation,
+      target_counter_evidence,
+      target_constructive,
+      target_theory,
+      target_definition_max,
+      target_procedure_max
+    ])
+  FailureBehavior: reject
+  PrecedenceWeight: 85
+  Dependencies: [R-POD-008]
   ConflictsWith: []
 
 # PRE_CARD - before generating each card
@@ -278,10 +321,10 @@ R-C-004:  # ContextDocking
 
 R-C-005:  # Connectivity_NoBroaderIsolation
   Scope: PER_CARD
-  ActivationCondition: always
+  ActivationCondition: card.is_connectivity_card == true
   RequiredArtifact: card_set
   ValidationMethod: card.related_cards_in_same_note >= 1
-  FailureBehavior: warn
+  FailureBehavior: regenerate
   PrecedenceWeight: 60
   Dependencies: []
   ConflictsWith: []
@@ -414,7 +457,10 @@ R-C-018:  # DomainContextCues
   Scope: PER_CARD
   ActivationCondition: always
   RequiredArtifact: card
-  ValidationMethod: front.starts_with("<strong>[Domain]</strong>")
+  ValidationMethod: >
+    front.starts_with("<strong>") AND
+    front.contains("</strong><br>") AND
+    front_label_length > 0
   FailureBehavior: regenerate
   PrecedenceWeight: 75
   Dependencies: []
@@ -452,6 +498,38 @@ R-C-021:  # CardContentPurity
   PrecedenceWeight: 100
   Dependencies: []
   ConflictsWith: [R-S-009]
+
+R-C-023:  # NegationFormat
+  Scope: PER_CARD
+  ActivationCondition: card.type == NEGATION
+  RequiredArtifact: card
+  ValidationMethod: front.contains("NOT") OR front.contains("differs from")
+  FailureBehavior: regenerate
+  PrecedenceWeight: 80
+  Dependencies: []
+  ConflictsWith: []
+
+R-C-024:  # CounterEvidenceFormat
+  Scope: PER_CARD
+  ActivationCondition: card.type == COUNTER_EVIDENCE
+  RequiredArtifact: card
+  ValidationMethod: front.contains("What contradicts") OR front.contains("NOT apply")
+  FailureBehavior: regenerate
+  PrecedenceWeight: 80
+  Dependencies: []
+  ConflictsWith: []
+
+R-C-025:  # ModelCardFormat
+  Scope: PER_CARD
+  ActivationCondition: card.type == MODEL
+  RequiredArtifact: card
+  ValidationMethod: >
+    front.contains("Explain/visualize how") OR
+    front.contains("What are the stages")
+  FailureBehavior: regenerate
+  PrecedenceWeight: 80
+  Dependencies: []
+  ConflictsWith: []
 
 # POST_CARD - per-section coverage checks
 
@@ -575,6 +653,92 @@ R-PN-005:  # NoSilentSectionSkip
   Dependencies: []
   ConflictsWith: []
 
+R-PN-007:  # CrossH2SynthesisRequired
+  Scope: POST_NOTE
+  ActivationCondition: h2_count >= 2
+  RequiredArtifact: cross_h2_synthesis_cards
+  ValidationMethod: cross_h2_synthesis_cards >= 1
+  FailureBehavior: regenerate
+  PrecedenceWeight: 90
+  Dependencies: [R-PN-002]
+  ConflictsWith: []
+
+R-PN-008:  # ConnectivityMinimum
+  Scope: POST_NOTE
+  ActivationCondition: concept_count >= 3
+  RequiredArtifact: connectivity_cards
+  ValidationMethod: connectivity_cards >= max(2, floor(total_cards * 0.15))
+  FailureBehavior: regenerate
+  PrecedenceWeight: 85
+  Dependencies: [R-PN-002]
+  ConflictsWith: []
+
+R-PN-009:  # DistributionCaps
+  Scope: POST_NOTE
+  ActivationCondition: note_processing_complete
+  RequiredArtifact: card_type_counts
+  ValidationMethod: >
+    definition_cards <= floor(total_cards * 0.35) AND
+    procedure_cards <= floor(total_cards * 0.50)
+  FailureBehavior: regenerate
+  PrecedenceWeight: 80
+  Dependencies: [R-PN-002]
+  ConflictsWith: []
+
+R-PN-010:  # InternalizationLinkage
+  Scope: POST_NOTE
+  ActivationCondition: internalization_report_present == true
+  RequiredArtifact: internalization_linkage_counts
+  ValidationMethod: >
+    boundary_cards >= 1 AND
+    misconception_cards >= 1 AND
+    link_cards >= 1
+  FailureBehavior: regenerate
+  PrecedenceWeight: 85
+  Dependencies: [R-POD-008]
+  ConflictsWith: []
+
+R-PN-011:  # FailureModeTriggeredMinimum
+  Scope: POST_NOTE
+  ActivationCondition: failure_mode_triggers_present == true
+  RequiredArtifact: failure_mode_cards
+  ValidationMethod: failure_mode_cards >= 1
+  FailureBehavior: regenerate
+  PrecedenceWeight: 85
+  Dependencies: [R-PN-002]
+  ConflictsWith: []
+
+R-PN-012:  # CardBudgetAdherence
+  Scope: POST_NOTE
+  ActivationCondition: card_budget_plan_present == true
+  RequiredArtifact: card_type_counts
+  ValidationMethod: >
+    total_cards >= card_budget_plan.target_total_cards AND
+    synthesis_cards >= card_budget_plan.target_synthesis AND
+    cross_h2_synthesis_cards >= card_budget_plan.target_cross_h2_synthesis AND
+    model_cards >= card_budget_plan.target_model AND
+    failure_mode_cards >= card_budget_plan.target_failure_mode AND
+    negation_cards >= card_budget_plan.target_negation AND
+    counter_evidence_cards >= card_budget_plan.target_counter_evidence AND
+    definition_cards <= card_budget_plan.target_definition_max AND
+    procedure_cards <= card_budget_plan.target_procedure_max AND
+    constructive_cards >= card_budget_plan.target_constructive_min AND
+    constructive_cards <= card_budget_plan.target_constructive_max
+  FailureBehavior: regenerate
+  PrecedenceWeight: 85
+  Dependencies: [R-POD-010]
+  ConflictsWith: []
+
+R-PN-013:  # MaxCardsPerNote
+  Scope: POST_NOTE
+  ActivationCondition: note_processing_complete
+  RequiredArtifact: card_type_counts
+  ValidationMethod: total_cards <= max_cards_per_note
+  FailureBehavior: regenerate
+  PrecedenceWeight: 80
+  Dependencies: [R-PN-002]
+  ConflictsWith: []
+
 R-PN-006:  # DoctrineComplianceGate
   Scope: POST_NOTE
   ActivationCondition: note_processing_complete
@@ -583,21 +747,31 @@ R-PN-006:  # DoctrineComplianceGate
     doctrine_compliance_report.has_fields([
       all_checks_passed,
       internalization_ok,
+      internalization_linkage_ok,
       mapping_ok,
       elements_ok,
       coverage_ok,
       tier1_ok,
       minimums_ok,
+      connectivity_ok,
+      caps_ok,
+      global_failure_mode_ok,
+      budget_ok,
       quality_ok,
       output_purity_ok,
       failures
     ]) AND
     doctrine_compliance_report.internalization_ok == true AND
+    doctrine_compliance_report.internalization_linkage_ok == true AND
     doctrine_compliance_report.mapping_ok == true AND
     doctrine_compliance_report.elements_ok == true AND
     doctrine_compliance_report.coverage_ok == true AND
     doctrine_compliance_report.tier1_ok == true AND
     doctrine_compliance_report.minimums_ok == true AND
+    doctrine_compliance_report.connectivity_ok == true AND
+    doctrine_compliance_report.caps_ok == true AND
+    doctrine_compliance_report.global_failure_mode_ok == true AND
+    doctrine_compliance_report.budget_ok == true AND
     doctrine_compliance_report.quality_ok == true AND
     doctrine_compliance_report.output_purity_ok == true AND
     doctrine_compliance_report.all_checks_passed == true AND
@@ -725,7 +899,7 @@ R-S-012:  # PostGenValidationScript
   Scope: SERIALIZATION
   ActivationCondition: tsv_file_written
   RequiredArtifact: tsv_file
-  ValidationMethod: awk_validation.failure_count == 0
+  ValidationMethod: validate_tsv_passed == true
   FailureBehavior: regenerate
   PrecedenceWeight: 100
   Dependencies: []
@@ -757,7 +931,7 @@ R-G-001:  # ManifestCompletionCheck
   Scope: GLOBAL_RUN
   ActivationCondition: input_mode in [folder, cwd]
   RequiredArtifact: file_manifest
-  ValidationMethod: for_all(f in manifest): f.status in [PROCESSED, SKIPPED_WITH_REASON]
+  ValidationMethod: for_all(f in manifest): f.status in [PROCESSED, SKIPPED_WITH_REASON, PARTIAL_READ]
   FailureBehavior: reject
   PrecedenceWeight: 100
   Dependencies: [R-PD-006]
@@ -787,7 +961,7 @@ R-G-004:  # ExecutionReport
   Scope: GLOBAL_RUN
   ActivationCondition: all_files_processed
   RequiredArtifact: report
-  ValidationMethod: report.contains_manifest_status AND total_cards AND total_files
+  ValidationMethod: report.contains_manifest_status AND total_cards AND total_files AND report.contains_partial_reads
   FailureBehavior: warn
   PrecedenceWeight: 60
   Dependencies: [R-G-001]
@@ -802,20 +976,42 @@ R-G-005:  # MaxRegenerationAttempts
   PrecedenceWeight: 90
   Dependencies: []
   ConflictsWith: []
+
+R-G-006:  # GlobalFailureModeMinimum
+  Scope: GLOBAL_RUN
+  ActivationCondition: input_mode in [folder, cwd] AND run_stats_present == true
+  RequiredArtifact: global_failure_mode_cards
+  ValidationMethod: >
+    total_cards > 0 IMPLIES
+    global_failure_mode_cards >= ceil(total_cards / 25)
+  FailureBehavior: regenerate
+  PrecedenceWeight: 85
+  Dependencies: [R-G-002]
+  ConflictsWith: []
+
+R-G-007:  # RunStatsMissing
+  Scope: GLOBAL_RUN
+  ActivationCondition: input_mode in [folder, cwd] AND require_run_stats == true AND run_stats_present == false
+  RequiredArtifact: report
+  ValidationMethod: report.contains("run_stats_missing")
+  FailureBehavior: reject
+  PrecedenceWeight: 80
+  Dependencies: []
+  ConflictsWith: []
 ```
 
 ## Schema Execution Order
 
 ```
 1_Discovery:    R-PD-001 || R-PD-002 -> R-PD-004 -> R-PD-005 -> R-PD-003 -> R-PD-006
-2_Analysis:     R-POD-001 -> R-POD-007 -> R-POD-008 || R-POD-002 -> R-POD-003 -> R-POD-004 -> R-POD-005 -> R-POD-006
+2_Analysis:     R-POD-001 -> R-POD-007 -> R-POD-008 -> R-POD-010 || R-POD-002 -> R-POD-003 -> R-POD-004 -> R-POD-005 -> R-POD-006 -> R-POD-009
 3_PreCard:      R-PC-006 || R-PC-003 || R-PC-001 -> R-PC-002 -> R-PC-004 || R-PC-005
 4_PerCard:      [R-C-007 || R-C-008 || R-C-011] -> [R-C-001 || R-C-002 || R-C-009 || R-C-010] ->
                [R-C-003..R-C-015] -> [R-C-016..R-C-020] -> [R-C-019 || R-C-021]
 5_PostCard:     R-POC-003 -> R-POC-002 -> R-POC-001 || R-POC-006 -> R-POC-004 -> R-POC-005
-6_PostNote:     R-PN-002 -> R-PN-003 || R-PN-005 -> R-PN-006 -> R-PN-001 -> R-PN-004
+6_PostNote:     R-PN-002 -> R-PN-003 || R-PN-005 -> R-PN-007 -> R-PN-008 -> R-PN-009 -> R-PN-010 -> R-PN-011 -> R-PN-012 -> R-PN-013 -> R-PN-006 -> R-PN-001 -> R-PN-004
 7_Serialization: [R-S-001..R-S-003] -> R-S-004 -> R-S-005 -> R-S-006..R-S-008 -> R-S-009..R-S-011 -> R-S-012 -> R-S-013 -> R-S-014
-8_Global:       R-G-002 -> R-G-003 -> R-G-001 -> R-G-004 -> R-G-005
+8_Global:       R-G-002 -> R-G-003 -> R-G-001 -> R-G-004 -> R-G-005 -> R-G-006 -> R-G-007
 ```
 
 ## Conflict Resolutions

@@ -34,7 +34,7 @@ For EVERY concept:
 - Can you explain it simply in plain language?
 - If not, you have NOT understood it. Research further.
 
-**Phase 1 Exit Criteria:** You have a complete mental model of the input, de-contextualized into universal principles. Proceed to Phase 1.1.
+**Phase 1 Exit Criteria:** You have a complete mental model of the input, de-contextualized into universal principles. Proceed to Weight Classification.
 
 ---
 
@@ -195,4 +195,3 @@ Depth prioritization operates strictly within existing ceilings and budget.
 - Extra cross-links
 
 ---
-

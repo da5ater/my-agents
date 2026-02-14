@@ -20,6 +20,9 @@ STAGE 2 - ANALYSIS
   Output: element_inventory, context_map, rule_application_plan, classification
   Gate:   R-POD-006 must pass - plan built for all Tier 1 rules
 
+If parse_success == false and file_text_length > 0, mark file_status as PARTIAL_READ and continue best-effort.
+Include PARTIAL_READ counts in the execution report.
+
 STAGE 2.5 - CONCEPT INTERNALIZATION
   Scope: POST_DISCOVERY
   Input:  element_inventory + classification
@@ -27,6 +30,12 @@ STAGE 2.5 - CONCEPT INTERNALIZATION
   Gate:   internalization_report must be present before STAGE 3
 
 Produce `internalization_report` in the format specified in `references/doctrine.md`.
+
+STAGE 2.7 - CARD BUDGET PLANNING
+  Scope: POST_DISCOVERY
+  Input:  element_inventory + concept_count + presence flags
+  Output: card_budget_plan
+  Gate:   card_budget_plan must be present before STAGE 3
 
 STAGE 3 - GENERATION
   Scope: PRE_CARD (R-PC-001 through R-PC-006)
@@ -58,6 +67,8 @@ If any doctrine requirement fails, return to STAGE 3 and regenerate.
 
 Produce `doctrine_compliance_report` in the format specified in `references/doctrine.md`.
 
+Produce `card_budget_plan` in the format specified in `references/doctrine.md`.
+
 ## Regeneration Limits
 
 Track regeneration attempts per note and per run.
@@ -66,6 +77,106 @@ If attempts exceed 3, abort with an explicit failure and do not loop.
 ## Validation Script
 
 Use `scripts/validate_tsv.sh` after serialization.
+
+## Budget and Compliance Scripts
+
+- Use `scripts/compute_card_budget_pre.py --note-meta <note_meta.json> --output <card_budget.json>` for pre-generation budgets.
+- Use `scripts/compute_doctrine_report.py --counts <counts.json>` to build `doctrine_compliance_report`.
+- Use `scripts/compute_doctrine_report.py --counts <counts.json> --require-run-stats` to enforce run-level stats in folder mode.
+- Use `scripts/build_counts.py --input <raw_stats.json> --output <counts.json>` to normalize stats.
+- Use `scripts/parse_note.py --input <note.md> --output <note_meta.json>` to extract structure.
+- Use `scripts/validate_cards.py --tsv <output.tsv> --note-metadata <note_meta.json> --output <raw_stats.json>` to compute raw stats.
+- Use `scripts/aggregate_run_stats.py --inputs <raw_stats.json>... --output <run_stats.json>` for folder mode.
+- Use `scripts/run_ankify_checks.sh <note.md> <output.tsv> [run_stats.json]` for a one-shot run.
+- Set `REQUIRE_RUN_STATS=1` to fail when run-level stats are missing.
+
+## Prune Artifacts
+
+When pruning, produce:
+
+- prune_plan
+- redundancy_report
+
+Deprecated:
+- `scripts/compute_card_budget.py` (post-generation budgets)
+
+## Card Type Normalization
+
+Use a canonical internal set:
+
+THEORY, CONSTRUCTIVE, SYNTHESIS, MODEL, FAILURE_MODE, NEGATION, COUNTER_EVIDENCE, DEFINITION, PROCEDURE
+
+`scripts/validate_cards.py` normalizes common variants (e.g., COUNTER-EVIDENCE, FAILURE MODE) to this set.
+
+### counts.json schema (required fields)
+
+- concept_count
+- h2_count
+- total_cards
+- synthesis_cards
+- cross_h2_synthesis_cards
+- model_cards
+- failure_mode_cards
+- negation_cards
+- counter_evidence_cards
+- connectivity_cards
+- definition_cards
+- procedure_cards
+- mental_models_present
+- failure_modes_present
+- contradictions_present
+- distinctions_present
+- failure_mode_triggers_present
+- mapping_ok
+- elements_ok
+- coverage_ok
+- tier1_ok
+- quality_ok
+- output_purity_ok
+- internalization_ok
+- internalization_linkage_ok
+- budget_ok
+
+## Targeted Regeneration Rules
+
+- If only one class is missing, regenerate that class only and append.
+- If only caps are violated, convert excess cards according to the doctrine conversion priority.
+- Do not rewrite valid cards unless TSV validation fails.
+- Full rewrite allowed only when tsv_validation_failed == true.
+
+## POST-GEN PRUNE (Required)
+
+After validation and before TSV serialization, prune to reduce deck size while preserving minimums.
+
+- Never delete required minimum types until all minimums pass.
+- Prefer deleting: definitions -> procedures -> shallow theory -> excess constructive.
+- Keep at least one definition per H2 concept.
+- Keep 2-4 constructive cards per code block.
+
+## Redundancy Detection
+
+Use `scripts/redundancy_prune.py --cards <cards.json> --output <prune_plan.json>` to detect near-duplicate fronts.
+Apply the prune plan after minimums pass and before serialization.
+
+## Global Failure-Mode Minimum
+
+In folder mode, enforce:
+
+- global_failure_mode_cards >= ceil(total_cards / 25)
+- minimum 1 if total_cards > 0
+
+Only enforce per-note failure-mode minimum when the note contains mistake/pitfall/warning language.
+
+## Artifact Requirements
+
+Must create the following artifacts for each run:
+
+- file_manifest
+- element_inventory
+- rule_application_plan
+- internalization_report
+- card_budget_plan
+- doctrine_compliance_report
 
 ## Input Modes
 
