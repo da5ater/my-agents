@@ -1,0 +1,133 @@
+You are editing the Ankify skill to achieve this mission:
+
+MISSION
+- Preserve doctrine depth (model / synthesis / misconception / counter-evidence / negation / connectivity)
+- BUT enforce bounded card count per note, especially for beginner material.
+- Prefer CONVERSION and PRUNING over ADDING.
+- Output TSV must remain stable: exactly 3 columns, no raw tabs/newlines inside cells.
+
+CURRENT FAILURE
+- Folder run produced 471 cards for 46 notes (~10.2/note).
+- Main driver: too many CONSTRUCTIVE/code cards (chunking + no cap).
+- Budget logic is inverted: budget_ok currently checks total_cards >= target_total_cards (a floor), not a ceiling.
+
+GOAL METRICS (acceptance tests)
+- For beginner folders: average_cards_per_note <= 8
+- Hard cap: max_cards_per_note <= 10 (unless explicitly overridden)
+- Deep ratio >= 40%
+- Constructive ratio <= 35% and constructive_per_note <= 2 by default
+- No generic deep backs (see “anti-generic” rules below)
+
+IMPLEMENT THESE CHANGES
+
+A) FIX BUDGET SEMANTICS (MOST IMPORTANT)
+1) In compute_card_budget_pre.py:
+   - Replace target_total_cards (floor) with:
+     - target_total_cards_max (ceiling)
+     - target_total_cards_min (floor)
+     - target_constructive_max / target_constructive_min
+     - target_definition_max / target_theory_max
+   - Default (beginner profile; single mode still):
+     - required_deep_min = 4 (MODEL + NEGATION + FAILURE_MODE + COUNTER_EVIDENCE)
+     - + SYNTHESIS if concept_count >= 2 (but synthesis must be grounded; see below)
+     - target_constructive_max = min(2, code_blocks)
+     - target_constructive_min = 1 if code_blocks > 0 else 0
+     - target_definition_max = 1
+     - target_theory_max = 2 or 4
+     - target_total_cards_min = required_deep_min + target_constructive_min
+     - target_total_cards_max = clamp(required_deep_min + target_constructive_max + 1, 6, 10)
+
+2) In compute_doctrine_report.py:
+   - Change budget_ok from (total_cards >= target_total_cards) to:
+     - total_cards >= target_total_cards_min AND total_cards <= target_total_cards_max
+   - Replace max_cards_per_note logic to align with target_total_cards_max (or set max_cards_per_note = target_total_cards_max).
+
+B) STOP CODE CHUNK FLOODING (CONSTRUCTIVE CAP)
+1) In generate_ankify_tsv.py:
+   - Do NOT generate one constructive card per chunk.
+   - New rule:
+     - At most target_constructive_max constructive cards per note.
+     - Prefer selecting the “best” code blocks:
+       - longest meaningful block
+       - block containing key API names / operators
+       - block closest to an H2 heading
+   - Increase chunk limit to reduce splitting:
+     - max_lines_per_constructive_card = 12 (or 15)
+   - If a code block exceeds that:
+     - take the most representative 12–15 lines
+     - OR produce ONE “complete the missing line(s)” card rather than multiple part-1/part-2 cards.
+
+2) In redundancy_prune.py:
+   - Add a heuristic: if multiple constructive cards exist for same note and contain “first part / second part / part 2”, keep only the first unless under constructive_min.
+
+C) CONVERT, DON’T ADD (FILL MISSING TYPES BY REPLACEMENT FIRST)
+1) In append_missing_types.py:
+   - Current behavior appends generic deep cards.
+   - New behavior:
+     - If a required deep type is missing:
+       - First CONVERT an existing shallow card (THEORY/DEFINITION/PROCEDURE) into that deep type.
+       - Only append a new card if total_cards < target_total_cards_min (so you are under the floor).
+   - Remove generic back templates like:
+     - “X may not be suitable for all scenarios…”
+   - Any deep card you append (only when necessary) MUST be grounded using note text or code excerpt (see anti-generic rules).
+
+2) Update conversion_plan.py:
+   - Don’t base conversions only on procedure_cards // 5 (procedure can be 0).
+   - Drive conversion by:
+     - missing deep types OR
+     - total_cards > target_total_cards_max
+   - Select conversion candidates in this order:
+     - THEORY -> DEFINITION -> PROCEDURE -> extra CONSTRUCTIVE beyond target_constructive_max (optional last resort)
+
+D) MAKE “DEEP” ACTUALLY DEEP (ANTI-GENERIC VALIDATION)
+Add validators in validate_cards.py (or in compute_doctrine_report.py) that fail deep cards if they are generic:
+- FAILURE_MODE back must include:
+  - a concrete “If … then …” misuse scenario OR
+  - a specific API/keyword from the note/code (not just the topic name)
+- COUNTER_EVIDENCE back must include:
+  - a concrete counterexample condition (“when…”, “unless…”, “except…”) grounded in note/code
+- MODEL back must include:
+  - at least 2 stages OR a flow list derived from headings/code
+- SYNTHESIS must explicitly compare two named concepts (not “related concepts” vague)
+
+If a deep card fails anti-generic:
+- regenerate that card by pulling an excerpt from note content_lines or code_lines.
+
+E) PRUNE TO THE CAP (PER NOTE, NOT GLOBAL)
+cap_prune.py currently prunes globally.
+Change it to prune per note (group by url/note id):
+- For each note:
+  - if total_cards > target_total_cards_max:
+    - drop in this order:
+      1) DEFINITION
+      2) THEORY
+      3) PROCEDURE
+      4) CONSTRUCTIVE beyond target_constructive_max
+      5) SYNTHESIS beyond required minimum
+      (never drop the only MODEL/NEGATION/FAILURE/COUNTER unless unavoidable)
+- Produce prune_plan.json with exact indices to remove.
+- apply_prune.py applies it.
+
+F) OUTPUT DISCIPLINE (stop “I’m done…” loops)
+Update run-summary-template + top-level skill behavior:
+- Do not print chain-of-thought / internal monologue.
+- Final output should be:
+  - file path(s)
+  - counts summary
+  - PASS/FAIL flags
+  - top 5 “largest notes by card count”
+No repeated “Wait…” style narration.
+
+DELIVERABLES
+- Updated scripts: compute_card_budget_pre.py, compute_doctrine_report.py, generate_ankify_tsv.py,
+  append_missing_types.py, conversion_plan.py, validate_cards.py, cap_prune.py, redundancy_prune.py
+- Update depth-templates.md only if needed (prefer grounding logic over new templates)
+- Ensure TSV validity stays unchanged.
+
+After edits, rerun folder test and report:
+- total cards
+- avg cards/note
+- deep ratio
+- constructive ratio
+- max cards in any single note
+- examples of 1 failure-mode and 1 counter-evidence card that are grounded (not generic)
