@@ -427,3 +427,76 @@
 - **Type**: Rule
 - **Directive**: Personalize prompts by framing them in the context of the user's specific life situations.
 
+## 4. Operational Doctrine (Procedures & Quotas)
+
+### Structural Mapping
+Treat H2 sections as atomic concepts. Use H3 subsections as card-type cues.
+
+| H3 Subsection | Card Type |
+|--------------|-----------|
+| **Notes** | THEORY |
+| **Distinctions & Negations** | NEGATION |
+| **Counter-Evidence** | COUNTER-EVIDENCE |
+| **Definitions** | DEFINITION |
+| **Configuration** | PROCEDURE |
+| **Technical Procedures** | PROCEDURE |
+| **Code Implementation** | CONSTRUCTIVE |
+
+### Content Element -> Card Type
+```
+Code block (<=5 lines)  -> CONSTRUCTIVE ("Write the code for...")
+Code block (>5 lines)   -> Decompose into 3-5 atomic CONSTRUCTIVE cards
+Bolded rule/pattern     -> THEORY ("What is the rule for..." / "Explain why...")
+Distinction (X != Y)    -> NEGATION ("How does A differ from B?")
+Counter-evidence        -> COUNTER-EVIDENCE ("When does X NOT apply?")
+Definition              -> DEFINITION ("What is [term]?")
+Configuration           -> PROCEDURE ("How do you set up X?")
+Mental model            -> MODEL ("Explain/visualize how X works")
+Common mistake          -> FAILURE MODE ("What goes wrong if you do X?")
+```
+
+### Canonical Card Types
+Use these internal names consistently:
+THEORY, CONSTRUCTIVE, SYNTHESIS, MODEL, FAILURE_MODE, NEGATION, COUNTER_EVIDENCE, DEFINITION, PROCEDURE
+
+### Quantitative Minimums
+When the triggering elements exist in the note, enforce minimum counts:
+- concept_count >= 2 -> synthesis_cards >= 1
+- concept_count >= 4 -> synthesis_cards >= 2
+- h2_count >= 2 -> cross_h2_synthesis_cards >= 1
+- mental_models present -> model_cards >= 1
+- failure_modes present -> failure_mode_cards >= 1
+- contradictions present -> counter_evidence_cards >= 1
+- distinctions present -> negation_cards >= 1
+
+### Hard Cap (Absolute)
+- Basic notes: `max_total_cards_max = 6` when anchors < 8 AND h2_count < 3 AND code_blocks <= 1.
+- High complexity: `max_total_cards_max = 8` when any threshold is exceeded.
+
+### Conversion Quota (Depth Without Growth)
+For every 5 PROCEDURE cards in a note, convert 1 into a deeper doctrine type by replacement.
+Priority order:
+1. MODEL
+2. FAILURE_MODE
+3. COUNTER_EVIDENCE
+4. SYNTHESIS
+5. NEGATION
+
+### Per-Note Card Cap
+max_cards_per_note = clamp(10 + code_blocks*2, 12, 18)
+If code_blocks == 0, max_cards_per_note = 12.
+If exceeded, convert excess into deeper variants.
+
+### Manifesto Compliance Checklist
+Use this checklist before TSV serialization:
+- Mapping: H2/H3 structural mapping applied to all sections.
+- Elements: content elements mapped to required card types.
+- Coverage: every structural element yields >=1 card.
+- Tier 1: MODEL, FAILURE MODE, NEGATION, COUNTER-EVIDENCE, SYNTHESIS present when triggered.
+- Minimums: quantitative minimums satisfied when triggered.
+- Connectivity: connectivity minimums satisfied when triggered.
+- Internalization linkage: boundary, misconception, link reflected in cards.
+- Budget: card counts aligned with card_budget_plan.
+- Conversion quota: procedure-to-deep conversion quota satisfied.
+- Quality: atomic, active recall, contextualized, unambiguous.
+- Output: no rule metadata leaked into card text.

@@ -5,7 +5,7 @@
 
 ## Output Objectives (References)
 
-> **See `references/manifesto.md` for the Supreme Doctrine.**
+> **See `references/doctrine.md` for the Supreme Doctrine.**
 -   **High-Signal Synthesis**: (Principle 1)
 -   **Atomicity**: (Rule EXT-04)
 -   **De-contextualization**: (Principle 4)
@@ -131,7 +131,7 @@ Break the content into logical sections. Apply this structure only to concepts s
 
 #### Output Rules (References)
 
-> **See `references/constraints.md` for Hard Limits.**
+> **See `references/doctrine.md` for Hard Limits.**
 -   **File Only**: (Constraint C-03)
 -   **Structure**: (Constraint C-05)
 
