@@ -22,6 +22,8 @@ When this command is invoked, you **MUST** execute the following workflow immedi
 
 This skill enforces a **Manifesto-First** approach. You must consult the following references before generating any content:
 
+> refrences are in the CWD of the skill itself which is in `/home/mohamed/.config/opencode/skills/ankify/references`
+
 1.  **Read the Rules**: `references/manifesto.md` (The absolute source of truth for card quality).
 2.  **Follow the Process**: `references/workflow.md` (The step-by-step generation pipeline).
 3.  **Use Templates**: `references/depth-templates.md` (Required phrasing patterns).

@@ -16,6 +16,8 @@ obsidianize "here is some raw text..."
 
 ## Workflow
 
+> refrences are in the CWD of the skill itself which is in `/home/mohamed/.config/opencode/skills/obsidianize-skill/references`
+
 1.  **Analyze Context:** Read `references/doctrine.md` for core philosophy, constraints, and process.
 2.  **Plan Structure:** Use `references/output-structure.md` to determine the note layout.
 3.  **Execute:**
