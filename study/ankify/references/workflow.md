@@ -27,8 +27,11 @@ This document defines the single, authoritative pipeline for transforming Obsidi
 ### 3. Plan (LLM)
 - **Input**: Internalization + Inventory + Manifesto Core.
 - **Process**:
-    - LLM decides *which* concepts serve as anchors.
-    - LLM selects *which* card types (Tier 1) apply based on `manifesto.md` triggers.
+    - **Step 3.1: Manifesto Scan**: Scan `manifesto.md` and list *all* rules relevant to this specific note's concepts.
+    - **Step 3.2: Selection**: LLM decides *which* concepts serve as anchors.
+    - **Step 3.3: Type Check**: LLM selects *which* card types (Tier 1) apply based on `manifesto.md` triggers.
+
+> you have got to use all the manifisto rules . but triggered based on each concept in the note.
     - **Constraint**: Must respect Hard Caps (max 6-8 cards).
 - **Outcome**: *Target Budget* (Debug: `card_budget.json`).
 
@@ -36,6 +39,7 @@ This document defines the single, authoritative pipeline for transforming Obsidi
 - **Input**: Note + Plan + Breadth/Depth Templates (from `depth-templates.md` and `manifesto.md`).
 - **Process**: 
     - LLM generates `front`, `back`, `url` for each card.
+    - **Strict Rule**: Every card must cite the Manifesto Rule ID (e.g., `[PR-0014]`) that justifies its existence in the thought process.
     - **Strict Rule**: No generic templates ("Explain how X works"). Use "atomic" prompts.
     - **Strict Rule**: Meaningful content only. No "filler" cards to hit quotas.
 - **Outcome**: Raw TSV lines.

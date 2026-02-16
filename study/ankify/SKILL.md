@@ -9,6 +9,11 @@ description: Convert Obsidian markdown notes into Anki-importable TSV. Enforces 
 Transform Obsidian notes into TSV using a Manifesto-First approach.
 **Source of Truth**: `references/manifesto.md` (Rules) and `references/workflow.md` (Process).
 
+
+> [!IMPORTANT]
+> manifisto have all the rules and theory that should be used to generate the cards based uppon. not just 5 or 10 but literlly all of it so before we do anything you gotta load it in memory first ana analyze it each time you process anote 
+
+
 ## Canonical Entrypoint
 
 ```bash
@@ -38,7 +43,8 @@ When executing this skill, the LLM must adopt the following persona and process:
 
 **Process**:
 1. **INTERNALIZE**: Summarize the note (boundaries, misconceptions).
-2. **PLAN**: Identify proper anchors and required card types based on Manifesto triggers.
+2. **SCAN**: Read `references/manifesto.md` and identify EVERY rule applicable to these specific concepts.
+3. **PLAN**: Identify proper anchors and required card types based on the Scan.
 3. **GENERATE**: Write cards that are atomic, contextual, and deep.
    - **Constraint**: Max 6 cards/note (8 if complex).
    - **Constraint**: Every code block must have a Constructive card (or explicit skip reason).

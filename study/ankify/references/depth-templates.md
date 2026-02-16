@@ -34,3 +34,22 @@ Use these patterns to generate deep cards. Do **NOT** use generic "Explain X" pr
 
 *   **Pattern**: `What is the console output of the following snippet? [Code]`
 *   **Pattern**: `What is the value of [Variable] after [Event]?`
+
+## 6. The Why (Rationale)
+**Intent**: Embed facts in logic (PR-0063).
+
+*   **Pattern**: `Why is [Fact] true? (Explain the mechanism)`
+*   **Pattern**: `What is the architectural reason for [Design Choice]?`
+
+## 7. The Open List (3-Tier Strategy)
+**Intent**: Handle evolving sets without rote memorization (PR-0079).
+
+*   **Tier 1 (Anchor)**: `What category does [Instance] belong to?`
+*   **Tier 2 (Pattern)**: `What are the common characteristics of [Category]?`
+*   **Tier 3 (Generative)**: `Give 3 examples of [Category] (Brainstorming).`
+
+## 8. The Connection (Synthesis)
+**Intent**: Force ideas to mingle (PR-0017).
+
+*   **Pattern**: `How does [Concept A] influence [Concept B]?`
+*   **Pattern**: `What do [Concept A] and [Concept B] have in common regarding [Dimension]?`

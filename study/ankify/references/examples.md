@@ -38,3 +38,23 @@ const map = users.reduce((acc, user) => {
 *   **Front**: Is `map` faster than `forEach`?
 *   **Why**: 50% guess chance.
 *   **Fix**: "Compare the performance characteristics of `map` vs `forEach`."
+
+### Personalization (PR-0014 Compliant)
+**Front**: What is the primary benefit of [Concept]? (Like the one in [Person]'s project)
+**Back**: [Benefit]
+**Note**: Explicitly reference the user's project/context in the question.
+
+### Context Docking (PR-0018 Compliant)
+**Front**: 
+Context: [Prior Knowledge/Framework]
+Question: How does [New Concept] extend or differ from this?
+**Back**: [Explanation]
+
+### Emotional Salience (PR-0071 Compliant)
+**Front**: [Concept] fails when...? (Think of the [Disaster/Funny Event])
+**Back**: [Failure Condition]
+
+### Source Tracing (PR-0076 Compliant)
+**Front**: According to [Author/Source], what is the key argument for [Claim]?
+**Back**: [Argument]
+**Source**: [Link/Citation]
