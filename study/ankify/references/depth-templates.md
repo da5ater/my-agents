@@ -53,3 +53,26 @@ Use these patterns to generate deep cards. Do **NOT** use generic "Explain X" pr
 
 *   **Pattern**: `How does [Concept A] influence [Concept B]?`
 *   **Pattern**: `What do [Concept A] and [Concept B] have in common regarding [Dimension]?`
+
+## 9. The Sequence (Ordering)
+**Intent**: Capture order without brute force (PR-0068, PR-0010).
+
+*   **Pattern**: `In the sequence [A, B, C, D, E], what comes immediately after [B]?`
+*   **Pattern**: `Arrange the following steps of [Process] in order: [Scrambled List].`
+
+## 10. The Darwin (Disconfirmation)
+**Intent**: Fight confirmation bias (PR-0038).
+
+*   **Pattern**: `What is the strongest argument AGAINST [Concept]?`
+*   **Pattern**: `Under what specific conditions does [Rule/Best Practice] become harmful?`
+
+## 11. The Salience (Immediacy)
+**Intent**: Keep ideas alive until used (PR-0081).
+
+*   **Pattern**: `Why is [Concept] relevant to my current project [Project Name]?`
+*   **Pattern**: `What is the "One Big Idea" from [Source] that I must not forget?`
+
+## 12. The Mechanism (Deep Dive)
+**Intent**: Embed facts in logic (PR-0063).
+
+*   **Pattern**: `How does [Component] achieve [Result]? (Step-by-step mechanism)`

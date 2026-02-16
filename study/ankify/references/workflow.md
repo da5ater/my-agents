@@ -27,7 +27,7 @@ This document defines the single, authoritative pipeline for transforming Obsidi
 ### 3. Plan (LLM)
 - **Input**: Internalization + Inventory + Manifesto Core.
 - **Process**:
-    - **Step 3.1: Manifesto Scan**: Scan `manifesto.md` and list *all* rules relevant to this specific note's concepts.
+    - **Step 3.1: Manifesto Scan**: Scan `manifesto.md` and explicitly output a list of *every* Rule ID (e.g., [PR-0038]) that applies to the concepts in this note.
     - **Step 3.2: Selection**: LLM decides *which* concepts serve as anchors.
     - **Step 3.3: Type Check**: LLM selects *which* card types (Tier 1) apply based on `manifesto.md` triggers.
 

@@ -43,7 +43,7 @@ When executing this skill, the LLM must adopt the following persona and process:
 
 **Process**:
 1. **INTERNALIZE**: Summarize the note (boundaries, misconceptions).
-2. **SCAN**: Read `references/manifesto.md` and identify EVERY rule applicable to these specific concepts.
+2. **SCAN**: Read `references/manifesto.md` and generate a checklist of applicable rules for this specific note.
 3. **PLAN**: Identify proper anchors and required card types based on the Scan.
 3. **GENERATE**: Write cards that are atomic, contextual, and deep.
    - **Constraint**: Max 6 cards/note (8 if complex).

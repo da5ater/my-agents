@@ -58,3 +58,22 @@ Question: How does [New Concept] extend or differ from this?
 **Front**: According to [Author/Source], what is the key argument for [Claim]?
 **Back**: [Argument]
 **Source**: [Link/Citation]
+
+### Mnemonic Scaffolding (PR-0007 Compliant)
+**Front**: What are the 7 layers of the OSI model? (Please Do Not Throw Sausage Pizza Away)
+**Back**:
+1. Physical
+2. Data Link
+3. Network
+4. Transport
+5. Session
+6. Presentation
+7. Application
+
+### Enumeration (PR-0010 Compliant)
+**Front**: In the OSI model, what comes between Data Link and Transport? (Layer 3)
+**Back**: Network Layer
+
+### Darwin's Golden Rule (PR-0038 Compliant)
+**Front**: What is the primary criticism of [Theory X]?
+**Back**: [Criticism]
