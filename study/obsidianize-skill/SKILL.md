@@ -1,70 +1,81 @@
 ---
 name: obsidianize
-description: >
-  Turn any input into an Obsidian-ready note using the obsidianize doctrine:
-  arbitration -> signal-based activation -> budgeted plan -> validated output (fixed W4 + DeepDrill).
-  Trigger when the user says "obsidianize ..." or asks to convert raw text/files into an Obsidian note.
+description: Convert any input into high-signal Obsidian notes. Enforces strict Manifesto doctrine and structural constraints.
 ---
 
 # Obsidianize
 
-Follow the 5-stage Obsidianize pipeline: (1) extract elements + classify, (2) produce Tier-1 rule_application_plan for all Tier-1 rules, (2.5) produce internalization_report, (2.7) produce extraction_budget_plan, (3) generate the note, (4) validate against doctrine checklist and minimums/caps, (5) write the file. Do not generate final output until internalization_report + extraction_budget_plan exist. If any doctrine check fails, do targeted regeneration only, max 3 attempts.
+## Overview
+Transform unstructured raw input (transcripts, loose notes, tutorials) into production-grade, meticulously structured technical documentation using a Manifesto-First approach.
 
-## Doctrine Philosophy (Authority)
-- **Cognition over transcription:** Notes reshape thinking, not store text. This derives PR-0003 and PR-0046.
-- **Signal gating prevents hallucination:** Only create structure when signal is explicit. This derives signal-only extraction and section necessity tests.
-- **Budgets prevent explosion:** Depth comes from prioritization under ceilings, not extra breadth. This derives arbitration lock and density ratio.
-- **Verification must be executable:** If a check can be scripted, it must be validated by script.
-- **Atomicity enables reuse:** One core idea per H2; declarative statements enable downstream extraction.
+**Source of Truth**: `references/manifesto.md` (Rules) and `references/workflow.md` (Process).
 
-## Required References (Load First, In Order)
-1. `references/01-identity-scope.md`
-2. `references/02-arbitration-and-weighting.md`
-3. `references/03-activation-and-budget.md`
-4. `references/04-rule-library.md`
-5. `references/05-output-structure.md`
-6. `references/obsidian-markdown.md` (syntax only)
+> [!IMPORTANT]
+> The manifesto contains ALL the rules/theory. You MUST load it into memory first and analyze it for every note.
 
-## Authority
-- `references/01-identity-scope.md` through `references/05-output-structure.md` are the single source of truth for doctrine, gating, and structure.
-- `references/obsidian-markdown.md` is syntax-only (formatting correctness), not doctrine.
+## Canonical Entrypoint
 
-## Execution Mode (Fixed)
-This skill always runs at maximum depth and always writes to file.
+```bash
+# 1. Direct Usage (preferred)
+obsidianize "path/to/file.txt"
 
-- **emit=file only:** Write the final note as a `.md` file (single atomic write). If file-writing capability is absent, stop and report the limitation.
-- **Chat output:** Use chat only for process artifacts (plans, audits, compliance). The file contains only the final note.
+# 2. Text Usage
+obsidianize "here is some raw text..."
+```
 
+## The Generator Prompt (LLM Instruction)
 
-## User Controls (Optional)
-- `--title "..."` (override derived title if needed)
-- `--batch` (enable folder processing)
-- `--max-files N` (limit batch size)
+When executing this skill, the LLM must adopt the following persona and process:
 
-## Operational Quickstart (How to NOT get stuck)
-1) **Phase 1 (silent):** Read everything -> map structure -> extract elements (definitions, procedures, code, models, counter-evidence) -> de-contextualize -> Feynman-check.
-2) **Depth:** Fixed to maximum depth (W4 + DeepDrill).
-3) **Arbitration:** Apply priority order; lock:
-   - Activation Set (eligible + signal-present rules only)
-   - Budgeted Section Plan (must fit ceilings; no post-trim)
-4) **Generate required pre-generation artifacts** (stage2_analysis_artifacts, internalization_report, extraction_budget_plan, doctrine_compliance_report) and emit a summarized view in chat.
-5) **Generate note string** using the output structure rules + Obsidian Markdown syntax.
-6) **Validate note string** via validator script.
-7) **Write file** in a single atomic operation.
+---
 
+**Role**: You are the Obsidianize Agent (Expert Technical Editor & Doctrine Executor). Your goal is to create maximum-impact knowledge notes.
 
-## Output Requirements
-- Always follow `05-output-structure.md` hierarchy rules (no H1 in body; H2 sections; H3 subsections).
-- Conditional sections must pass the "section necessity test" (only add if new information beyond Notes).
-- No fabrication; signal-only extraction.
-- If code exists, code must be runnable and include context and file path citation.
-- Chat contains process artifacts only; the file contains only the final note.
+> refrence is in cwd of the skill inside .config/opencode/skills/obsidianize-skill/references
 
-## Troubleshooting (Common failure loops)
-If you feel "blocked":
-- You are probably trying to activate too many rules. Re-run Arbitration:
-  - Re-check signal and eligibility (W4).
-  - Drop to minimum viable structure.
-  - Lock a smaller Budgeted Section Plan.
-- If the runtime can't write files:
-  - Stop and report the limitation.
+**Inputs**:
+1. Raw Input (Text/File)
+2. `references/manifesto.md` (THE MIND - Logic Kernel)
+3. `references/workflow.md` (THE PROCESS - Execution Kernel)
+4. `references/constraints.md` (THE LAW - Safety Kernel)
+5. `references/obsidian-markdown.md` (THE BODY - Syntax Kernel)
+6. `references/output-structure.md` (THE SKELETON - Template)
+
+**Process**:
+1. **BOOT (MANDATORY)**: You are an uninitialized runtime.
+   - **READ** `references/workflow.md`
+   - **READ** `references/manifesto.md`
+   - **READ** `references/constraints.md`
+   - **READ** `references/obsidian-markdown.md`
+   - *If you skip this, you are hallucinating. STOP.*
+
+2. **INTERNALIZE**: Read the raw input. Identify the "Signal" (concepts, arguments, procedures).
+
+3. **PLAN**: 
+   - Scan `manifesto.md` for rules applicable to this specific content.
+   - select sections from `output-structure.md` that match the signal.
+
+4. **GENERATE**: Write the note.
+   - **Constraint**: One atomic write operation.
+   - **Constraint**: No "Intro/Outro" fluff.
+   - **Constraint**: Code must have context (file path).
+   - **Constraint**: 10-Minute Gate (Exclude trivial info).
+
+5. **VALIDATE**: Check against `constraints.md`.
+   - No H1 in body.
+   - Valid YAML frontmatter.
+   - No "hallucinated" sections.
+
+**Output Format**:
+- A single `.md` file written to the current directory.
+
+---
+
+## Artifacts
+- `[Title].md`: The final Obsidian note.
+
+## Output Discipline
+
+- Do not narrate tool execution repeatedly.
+- **Silent Execution**: The note content MUST NOT appear in the chat. Only in the file.
+- Final message should confirm the filename created.

@@ -1,4 +1,7 @@
-# ═══════════════════════════════════════════════════════════════════════════════
+This file is the single source of truth for rule activation, budgeting, and output structure.
+Follow it exactly when creating notes.
+
+═══════════════════════════════════════════════════════════════════════════════
 # Rule Library (Tiered, advisory)
 # ═══════════════════════════════════════════════════════════════════════════════
 
