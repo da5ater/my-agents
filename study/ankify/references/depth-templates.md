@@ -1,72 +1,36 @@
-# Ankify Depth Templates
+# Depth Templates (Manifesto Aligned)
 
-Use these canonical templates to satisfy doctrine requirements for deep card types.
-If a card is tagged as one of these types but does not match a template, it does not count toward the minimums.
+Use these patterns to generate deep cards. Do **NOT** use generic "Explain X" prompts.
 
-## MODEL (Mental Model)
+## 1. The Model (Structure & Flow)
+**Intent**: Visualize systems, not just lists.
 
-**Intent:** Force the user to visualize the mechanism, state changes, or invisible flow.
-**Trigger:** Hidden logic, lifecycles, state machines, architecture.
+*   **Pattern**: `Draw the [Diagram Name] for [Scenario].`
+*   **Pattern**: `Trace the data flow of [Variable] through [Function].`
+*   **Pattern**: `What are the [N, e.g. 3] stages of [Process]?`
 
-| Template | Example |
-|----------|---------|
-| `Explain/visualize how [Concept] works.` | "Explain/visualize how the Event Loop handles async callbacks." |
-| `What are the stages of [Process]?` | "What are the stages of the React render lifecycle?" |
-| `Trace the flow of [Data] through [System].` | "Trace the flow of a request through the Express middleware stack." |
+## 2. The Failure Mode (Boundaries)
+**Intent**: Define what breaks.
 
-**Forbidden (Too Shallow):**
-- "What is the model for X?"
-- "How does X work?" (Too vague)
+*   **Pattern**: `What specific error occurs if you [Action] with [Invalid Input]?`
+*   **Pattern**: `Why does [Code/Pattern] fail when [Condition]?`
+*   **Pattern**: `Given [Constraint], why is [Approach A] worse than [Approach B]?`
 
-## FAILURE_MODE (Pre-mortems)
+## 3. The Constructive (Whiteboard)
+**Intent**: Write code, don't just read it. Context is mandatory (MC-CTX-001).
 
-**Intent:** Encode "pain avoidance" and operational boundaries.
-**Trigger:** Pitfalls, common errors, edge cases, "don't do this" warnings.
+*   **Pattern**:
+    *   **Front**: `Given [Context/State], write the code to [Task].`
+    *   **Back**: `<pre><code>...</code></pre>`
 
-| Template | Example |
-|----------|---------|
-| `What goes wrong if you [Concrete Misuse]?` | "What goes wrong if you mutate state with push in React?" |
-| `[System] breaks if [Concrete Condition]. Explain why.` | "The build breaks if you import circularly between A and B. Explain why." |
+## 4. The Distinction (Negation)
+**Intent**: Define by exclusion.
 
-**Must include:** a concrete incorrect action and a concrete consequence.
+*   **Pattern**: `How does [Concept A] differ from [Concept B] regarding [Dimension]?`
+*   **Pattern**: `[Concept X] is NOT [Concept Y] because...?`
 
-**Forbidden:**
-- "What goes wrong if X is misused?"
-- "Is X bad?"
-- "Name one error."
+## 5. The Prediction
+**Intent**: Test mental compiler.
 
-## COUNTER_EVIDENCE (Nuance)
-
-**Intent:** Break the "always true" heuristic. Prevent overgeneralization.
-**Trigger:** Exceptions to rules, specific context constraints, trade-offs.
-
-| Template | Example |
-|----------|---------|
-| `When does [Concept/Rule] NOT apply?` | "When does the Same-Origin Policy NOT apply?" |
-| `Under what condition does [Assertion] fail?` | "Under what condition does `useEffect` fail to run on mount?" |
-
-**Forbidden:**
-- "What contradicts X?"
-- "Is X always true?"
-
-## NEGATION (Boundaries)
-
-**Intent:** Define what something is *not* to sharpen the mental category.
-**Trigger:** Distinctions, "X is not Y", boundaries.
-
-| Template | Example |
-|----------|---------|
-| `How does [A] differ from [B]?` | "How does `map` differ from `forEach`?" |
-
-**Must include:** two concrete tokens from the note.
-
-## SYNTHESIS (Connections)
-
-**Intent:** Connect two isolated concepts (H2s) to build a knowledge graph.
-**Trigger:** Multi-concept notes, interactions, tradeoffs.
-
-| Template | Example |
-|----------|---------|
-| `Compare [A] and [B] regarding [Dimension 1] and [Dimension 2].` | "Compare `map` and `forEach` regarding mutation and return value." |
-
-**Must reference:** Two distinct concrete tokens and at least two dimensions.
+*   **Pattern**: `What is the console output of the following snippet? [Code]`
+*   **Pattern**: `What is the value of [Variable] after [Event]?`

@@ -1,7 +1,8 @@
-# ANKIFY Doctrine (Source of Truth)
+# ANKIFY Doctrine (Legacy - See Manifesto Core)
 
-Use this doctrine as the primary source of truth for card creation.
-If any schema or implementation detail conflicts with this doctrine, follow doctrine and treat the other rule as stale.
+**NOTE**: `references/manifesto_core.md` is now the single source of truth.
+This file is retained for historical context but should not be treated as the primary rule-set.
+If in doubt, follow `manifesto_core.md`.
 
 ## Card Intent
 

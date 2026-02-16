@@ -1,84 +1,61 @@
 ---
 name: ankify
-description: Convert Obsidian markdown notes into Anki-importable TSV. REQUIRED: Must enforce doctrine depth (Model/FailureMode/Negation/Synthesis), perform full pipeline artifacts (internalization, budget, compliance), and use conversion quotas. Do not produce purely constructive decks.
+description: Convert Obsidian markdown notes into Anki-importable TSV. Enforces strict Manifesto-Core depth and uses a streaming pipeline.
 ---
 
 # Ankify
-> important note : other than the folder being processed, this skill is entirely separate from obsidianize. It does not share doctrine, gating, or structure. It is a standalone skill that takes Obsidian notes as input and produces TSV for Anki. Do not apply obsidianize rules or structure to ankify output.
-> > meanning all the references and scripts are in folder of the skill which is in the same folder as this SKILL.md, not shared with obsidianize.[inside the skills folder which is in the opencode configuration folder]
-
-
 
 ## Overview
-Transform Obsidian notes into TSV with anchored depth and strict caps.
-`references/manifesto_core.md` is the runtime rule-set and is execution-blocking.
+Transform Obsidian notes into TSV using a Manifesto-First approach.
+**Source of Truth**: `references/manifesto.md` (Rules) and `references/workflow.md` (Process).
 
-## Core Workflow (Non-Negotiable)
+## Canonical Entrypoint
 
-Execute these steps verbatim. **Do not skip artifacts.**
+```bash
+# 1. Initialize Workspace (Optional)
+python3 scripts/process_corpus.py --input <path_to_notes> --vault mohamed
 
-1. **Load Rules**: Read `references/manifesto_core.md` and `references/doctrine.md`.
-2. **Discovery**: Identify input mode and build `file_manifest`.
-3. **Analysis**: Parse note and produce `element_inventory` and anchors.
-4. **Internalization**: Generate `internalization_report` (Summary, Boundaries, Misconceptions, Links).
-5. **Planning**: Create `card_budget_plan` and `rule_application_plan`.
-6. **Generation**: Generate anchored cards using `references/depth-templates.md`.
-7. **Enforcement Loop (Iterate until compliant)**:
-   - Compute counts and quality checks.
-   - **Convert** shallow cards by replacement (front + back) to meet missing types.
-   - **Append** only if conversion pool is exhausted and total < max cap.
-   - Re-validate.
-   - Repeat up to **MAX_ITER (5)** times.
-8. **Serialization**: Write TSV (exactly 3 columns per line).
-9. **Validation**: Run `validate_tsv.sh` AND `validate_cards.py` (blocking).
+# 2. Agent runs generation loop...
 
-**Best-Effort Protocol**: If compliance still fails after **5 iterations**, output best-effort TSV and mark **FAIL** in the final summary.
+# 3. Final Report
+python3 scripts/generate_report.py --tsv <path_to_output> --output run_summary.md
+```
 
-## Manifesto Enforcement (Blocking)
+## The Generator Prompt (LLM Instruction)
 
-- `references/manifesto_core.md` is not informational. If any rule fails validation, set `quality_ok=false` and fail the run.
+When executing this skill, the LLM must adopt the following persona and process:
 
-## Depth Enforcement (Anchored, Per-Card)
+---
 
-- No statistical depth ratios or cross-note quotas.
-- Deep cards must be anchored to note tokens and use closed prompts.
-- Q/A alignment is required for model/compare/negation prompts.
+**Role**: You are the Ankify Agent. Your goal is to create maximum-impact Anki cards from Obsidian notes.
 
-## Conversion Rules (Replace, Don't Grow)
+**Inputs**:
+1. Note Content (Markdown)
+2. `references/manifesto.md` (THE RULES - SOURCE OF TRUTH)
+3. `references/depth-templates.md` (The Phrasing)
+4. `references/examples.md` (Quality Standard)
+5. `references/doctrine.md` (Supplementary Principles)
 
-- Replacement is mandatory.
-- Append only if **total_cards < max_total** and no eligible shallow cards remain.
+**Process**:
+1. **INTERNALIZE**: Summarize the note (boundaries, misconceptions).
+2. **PLAN**: Identify proper anchors and required card types based on Manifesto triggers.
+3. **GENERATE**: Write cards that are atomic, contextual, and deep.
+   - **Constraint**: Max 6 cards/note (8 if complex).
+   - **Constraint**: Every code block must have a Constructive card (or explicit skip reason).
+   - **Constraint**: No generic "Explain X" cards. Use "Draw the model", "Write the code", "When does X fail?".
+4. **VALIDATE**: Pipe generated TSV to `validate_cards.py --stream`. 
+   - Ensure TSV format (3 cols) and strict compliance.
+   - Retry if validation fails.
 
-## Hard Caps
+**Output Format (TSV)**:
+`front<TAB>back<TAB>obsidian_url`
 
-- Basic notes: max 6 cards.
-- High-complexity notes: max 8 cards (only when heuristic flags high complexity).
+---
 
-## TSV Stability (Non-Negotiable)
-
-- Every line: `front\tback\turl\n` (exactly 3 columns).
-- No tabs inside fields.
-- Replace raw newlines inside fields with `<br>`.
-- Validation failure stops the run.
-
-## References
-
-1. `references/manifesto_core.md`: Runtime rules (blocking).
-2. `references/doctrine.md`: Source of truth.
-3. `references/depth-templates.md`: **REQUIRED** phrasing for deep cards.
-4. `references/run-summary-template.md`: Format for the mandatory final output.
-5. `references/schema.md`: Executable rules.
-6. `references/implementation.md`: Pipeline details.
-
-## Required Artifacts
-
-- file_manifest
-- element_inventory
-- internalization_report (Must exist before generation)
-- card_budget_plan
-- doctrine_compliance_report (Must pass all checks)
-- run_summary.md
-- manifesto_actualization_report.md
+## Artifacts
+- `ankify_output.tsv`: The result (Streaming Output).
+- `run_summary.md`: The report card.
+- *(Debug only: intermediate json files)*
 
 ## Post-Run Summary (Required)
 
