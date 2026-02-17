@@ -16,6 +16,7 @@ This document defines the single, authoritative pipeline for transforming Obsidi
     -   Identify code blocks (language, line count).
     -   Identify headings (H1/H2/H3).
     -   Read full text.
+    -   **Identify Path**: Determine the file's path relative to the vault root (e.g., `programming/javascript/basics.md`).
     -   **Outcome**: A clean text representation of the note and an inventory of elements. with a highligt of the signal and core conecpts to be used in the cards as a sugestion.
 
 ### 2. Internalize (LLM)
@@ -40,6 +41,7 @@ This document defines the single, authoritative pipeline for transforming Obsidi
 -   **Input**: Internalization +  Manifesto Core + Plan + `manifesto.md` insights + `examples.md` (patterns & constraints).
 -   **Process**:
     -   LLM generates `front`, `back`, `url` for each card.
+    -   **Strict Rule**: URL must follow `obsidian://open?vault=<VAULT_NAME>&file=<relative_path_encoded>`.
     -   **Strict Rule**: Every card must map to a Manifesto Rule ID (e.g., `[PR-0014]`) that justifies its existence in the thought process.
     -   **Strict Rule**: No generic templates ("Explain how X works"). Use "atomic" prompts.
     -   **Strict Rule**: Meaningful content only. No "filler" cards to hit quotas.

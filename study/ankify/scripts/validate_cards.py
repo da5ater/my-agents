@@ -108,16 +108,28 @@ def process_line(line: str, line_num: int, vault: str, default_file: str) -> Tup
     back = clean_field(back)
     url = url.strip()
 
-    # URL Inference
-    if not url or "obsidian://" not in url:
+    # URL Inference & Validation
+    # Format: obsidian://open?vault=<VAULT_NAME>&file=<relative_path_encoded>
+    
+    if not url:
         if default_file:
+            # Assume default_file is the relative path
             clean_path = default_file
             if clean_path.endswith(".md"):
-                clean_path = clean_path[:-3]
-            encoded_path = urllib.parse.quote(clean_path)
+                clean_path = clean_path[:-3] # Remove extension if present, though Obsidian works with both. 
+                                             # User example didn't have .md, usually cleaner without.
+            
+            # Encode path segments but keep slashes? No, obsidian URLs usually encode slashes as %2F
+            # Example: programming%2Fjavascript...
+            encoded_path = urllib.parse.quote(clean_path, safe='') 
             url = f"obsidian://open?vault={vault}&file={encoded_path}"
         else:
             return None, ["Missing URL and no default file provided to infer it."]
+    
+    # Strict URL Validation
+    expected_prefix = f"obsidian://open?vault={vault}&file="
+    if not url.startswith(expected_prefix):
+         return None, [f"Invalid URL format. Must start with: {expected_prefix}"]
 
     # Validation
     errors = validate_card(front, back)

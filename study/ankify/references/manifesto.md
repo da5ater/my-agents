@@ -7,13 +7,19 @@
 > [!IMPORTANT]
 > The following settings are the definitive source of truth for the Agent's behavior.
 
-### Global Limits
+### Configuration & Variables
 | Variable | Value | Description |
 | :--- | :--- | :--- |
 | `MAX_CARDS_PER_NOTE_BASE` | 5 | Base limit for cards per note. |
 | `MAX_CARDS_PER_NOTE_CAP` | 10 | Absolute maximum cards per note (hard cap). |
 | `MIN_CARDS_PER_NOTE` | 3 | Minimum cards where complex rules apply. |
 | `CODE_BLOCK_SCALER` | 1 | Additional cards allowed per atomic code logical unit. |
+| `VAULT_NAME` | mohamed | The name of the Obsidian vault for URL generation. |
+
+### URL Format
+**Rule**: All cards MUST include a valid Obsidian URL in the 3rd column.
+**Format**: `obsidian://open?vault=<VAULT_NAME>&file=<relative_path_encoded>`
+**Example**: `obsidian://open?vault=mohamed&file=programming%2Fjavascript%2Farrays.md`
 
 ### Triggers (Input -> Card Type)
 **Rule**: If the note contains these elements, you MUST generate the corresponding card type.

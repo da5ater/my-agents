@@ -62,4 +62,11 @@ echo "<your_tsv_content>" | python3 scripts/validate_cards.py --vault mohamed --
 -   **No Orphan Pronouns** ("It", "This").
 -   **Strict TSV Format**: `Front <TAB> Back <TAB> URL`. No raw newlines in fields (use `<br>`).
 -   **Validation Loop**: You must run the validation script and fix any reported errors until the script passes with exit code 0.
+- the obsidian URL is `obsidian://open?vault=mohamed&path=<relative_path_to_note>`
 
+
+
+### configuration 
+
+- vault name is `mohamed`
+- the path is relative to the vault root
