@@ -17,14 +17,7 @@ Do not wrap this in a code block; render it as Markdown.
 
 | Type | Count | Target | Status |
 |------|-------|--------|--------|
-| MODEL | <int> | >0 | <✅/❌> |
-| FAILURE_MODE | <int> | >Total/25 | <✅/❌> |
-| COUNTER_EVIDENCE | <int> | >0 if trig | <✅/❌> |
-| NEGATION | <int> | >0 if trig | <✅/❌> |
-| SYNTHESIS | <int> | >0 if trig | <✅/❌> |
-| CONSTRUCTIVE | <int> | Cap | - |
-| PROCEDURE | <int> | <50% | - |
-| DEFINITION | <int> | <35% | - |
+
 
 ### Note Status Table
 
@@ -34,15 +27,8 @@ Do not wrap this in a code block; render it as Markdown.
 | `oop/classes.md` | 0 | ❌ FAIL | Missing FAILURE_MODE |
 | `config/setup.md` | - | ⏭️ SKIP | No content |
 
-### Top 5 Largest Notes
-
-| Note | Cards | Compliance |
-|------|-------|------------|
-| `path/to/note.md` | 10 | ✅ PASS |
-| `path/to/note.md` | 9 | ✅ PASS |
-| `path/to/note.md` | 9 | ❌ FAIL |
 
 ### Execution Artifacts
 - TSV Output: `<path>`
 - Manifest: `<path>`
-- Run Stats: `<path>`
+

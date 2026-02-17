@@ -2,30 +2,57 @@
 
 **Objective**: Generate cards by systematically applying ALL rules from the knowledge base. This document contains the consolidated, authoritative rules for the Ankify system.
 
-## 1. The Core Pillars
+## 0. Configuration & Constraints
 
-1. **Context First**: No orphans. Every card must be anchored to a concept, code snippet, or scenario.
-2. **Atomicity**: One card, one idea. No multi-part questions.
-3. **Active Recall**: No yes/no. No recognition. Demand generation.
-4. **Signal-to-Noise**: Zero filler.
+> [!IMPORTANT]
+> The following settings are the definitive source of truth for the Agent's behavior.
 
-## 2. Actualization Table (Machine-Checkable)
+### Global Limits
+| Variable | Value | Description |
+| :--- | :--- | :--- |
+| `MAX_CARDS_PER_NOTE_BASE` | 5 | Base limit for cards per note. |
+| `MAX_CARDS_PER_NOTE_CAP` | 10 | Absolute maximum cards per note (hard cap). |
+| `MIN_CARDS_PER_NOTE` | 3 | Minimum cards where complex rules apply. |
+| `CODE_BLOCK_SCALER` | 1 | Additional cards allowed per atomic code logical unit. |
 
-| RULE_ID | Trigger | Rule | Why | Enforcement | Repair |
-|---|---|---|---|---|---|
-| MC-CTX-001 | card_type == CONSTRUCTIVE | **Explicit Context Required** | Code without context is guessing. | Front must contain "Given:" or variable definitions. | Inject missing variable/state context from note. |
-| MC-CTX-002 | any card | **No Orphan Pronouns** | "It" depends on context users won't have. | Front must not start with "It", "This", "They" without an antecedent. | Replace pronoun with specific noun/concept. |
-| MC-ATOM-001 | any card | **Single Atomic Task** | Multi-part cards cause partial fail loops. | Front must not contain multiple distinct questions (bulleted lists of Qs). | Split into multiple cards. |
-| MC-ACTIVE-001 | any card | **No Yes/No Questions** | Recognition is not recall. | Front must not start with "Is/Are/Does/Can/Should" expecting a boolean. | Rewrite as "When..." "How..." "What...". |
-| MC-ACTIVE-002 | any card | **No Fill-in-the-Blank** | Cloze is for idioms, not concepts. | Front must be a complete question, not a sentence with a missing word (unless explicit Cloze type). | Convert to Q&A. |
-| MC-SIGNAL-001 | any card | **No Generic "Explain"** | "Explain X" usually leads to vague, long answers. | Front must not be "Explain [Topic]". Use "Draw the model", "Trace the execution", "Contrast X and Y". | Narrow scope to specific mechanism/scenario. |
-| MC-SIGNAL-002 | card_type == FAILURE_MODE | **Concrete Failure** | "What goes wrong?" is too broad. | Front must specify the scenario: "What mistake causes error X?" or "What happens if I do Y?". | Add scenario constraint. |
-| MC-SIGNAL-003 | any card | **Banned Phrases** | Filler wastes time. | Back must not contain: "leads to incorrect behavior", "end-to-end", "misused". | Replace with specific error/outcome. |
-| MC-ANCHOR-001 | type in [MODEL, COMPARISON] | **Anchored Prompts** | Drift leads to hallucination. | Question must contain at least one unique token (function name, specific term) from the note. | Inject code token or specific term. |
-| MC-CODE-001 | card_type == CONSTRUCTIVE | **Whiteboard Rule** | Reading code is distinct from writing it. | Front asks to "Write", "Implement", "Refactor". Back contains code block. | Change verb to "Write/Implement". |
-| MC-BOUND-001 | any card | **Boundary Definition** | Understanding requires limits. | Set must include at least one card asking "When does this FAIL?" or "What is NOT covered?". | Generate a Failure Mode or Negation card. |
+### Triggers (Input -> Card Type)
+**Rule**: If the note contains these elements, you MUST generate the corresponding card type.
 
-## 3. The Mandates (Consolidated Rules)
+| Content Element | Target Card Type | Prompt Strategy |
+| :--- | :--- | :--- |
+| **Code Block** (Atomic Logic) | **CONSTRUCTIVE** | "Given [Context], write the code to [Task]" |
+| **Big Code Block** (>5 lines) | **CONSTRUCTIVE** (x3-5) | Decompose into multiple atomic logic cards |
+| **"Bolded" Rule/Pattern** | **THEORY** | "What is the rule for..." / "Explain why..." |
+| **Distinction** (X vs Y) | **NEGATION** | "How does A differ from B?" / "X is NOT Y because..." |
+| **Counter-Evidence** | **COUNTER-EVIDENCE** | "When does X NOT apply?" / "What contradicts this?" |
+| **Definition** | **DEFINITION** | "What is [term]?" |
+| **Configuration/Steps** | **PROCEDURE** | "How do you set up X?" |
+| **Mental Model** | **MODEL** | "Draw the diagram..." / "Visualize..." |
+| **Common Mistake** | **FAILURE_MODE** | "What goes wrong if you do X?" |
+
+### Quota Priorities (The Cull)
+**Rule**: If `total_cards > MAX_CARDS_PER_NOTE_CAP`, keep cards in this priority order (1 = Keep, 6 = Drop first).
+
+1.  **MODEL** (Highest Value)
+2.  **CONSTRUCTIVE**
+3.  **FAILURE_MODE**
+4.  **COUNTER_EVIDENCE**
+5.  **SYNTHESIS**
+6.  **NEGATION** (Lowest Value - drop first)
+
+### Validation Rules (The Gatekeeper)
+**Rule**: Any card violating these rules is **INVALID** and must be regenerated.
+
+1.  **NO Generic "Explain X"**: Prompt must be specific ("How does X handle Y?").
+2.  **NO Yes/No Questions**: Prompt must demand production, not recognition.
+3.  **NO Orphan Pronouns**: Front must not start with "It", "This", "They" (unless defined in the same card).
+4.  **NO Filler Phrases**: Back must not contain "leads to incorrect behavior", "end-to-end", "misused".
+5.  **NO Multi-part Questions**: One Question = One Card.
+6.  **Context Required**: Constructive cards must provide "Given:" state.
+
+---
+
+## 1. The Mandates (The Core Philosophy)
 
 ### PR-EFFICIENCY-01
 **Rule**: Spaced repetition provides 20x+ efficiency gains compared to conventional flashcards, reducing total review time from hours to minutes over multi-year periods.
@@ -426,73 +453,3 @@
 **Rule**: Bridge the theory-practice gap by anchoring salience prompts in specific, real-world contexts.
 - **Type**: Rule
 - **Directive**: Personalize prompts by framing them in the context of the user's specific life situations.
-
-## 4. Operational Doctrine (Procedures & Quotas)
-
-### Structural Mapping
-Treat H2 sections as atomic concepts. Use H3 subsections as card-type cues.
-
-| H3 Subsection | Card Type |
-|--------------|-----------|
-| **Notes** | THEORY |
-| **Distinctions & Negations** | NEGATION |
-| **Counter-Evidence** | COUNTER-EVIDENCE |
-| **Definitions** | DEFINITION |
-| **Configuration** | PROCEDURE |
-| **Technical Procedures** | PROCEDURE |
-| **Code Implementation** | CONSTRUCTIVE |
-
-### Content Element -> Card Type
-```
-Code block (<=5 lines)  -> CONSTRUCTIVE ("Write the code for...")
-Code block (>5 lines)   -> Decompose into 3-5 atomic CONSTRUCTIVE cards
-Bolded rule/pattern     -> THEORY ("What is the rule for..." / "Explain why...")
-Distinction (X != Y)    -> NEGATION ("How does A differ from B?")
-Counter-evidence        -> COUNTER-EVIDENCE ("When does X NOT apply?")
-Definition              -> DEFINITION ("What is [term]?")
-Configuration           -> PROCEDURE ("How do you set up X?")
-Mental model            -> MODEL ("Explain/visualize how X works")
-Common mistake          -> FAILURE MODE ("What goes wrong if you do X?")
-```
-
-### Canonical Card Types
-Use these internal names consistently:
-THEORY, CONSTRUCTIVE, SYNTHESIS, MODEL, FAILURE_MODE, NEGATION, COUNTER_EVIDENCE, DEFINITION, PROCEDURE
-
-### Quantitative Minimums
-When the triggering elements exist in the note, enforce minimum counts:
-- concept_count >= 2 -> synthesis_cards >= 1
-- concept_count >= 4 -> synthesis_cards >= 2
-- h2_count >= 2 -> cross_h2_synthesis_cards >= 1
-- mental_models present -> model_cards >= 1
-- failure_modes present -> failure_mode_cards >= 1
-- contradictions present -> counter_evidence_cards >= 1
-- distinctions present -> negation_cards >= 1
-
-### Hard Cap (Absolute)
-- Basic notes: `max_total_cards_max = 6` when anchors < 8 AND h2_count < 3 AND code_blocks <= 1.
-- High complexity: `max_total_cards_max = 8` when any threshold is exceeded.
-
-### Conversion Quota (Depth Without Growth)
-For every 5 PROCEDURE cards in a note, convert 1 into a deeper doctrine type by replacement.
-Priority order:
-1. MODEL
-2. FAILURE_MODE
-3. COUNTER_EVIDENCE
-4. SYNTHESIS
-5. NEGATION
-
-
-### Manifesto Compliance Checklist
-Use this checklist before TSV serialization:
-- Mapping: H2/H3 structural mapping applied to all sections.
-- Elements: content elements mapped to required card types.
-- Coverage: every structural element yields >=1 card.
-- Tier 1: MODEL, FAILURE MODE, NEGATION, COUNTER-EVIDENCE, SYNTHESIS present when triggered.
-- Minimums: quantitative minimums satisfied when triggered.
-- Connectivity: connectivity minimums satisfied when triggered.
-- Internalization linkage: boundary, misconception, link reflected in cards.
-- Budget: card counts aligned with card_budget_plan.
-- Conversion quota: procedure-to-deep conversion quota satisfied.
-- Quality: atomic, active recall, contextualized, unambiguous.
-- Output: no rule metadata leaked into card text.

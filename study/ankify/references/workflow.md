@@ -37,22 +37,23 @@ This document defines the single, authoritative pipeline for transforming Obsidi
 -   **Outcome**: *Target Budget*.
 
 ### 4. Generate (LLM)
--   **Input**: Internalization +  Manifesto Core + Plan + `manifesto.md` insights   + `depth-templates.md` as a guide.
+-   **Input**: Internalization +  Manifesto Core + Plan + `manifesto.md` insights + `examples.md` (patterns & constraints).
 -   **Process**:
     -   LLM generates `front`, `back`, `url` for each card.
-    -   **Strict Rule**: Every card must be ,apped [conseptually _this will not go the actual .tsv file vut for the llm for anti-cheating] the Manifesto Rule ID (e.g., `[PR-0014]`) that justifies its existence in the thought process.
+    -   **Strict Rule**: Every card must map to a Manifesto Rule ID (e.g., `[PR-0014]`) that justifies its existence in the thought process.
     -   **Strict Rule**: No generic templates ("Explain how X works"). Use "atomic" prompts.
     -   **Strict Rule**: Meaningful content only. No "filler" cards to hit quotas.
 -   **Outcome**: Raw TSV lines.
 
-### 5. Validate (Script)
+### 5. Validate (Script Loop)
 -   **Input**: Raw TSV.
 -   **Tooling**: `validate_cards.py`.
 -   **Checks**:
+    -   **Manifesto Compliance**: Checks for banned phrases, bad patterns, and missing fields.
     -   **Format**: 3 columns, no raw newlines.
 -   **Behavior**:
     -   **Pass**: Append to `ankify_output.tsv`.
-    -   **Fail**: Return failure list (stderr) -> **GOTO Step 4** (Retry with specific feedback).
+    -   **Fail**: Read stderr for specific line errors -> **GOTO Step 4** (Fix specific cards and retry until clean).
 
 ## Artifacts
 -   `ankify_output.tsv`: Final cards.

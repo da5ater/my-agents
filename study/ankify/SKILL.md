@@ -61,4 +61,5 @@ echo "<your_tsv_content>" | python3 scripts/validate_cards.py --vault mohamed --
 -   **No Yes/No questions**.
 -   **No Orphan Pronouns** ("It", "This").
 -   **Strict TSV Format**: `Front <TAB> Back <TAB> URL`. No raw newlines in fields (use `<br>`).
+-   **Validation Loop**: You must run the validation script and fix any reported errors until the script passes with exit code 0.
 
