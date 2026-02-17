@@ -70,36 +70,81 @@ Generate an Obsidian note in this order. Omit sections that lack signal or fail 
 
 Break the content into logical sections. Apply this structure only to concepts selected in the Activation Set and within the Budgeted Section Plan.
 
+> [!IMPORTANT] DOCTRINE ALIGNMENT
+> These sections MUST enforce `references/doctrine.md` rules:
+> - **EXT-01 (Signal Types)**: Each section maps to a signal type
+> - **EXT-02 (Feynman Test)**: Explain simply, no jargon without definition
+> - **EXT-04 (Atomic Decomposition)**: One note = one idea, one bullet = one rule
+> - **STR-04 (Rule-Based Patterning)**: Every bullet starts with bold rule name
+> - **STR-05 (Code Contextualization)**: All code blocks require context
+
 ##### [Section Title] (H2)
 
-###### Notes (H3)
+> Enforces: **STR-01** (Atomic Note), **STR-02** (No H1 in body)
 
-- **Goal:** Extract the underlying **rules, patterns, frameworks, or recipes** behind what is being taught.
-- **Style:** Use **Rule-Based Patterning**. Each bullet must:
-  - Start with a **bolded rule/pattern name** followed by a colon.
-  - Explain the **why** and **when** this rule applies, not just the **what**.
-  - Be **atomic**—one rule per bullet.
-- **Requirement:** For every fact, ask: _"What is the transferable principle here?"_
-- **Cognitive Tooling:** Explicitly capture "Mental Models", "Common Mistakes", or "Argument Categories" if present.
+###### Models & Mental Frameworks (H3)
+
+> **Signal Type:** Models (EXT-01)
+
+- **Goal:** Extract mental models, frameworks, or "ways of seeing" the domain
+- **Style:** Use **Rule-Based Patterning** (STR-04). Each bullet must:
+  - Start with a **bolded model name** followed by a colon
+  - Explain the **why** and **when** this model applies
+  - Be **atomic**—one model per bullet
+- **Requirement:** Answer: _"What is the transferable principle here?"_
+- **Format:** `**Model Name:** Explanation including when to apply it.`
 
 ###### Definitions (H3 - CONDITIONAL)
 
-- **Trigger:** Only if the text introduces **CRITICAL** domain-specific jargon.
+> **Signal Type:** Definitions (EXT-01) | Enforces: **EXT-02** (Feynman Test)
+
+- **Trigger:** Only if the text introduces **CRITICAL** domain-specific jargon (EXT-01)
 - **Constraint:** Do not define common words. Only define terms that would block understanding if unknown.
-- **Format:** **Term:** Precise definition based on the context.
+- **Format:** **Term:** Precise definition explained simply (Feynman Test)
+- **Requirement:** If you cannot explain it simply, mark as `> [!TODO] Research <Term>`
 
 ###### Distinctions & Negations (H3 - CONDITIONAL)
 
-- **Trigger:** If the text defines what something is NOT or distinguishes between similar concepts (explicit or implied).
+> **Signal Type:** Arguments (EXT-01) | Enforces: **EXT-03** (Darwin's Golden Rule)
+
+- **Trigger:** If the text defines what something is NOT or distinguishes between similar concepts
 - **Format:** "X is NOT Y because..." or "Unlike A, B does..."
-- **Goal:** Explicitly define boundaries of the concept.
+- **Goal:** Explicitly define boundaries of the concept
+- **Requirement:** Capture disconfirming evidence—what this concept is NOT
 
-###### Counter-Evidence & Disagreements (H3 - CONDITIONAL)
+###### Counter-Evidence & Disconfirmations (H3 - CONDITIONAL)
 
-- **Trigger:** If the text contradicts common wisdom, previous notes, or itself (explicit or implied).
-- **Goal:** Prioritize capturing contradictions ("Darwin's Golden Rule") to prevent confirmation bias.
+> **Signal Type:** Counter-Evidence (EXT-01) | Enforces: **EXT-03** (Darwin's Golden Rule)
+
+- **Trigger:** If the text contradicts common wisdom, previous notes, or itself
+- **Goal:** Prioritize capturing contradictions to prevent confirmation bias
+- **Format:** `**Contradiction:** [What it contradicts] → [The counter-evidence]`
+- **Requirement:** Never suppress friction—capture what challenges current understanding
+
+###### Insights & Novel Connections (H3 - CONDITIONAL)
+
+> **Signal Type:** Insights (EXT-01)
+
+- **Trigger:** Novel connections, "aha" moments, or unexpected relationships
+- **Format:** `**Insight:** [The connection] → [Why it matters]`
+- **Goal:** Capture moments of synthesis that restructure understanding
+
+###### Procedures & Workflows (H3 - CONDITIONAL)
+
+> **Signal Type:** Procedures (EXT-01)
+
+- **Trigger:** Actionable, step-by-step "how-to" recipes
+- **Style:** Numbered lists of clear, actionable steps
+- **Requirement:** Include prerequisites, steps, and expected outcomes
+- **Format:** 
+  ```
+  1. **Step Name:** Action to take
+  2. **Step Name:** Action to take
+  ```
 
 ###### Configuration (H3 - CONDITIONAL)
+
+> **Signal Type:** Procedures (EXT-01) | Enforces: **STR-05** (Code Contextualization)
 
 - _Include ONLY if the content involves setup, installation, or environment configuration._
 - **MANDATORY CHECKLIST (Do not omit):**
@@ -108,31 +153,59 @@ Break the content into logical sections. Apply this structure only to concepts s
   3.  **Environment Variables:** ALL required env vars (Names and Values).
   4.  **Source Origin:** Where these values came from.
 
-###### Technical Procedures & Workflows (H3 - CONDITIONAL)
-
-- **Trigger:** If the tutorial explains _how to do something_ that isn't purely writing code (e.g., configuring a Postman environment).
-- **Goal:** Capture the "Applicable" part of the text. Document exact steps.
-- **Style:** Numbered lists of clear, actionable steps.
-- **Balance:** Bridge the gap between "Notes" (Theory) and "Code Implementation" (Syntax).
-
 ###### Code Implementation (H3 - CONDITIONAL)
+
+> Enforces: **STR-05** (Code Contextualization) | **C-07** (Code Context)
 
 - _Include ONLY if code, scripts, or implementation logic is discussed._
 - **Goal:** The FINAL, working version of the code.
 - **Rules:**
-  1.  **File Path Citation:** You MUST explicitly state the file path/name before the block (e.g., `**File**: src/features/auth/AuthContext.js`).
-  2.  **Runnable:** Must be copy-paste ready.
-  3.  **Comments:** Add educational comments explaining the _WHY_ and _HOW_.
-  4.  **Integrity:** Do not truncate lines.
+  1.  **File Path Citation (REQUIRED):** You MUST explicitly state the file path/name before the block (e.g., `**File**: src/features/auth/AuthContext.js`).
+  2.  **Language Specification (REQUIRED):** Must specify language (e.g., ```python, ```javascript)
+  3.  **Runnable:** Must be copy-paste ready.
+  4.  **Comments:** Add educational comments explaining the _WHY_ and _HOW_.
+  5.  **Integrity:** Do not truncate lines.
+  6.  **Preservation:** **ALL code blocks from input MUST appear in output**—no exceptions
+
+> [!CRITICAL] CODE PRESERVATION MANDATE
+> **Constraint C-02 (Signal Sanctity) applies:** If code appears in the source, it MUST appear in the note.
+> - Do not summarize code—include full implementation
+> - Do not omit "obvious" code—if it's in the source, it's in the note
+> - Every code block requires context: where it came from and what it does
 
 > [!IMPORTANT] SECTION NECESSITY TEST
-> Before creating any conditional H3, ask: "Does this section add information NOT already captured in Notes H3?"
+> Before creating any conditional H3, ask: "Does this section add information NOT already captured in higher-level sections?"
 > If the answer is NO → skip the section.
+
+#### Code Preservation Rules (Hard Constraints)
+
+> **Enforces:** **C-02** (Signal Sanctity), **C-07** (Code Context), **STR-05** (Code Contextualization)
+
+**The Code Imperative:**
+Every code block discussed in the input MUST be preserved in the final note. This is non-negotiable.
+
+**Rules:**
+1. **No Code Left Behind**: If the source contains code, the note contains code
+2. **Full Context Required**: Every code block must have:
+   - File path/origin citation
+   - Language specification
+   - Explanation of purpose
+3. **No Summarization**: Do not replace code with "The code does X" descriptions
+4. **Complete Implementation**: Include full code, not partial snippets (unless source is partial)
+5. **Working State**: Code must be copy-paste ready
+
+**Verification Checklist:**
+- [ ] Count code blocks in input
+- [ ] Count code blocks in output  
+- [ ] Verify count matches (input count ≤ output count)
+- [ ] Verify each has file path context
+- [ ] Verify each has language tag
 
 #### Output Rules (References)
 
 > **See `references/doctrine.md` for Hard Limits.**
 -   **File Only**: (Constraint C-03)
 -   **Structure**: (Constraint C-05)
+-   **Code Preservation**: Every code block from input appears in output
 
 
