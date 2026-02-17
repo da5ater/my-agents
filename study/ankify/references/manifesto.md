@@ -482,10 +482,6 @@ Priority order:
 4. SYNTHESIS
 5. NEGATION
 
-### Per-Note Card Cap
-max_cards_per_note = clamp(10 + code_blocks*2, 12, 18)
-If code_blocks == 0, max_cards_per_note = 12.
-If exceeded, convert excess into deeper variants.
 
 ### Manifesto Compliance Checklist
 Use this checklist before TSV serialization:

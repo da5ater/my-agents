@@ -13,9 +13,9 @@ Transform Obsidian notes into rigorous Anki cards.
 
 When this command is invoked, you **MUST** execute the following workflow immediately:
 
-1.  **Discover**: Run `python3 scripts/process_corpus.py --input <path>` to get the list of notes.
+1.  **Discover**: read all notes in the given path [input], to get the list of notes.
 2.  **Iterate**: For each note in the list, execute the **5-Step Pipeline** (Internalize -> Plan -> Generate -> Validate) defined in `references/workflow.md`.
-3.  **Stream**: Valid cards must be piped to `scripts/validate_cards.py` and appended to `ankify_output.tsv` in real-time.
+3.  **Validate** [loop after .TSV is done]: run the validator script on the generated TSV lines, when error occurs correct the cards and retry. 
 4.  **Report**: After all notes are processed, output a final summary using `references/run-summary-template.md`.
 
 ## Core Rules & Process
@@ -33,14 +33,15 @@ This skill enforces a **Manifesto-First** approach. You must consult the followi
 
 ### 1. Discover Notes
 ```bash
-python3 scripts/process_corpus.py --input <path_to_notes>
+# List all notes in the given path
+find <path> -type f -name "*.md"
 ```
 
 ### 2. Generate Cards (Per Note)
 For each note, follow the **5-Step Pipeline**:
-1.  **Read** the note and `manifesto.md`.
+1.  **Read** the note and `references/manifesto.md`.
 2.  **Internalize** key concepts and boundaries.
-3.  **Plan** the card budget and types.
+3.  **Plan** how are going to apply the manifesto to the note.
 4.  **Generate** TSV lines (Front/Back/URL).
 5.  **Validate** using the script:
 
@@ -55,7 +56,9 @@ echo "<your_tsv_content>" | python3 scripts/validate_cards.py --vault mohamed --
 -   **Summary**: After processing all notes, write a summary report using `references/run-summary-template.md`.
 
 ## Critical Constraints
+-   **Manifesto-First**: You must follow the manifesto as the brain to create the cards.
 -   **No "Explain X" cards**.
 -   **No Yes/No questions**.
 -   **No Orphan Pronouns** ("It", "This").
 -   **Strict TSV Format**: `Front <TAB> Back <TAB> URL`. No raw newlines in fields (use `<br>`).
+
