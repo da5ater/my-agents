@@ -48,8 +48,6 @@ Prioritize information that *contradicts* current understanding. Disconfirming e
 **Rule [EXT-04]: Atomic Decomposition**
 Complex ideas must be broken down into their smallest indivisible units (atoms). One Note = One Idea. Do not lump disparate concepts into a single "Mega-Note."
 
-**Rule [EXT-05]: Source Traceability**
-While we de-contextualize the *content*, we must rigorously cite the *provenance*. Every claim must be traceable back to its origin (source file, author) to maintain intellectual honesty.
 
 **Rule [EXT-06]: Meaning over Syntax**
 Do not capture "housekeeping" chat (e.g., "Hello everyone", "Subscribe to the channel"). Capture only the core semantic meaning.
@@ -93,6 +91,7 @@ Code blocks must never stand alone.
 Always include standard YAML frontmatter:
 -   `tags`: Plural, lowercase, topic-based (e.g., `#algorithms` not `#Algo`).
 -   `aliases`: Alternative names for searchability.
+-   `backlinks`: [] //must include
 
 ---
 
