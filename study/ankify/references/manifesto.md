@@ -55,20 +55,59 @@
 4.  **NO Filler Phrases**: Back must not contain "leads to incorrect behavior", "end-to-end", "misused".
 5.  **NO Multi-part Questions**: One Question = One Card.
 6.  **Context Required**: Constructive cards must provide "Given:" state.
+7.  **NO Duplicates**: If two cards test the same target fact, keep only the strongest version.
+8.  **AIU Cap**: One Atomic Information Unit (AIU) → one card by default; two cards max only if the AIU is hard.
+9.  **Fragility Filter**: Avoid blank-swap or label-only cards unless tied to a concrete scenario or boundary.
 
 ---
 
+## Operational Rule Pack (Applies to Card Generation)
+
+These rules replace all abstract/philosophical mandates during generation. Cards must comply with TSV: `Front<TAB>Back<TAB>URL`, and **Front/Back must contain only the question and answer** (no metadata, prefixes, or labels).
+
+### 1) Decision Framework (AIU + Hardness)
+- List AIUs (Atomic Information Units) in the note.
+- For each AIU, label **Easy** or **Hard**.
+- **Easy AIU → 1 card**. **Hard AIU → 2 cards max**.
+- If a note has **1–2 AIUs**, cap total cards at **1–2** (skip trigger expansion).
+- Code blocks are not AIUs; extract the AIU(s) and keep only the highest‑signal one(s).
+
+### 2) Card Quality Checklist (Must Pass)
+- Specific target (no generic "Explain X").
+- Single correct answer (univocal).
+- Concrete scenario or boundary (no abstract-only prompts).
+- Minimal runnable context for code prompts.
+- No full lists unless ordered.
+- No duplicate testing of the same AIU.
+- No blank-swap prompts unless tied to a scenario or boundary.
+
+### 3) Type Selector (Choose ONE per AIU)
+- **Mechanism** → Why/How with example.
+- **Distinction** → Contrast/Negation.
+- **Procedure** → Constructive steps.
+- **Mistake** → Failure mode.
+- **Definition** → Only if paired with boundary or example (hard AIU only).
+
+### 4) Anti-Bloat Filters
+- If two cards differ only by wording, keep one.
+- Do not auto-add "why" cards unless AIU is hard.
+- Do not apply 5‑lens expansion unless concept is advanced + high‑leverage.
+
+### 5) Thin-Prompt Fixer
+- If a prompt is just a label swap, replace with a scenario/boundary prompt.
+- If a prompt is abstract, add a concrete example.
+- If a prompt is too easy, drop or merge into the strongest AIU card.
+
+## Atomic Information Unit (AIU) Budgeting
+
+**Rule**: An AIU is a single discrete idea (fact, mechanism, distinction, or procedure).
+**Rule**: Each AIU gets one card by default.
+**Rule**: A second card is allowed only if the AIU is hard (multi-step, error-prone, counter-intuitive, or frequently confused).
+**Rule**: If a note contains 1–2 AIUs, cap the note at 1–2 total cards; skip trigger expansion.
+**Rule**: Code blocks are not AIUs. Extract AIUs from code and keep only the highest-signal ones.
+**Rule**: When two cards differ only by wording, keep one and delete the rest.
+
 ## 1. The Mandates (The Core Philosophy)
-
-### PR-EFFICIENCY-01
-**Rule**: Spaced repetition provides 20x+ efficiency gains compared to conventional flashcards, reducing total review time from hours to minutes over multi-year periods.
-- **Type**: Model
-- **Directive**: Recognize the long-term time savings (4-7 minutes vs 2+ hours over 20 years) to justify the upfront effort of card creation.
-
-### PR-0001
-**Rule**: Memory is an intentional choice and behavior, not a passive event.
-- **Type**: Model
-- **Directive**: Treat card creation as a deliberate choice; prioritize intentional memory targets.
 
 ### PR-0002
 **Rule**: Contextual Scaffolding
@@ -90,20 +129,10 @@
 - **Type**: Model
 - **Directive**: Use cloze deletion as a primary card type for rapid content creation.
 
-### PR-0006
-**Rule**: Visual Anchoring
-- **Type**: Rule
-- **Directive**: Use images and diagrams to provide visual anchors for facts.
-
 ### PR-0007
 **Rule**: Mnemonic Scaffolding
 - **Type**: Rule
 - **Directive**: Incorporate mnemonics into the answer or extra field of cards to aid initial recall.
-
-### PR-0008
-**Rule**: Graphic/Image Occlusion
-- **Type**: Model
-- **Directive**: Use Image Occlusion for visual-spatial knowledge.
 
 ### PR-0009
 **Rule**: Set Avoidance
@@ -135,25 +164,15 @@
 - **Type**: Rule
 - **Directive**: Add parenthetical personal references or specific examples to questions (e.g., 'like the one at [Person]'s house').
 
-### PR-0015
-**Rule**: The slip-box (note system) grows in knowledge and utility (exponentially) in lockstep with the user's own competency, providing increasing connections and smart suggestions as it scales.
-- **Type**: Model
-- **Directive**: Scale the card collection as a reflection of deepening expertise.
-
 ### PR-0016
 **Rule**: A note system must be treated as a dynamic, interconnected structure rather than a static collection or storage space for isolated notes.
 - **Type**: Constraint
 - **Directive**: Design cards that refer to other cards or broader concepts to avoid isolation.
 
-### PR-0017
-**Rule**: The primary utility of a note-taking system is to provide a space for ideas to mingle and generate new insights, rather than merely retrieving specific facts.
-- **Type**: Principle
-- **Directive**: Create "comparison" or "synthesis" cards that force different ideas to interact.
-
 ### PR-0018
 **Rule**: Effective learning requires anchoring new information to a rich, interconnected latticework of prior knowledge ("docking points") to facilitate understanding and retrieval.
 - **Type**: Model
-- **Directive**: Use "context" fields to explicitly name the prior knowledge that "docks" the new fact.
+- **Directive**: Include minimal context in the question that names the prior knowledge that "docks" the new fact.
 
 ### PR-0019
 **Rule**: Temporal Stamping
@@ -170,25 +189,10 @@
 - **Type**: Rule
 - **Directive**: Create cards that distinguish between different writing sub-tasks and their specific cognitive requirements.
 
-### PR-0022
-**Rule**: Static questions maintain memory but don't promote progressive deepening of understanding over time.
-- **Type**: Failure mode
-- **Directive**: The limitation of static flashcards (maintenance without progressive deepening).
-
-### PR-0023
-**Rule**: Memory systems often fail to connect to authentic practice, making practice feel decontextualized and generic rather than project-grounded.
-- **Type**: Failure mode
-- **Directive**: The authentic practice disconnect in traditional spaced repetition (generic vs. context-grounded).
-
 ### PR-0024
 **Rule**: Practice prompts should be synthesized from learner's own activity (highlights, questions) and grounded in their authentic project context.
 - **Type**: Rule
 - **Directive**: The principle of synthesizing practice from personal activity traces (not generic questions).
-
-### PR-0025
-**Rule**: Complex ideas cannot be fully structured or critiqued within working memory; externalization (writing) is a prerequisite for improvement and analysis.
-- **Type**: Principle
-- **Directive**: Teach that externalization allows for manipulation and critique impossible in working memory.
 
 ### PR-0026
 **Rule**: Expertise is the result of sedimented experience and feedback loops, allowing for intuitive action ("gut feeling") that transcends explicit rule-following.
@@ -210,11 +214,6 @@
 - **Type**: Constraint
 - **Directive**: None specific.
 
-### PR-0030
-**Rule**: Understanding is functionally equivalent to the density of connections between ideas; the slip-box acts as a machine for building these connections and thus understanding. Contribution types include additions, contradictions, and questions.
-- **Type**: Definition
-- **Directive**: Context cues retrieval; connections aid recall.
-
 ### PR-0031
 **Rule**: Incomplete tasks (open loops) occupy short-term memory (Zeigarnik effect); writing them down ("closing" the task) clears cognitive load.
 - **Type**: Mechanism
@@ -223,31 +222,6 @@
 ### PR-0032
 **Rule**: Deliberately keeping questions unanswered ("open loops") allows the brain to process them in the background (diffuse mode) for creative problem solving.
 - **Type**: Strategy
-- **Directive**: None specific.
-
-### PR-0033
-**Rule**: The synthesis should strengthen both authentic practice (by making it more tractable) and explicit learning (by connecting it to community).
-- **Type**: Principle
-- **Directive**: The third design principle (strengthen both immersion and guided learning domains).
-
-### PR-0034
-**Rule**: Explicit learning must include dynamic, varied reinforcement that ensures transfer and progressively deepens understanding over time.
-- **Type**: Principle
-- **Directive**: The fourth design principle (learning that works
-
-### PR-0035
-**Rule**: Writing should be the assembly of existing notes into a draft, rather than a linear process of facing a blank page; the goal is the note series, not the draft itself.
-- **Type**: Process
-- **Directive**: None specific.
-
-### PR-0036
-**Rule**: The slip-box acts as a semi-autonomous dialogue partner that generates surprise and feedback, rather than just a passive storage device.
-- **Type**: Metaphor
-- **Directive**: None specific.
-
-### PR-0037
-**Rule**: Notes must strip ideas of their original source context (de-contextualization) and translate them into the user's own language to allow them to be re-embedded into new contexts; copying quotes without this process destroys meaning.
-- **Type**: Mechanism
 - **Directive**: None specific.
 
 ### PR-0038
@@ -260,30 +234,10 @@
 - **Type**: Principle
 - **Directive**: Why avoid linear processes? (To reduce confirmation bias).
 
-### PR-0040
-**Rule**: Literature notes are a transient tool for understanding and preparing ideas for the slip-box; they should not be polished as final products but used to capture the essence and 'practice' understanding.
-- **Type**: Principle
-- **Directive**: None specific.
-
-### PR-0041
-**Rule**: The note system is content-agnostic but relevance-dependent; it accepts any topic provided it connects to existing notes.
-- **Type**: System Property
-- **Directive**: None.
-
 ### PR-0042
 **Rule**: Decontextualized information prevents true understanding.
 - **Type**: Failure mode
 - **Directive**: Avoid "orphan" cards that test facts without reference to their theoretical or narrative context.
-
-### PR-0043
-**Rule**: Mental models, error patterns, and categories act as navigation aids for understanding texts.
-- **Type**: Cognitive Tooling
-- **Directive**: None.
-
-### PR-0044
-**Rule**: Intellectual maturity requires the courage to use one's own understanding rather than relying on guidance (Sapere aude).
-- **Type**: Core Value
-- **Directive**: None.
 
 ### PR-0045
 **Rule**: True understanding of a claim requires explicitly defining its boundaries and what it excludes (Negation/Inversion).
@@ -305,40 +259,15 @@
 - **Type**: Model
 - **Directive**: Create cards that reinforce the agency of the user in determining their memory contents.
 
-### PR-0049
-**Rule**: Prompt engineering is a skill that can be analyzed and taught through principles, not just an art.
-- **Type**: Rule
-- **Directive**: Test the specific criteria for "effective" prompts.
-
-### PR-0050
-**Rule**: The goal of SRS is both retention of external info and development of personal insight.
-- **Type**: Goal
-- **Directive**: Include prompts that ask for personal applications or connections between ideas.
-
 ### PR-0051
 **Rule**: A prompt is essentially an instruction for a future mental action.
 - **Type**: Model
 - **Directive**: Ensure prompts are actionable and clear tasks for the future self.
 
-### PR-0052
-**Rule**: The effort of pulling information from the brain is what strengthens the memory trace.
-- **Type**: Model (Mechanism)
-- **Directive**: Prioritize active recall over recognition or passive reading.
-
-### PR-0053
-**Rule**: Memory and understanding are deeply linked; being able to recall details makes it easier to think with them.
-- **Type**: Model
-- **Directive**: Use recall tasks to build the foundation for complex problem-solving.
-
 ### PR-0054
 **Rule**: Meta-cognitive awareness is required to change thinking patterns.
 - **Type**: Rule
 - **Directive**: Include cards about cognitive biases and thinking patterns to build meta-awareness.
-
-### PR-0055
-**Rule**: The "test" is the learning event itself, not just a measurement of previous learning.
-- **Type**: Model
-- **Directive**: Emphasize the learning aspect of the review session.
 
 ### PR-0056
 **Rule**: Opportunistic flexibility beats rigid planning in intellectual work.
@@ -355,45 +284,15 @@
 - **Type**: Model (Taxonomy)
 - **Directive**: Use specific card templates/strategies based on the knowledge type.
 
-### PR-0059
-**Rule**: True understanding comes from linking external information to personal experience and existing knowledge.
-- **Type**: Model
-- **Directive**: Write personalized prompts that ask for connections to the user's own life/projects.
-
 ### PR-0060
 **Rule**: Trying to be 100% exhaustive is counterproductive and leads to burnout; prioritize high-value information.
 - **Type**: Failure mode / Rule
 - **Directive**: Do not create cards for every trivial detail; select for value.
 
-### PR-0062
-**Rule**: Effective prompts are atomic (one detail), precise, consistent, and tractable (easy to attempt).
-- **Type**: Rule (Criteria)
-- **Directive**: Audit cards against these four criteria.
-
-### PR-0063
-**Rule**: Asking "why" helps embed facts, list items, and procedural steps into a larger conceptual network, making them easier to retain and apply.
-- **Type**: Rule / Strategy
-- **Directive**: Supplement factual cards with "Why" (explanation) cards; create rationale-based prompts for list members.
-
-### PR-0064
-**Rule**: A prompt must lead to exactly one correct answer to be effective for retrieval practice.
-- **Type**: Rule (Constraint)
-- **Directive**: Refine prompts until the intended answer is the only logical response.
-
 ### PR-0065
 **Rule**: Grouping items by their role or function makes a list easier to remember.
 - **Type**: Model (Strategy)
 - **Directive**: Prompt for the "category" or "functional group" before prompting for members.
-
-### PR-0066
-**Rule**: Raw lists are hard for memory because they lack internal structure or sequence.
-- **Type**: Failure mode / Constraint
-- **Directive**: Avoid asking for an entire list at once.
-
-### PR-0067
-**Rule**: Using cloze deletions in a fixed-order list leverages visual memory (shape) to support recall.
-- **Type**: Model (Strategy)
-- **Directive**: Use fixed-order lists with cloze deletions for list items.
 
 ### PR-0068
 **Rule**: Sequence learning from atomic components to integrative holistic understanding.
@@ -405,31 +304,6 @@
 - **Type**: Rule (Constraint)
 - **Directive**: Use cues sparingly and only to resolve ambiguity; avoid trivializing the prompt.
 
-### PR-0070
-**Rule**: Standardize placement of mnemonics in the answer field (e.g., in parentheses) to preserve retrieval effort.
-- **Type**: Rule
-- **Directive**: Place mnemonics in the "Extra" or "Answer" field, parenthesized.
-
-### PR-0071
-**Rule**: Use high-valence, vivid, or personal associations (visuals, humor, disgust) for maximum mnemonic efficiency.
-- **Type**: Rule
-- **Directive**: Suggest vivid/emotional imagery for difficult prompts to aid recall.
-
-### PR-0072
-**Rule**: Create auxiliary cards for difficult mnemonics to reinforce the 'memory hook' itself.
-- **Type**: Failure mode fix
-- **Directive**: Add auxiliary cards to practice difficult mnemonics for "leech" cards.
-
-### PR-0076
-**Rule**: Use metadata and external links to maintain context and provenance without cluttering the prompt text itself.
-- **Type**: Rule/Constraint
-- **Directive**: Use the 'Source' field or a metadata footer for context instead of the question field.
-
-### PR-0077
-**Rule**: Triangulate a concept by applying five specific lenses: Attributes/tendencies, Similarities/differences, Parts/wholes, Causes/effects, Significance/implications.
-- **Type**: Model/Rule
-- **Directive**: Generate a suite of cards for each concept, covering all five lenses.
-
 ### PR-0078
 **Rule**: Identify "open lists" (evolving sets of examples) and treat them differently than "closed lists" (fixed factual sets); avoid closed-list techniques like clozes for open lists.
 - **Type**: Model
@@ -439,11 +313,6 @@
 **Rule**: Apply a three-tier strategy for open lists: link instances to the category, analyze the category's patterns, and fuzzily link the category back to instances by asking for examples.
 - **Type**: Rule
 - **Directive**: Use the three-tier approach (Instance->Tag, Tag Pattern, Tag->Instance) for open lists.
-
-### PR-0081
-**Rule**: Spaced repetition can be used to artificially extend the Baader-Meinhof phenomenon, keeping ideas salient ("top of mind") until they connect to life experiences.
-- **Type**: Model
-- **Directive**: Use salience prompts to keep important but not-yet-applied ideas top-of-mind.
 
 ### PR-0082
 **Rule**: Prompt writing and note-taking must be an iterative process that deepens and refines as the user's subject-matter mastery matures over time.

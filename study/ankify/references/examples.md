@@ -25,6 +25,15 @@
 
 ---
 
+## 0.7 AIU Budgeting (Required)
+*One Atomic Information Unit (AIU) → one card by default; two cards max only if the AIU is hard.*
+
+**Example (AIU = prototype equivalence):**
+*   **Keep**: "Given `circle = new Circle(10)`, prove `circle.__proto__ === Circle.prototype`."
+*   **Drop**: Rephrased variants that test the same fact.
+
+---
+
 ## 1. The Triggers (Canonical Types)
 *These strictly map to the "Triggers" table in `manifesto.md`. If you see the input, generate this card.*
 
@@ -128,4 +137,3 @@
 ### 2.6 Mnemonic Scaffolding
 **Input**: Hard-to-remember ordered lists.
 *   **Pattern**: `What are the [N] stages? (Mnemonic: [Phrase])`
-

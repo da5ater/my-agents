@@ -17,17 +17,20 @@ This document defines the single, authoritative pipeline for transforming Obsidi
     -   Identify headings (H1/H2/H3).
     -   Read full text.
     -   **Identify Path**: Determine the file's path relative to the vault root (e.g., `programming/javascript/basics.md`).
-    -   **Outcome**: A clean text representation of the note and an inventory of elements. with a highligt of the signal and core conecpts to be used in the cards as a sugestion.
+-   **Outcome**: A clean text representation of the note and an inventory of elements. with a highligt of the signal and core conecpts to be used in the cards as a sugestion.
+    -   **Outcome**: A clean text representation of the note and an inventory of elements. Highlight the AIUs (Atomic Information Units).
 
 ### 2. Internalize (LLM)
 -   **Input**: Note Text.
 -   **Rule**: `manifesto.md` -> Internalization
 -   **Process**: LLM summarizes the concept, defines boundaries, predicts misconceptions, and links to related concepts. pay great ayyention to the code blocks and the signal, and most important atomic logic inside this codeblock
+    -   **Process**: LLM summarizes the concept, defines boundaries, predicts misconceptions, and identifies AIUs with hardness rating (easy vs hard).
 -   **Outcome**: *Conceptual Internalization*.
 
 ### 3. Plan (LLM)
 -   **Input**: Internalization + Inventory + Manifesto Core.
 -   **Process**:
+    -   **Process**:
     -   **Step 3.1: Manifesto Scan**: Scan `manifesto.md` and give it your best shot to use as much as possible [sometimes it is not possible to use all the manifesto] from the manifesto to plan the cards.
     -   **Step 3.2: Selection**: LLM decides *which* concepts serve as anchors.
     -   **Step 3.3: Type Check**: LLM selects *which* card types apply based on `manifesto.md` triggers.
@@ -35,6 +38,8 @@ This document defines the single, authoritative pipeline for transforming Obsidi
     -   **Constraint**: Must respect the signal and the core concepts.
     -   **Constraint**: Must respect the code blocks and the signal, and most important atomic logic inside this codeblock.
     -   **Constraint**: code blocks has the highest priority in the note
+    -   **Constraint**: AIU Budgeting: 1 card per AIU by default; 2 only if hard. If note has 1–2 AIUs, cap at 1–2 total cards.
+    -   **Constraint**: De-duplication: avoid generating multiple cards that test the same AIU with different wording.
 -   **Outcome**: *Target Budget*.
 
 ### 4. Generate (LLM)
@@ -45,6 +50,7 @@ This document defines the single, authoritative pipeline for transforming Obsidi
     -   **Strict Rule**: Every card must map to a Manifesto Rule ID (e.g., `[PR-0014]`) that justifies its existence in the thought process.
     -   **Strict Rule**: No generic templates ("Explain how X works"). Use "atomic" prompts.
     -   **Strict Rule**: Meaningful content only. No "filler" cards to hit quotas.
+    -   **Strict Rule**: Do not generate more than 2 cards per AIU. Prefer the strongest single prompt.
 -   **Outcome**: Raw TSV lines.
 
 ### 5. Validate (Script Loop)
