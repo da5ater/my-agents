@@ -19,11 +19,14 @@ Generate an Obsidian note in this order. Omit sections that lack signal or fail 
 
 - **Title Selection:** Choose a descriptive, link-friendly title (e.g., "State Management in React" rather than "React Tutorial"). Use this title as the **filename**, not as an H1 in the body.
 - **YAML Frontmatter:** YAML at the very top delimited by `---`, e.g.
+  ```yaml
   ---
-  aliases: []
-  tags: []
-  backlinks: []
+  aliases: ["Alternative Name", "Short Name"]
+  tags: ["topic", "subtopic"]
+  backlinks: ["[[Related Note A]]", "[[Related Note B]]"]
   ---
+  ```
+- **Backlinks Rule:** The `backlinks` field is **required**. Populate it with `[[wikilinks]]` to all related notes. If no related notes exist yet, use `[]`. **This is the ONLY place backlinks or related-note links should appear — never in the note body (C-12).**
 - **File Start:** After frontmatter, start immediately with the first Atomic Section (H2). No meta sections in the file.
 
 #### Pre-Generation Artifacts (Silent Execution)
@@ -43,8 +46,8 @@ Generate an Obsidian note in this order. Omit sections that lack signal or fail 
 
 **Expected Atomic Section Output:**
 ```markdown
-##### React State Mutation (H2)
-###### Notes (H3)
+## React State Mutation
+### Notes
 - **The Immutability Rule:** Never mutate state variables directly.
   - *Why:* Direct mutation bypasses React's rendering lifecycle, causing the data to update but the UI to remain stale.
   - *When to apply:* Always use the provided setter function (e.g., `setState` or `setCount`) to guarantee UI synchronization.
@@ -56,8 +59,8 @@ Generate an Obsidian note in this order. Omit sections that lack signal or fail 
 
 **Expected Atomic Section Output:**
 ```markdown
-##### Installation & Setup (H2)
-###### Configuration (H3)
+## Installation & Setup
+### Configuration
 1. **Install Package:**
    ```bash
    npm install zod
@@ -208,4 +211,8 @@ Every code block discussed in the input MUST be preserved in the final note. Thi
 -   **Structure**: (Constraint C-05)
 -   **Code Preservation**: Every code block from input appears in output
 
+> [!WARNING] BACKLINKS BODY BAN (C-12)
+> **Never** add a "Related Notes", "See Also", "Backlinks", or any equivalent section to the note body.
+> Related note links belong **exclusively** in the `backlinks:` YAML frontmatter field.
+> Violation: If you find yourself writing wikilinks at the bottom of a note as a section — stop. Move them to frontmatter.
 

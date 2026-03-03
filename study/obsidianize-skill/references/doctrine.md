@@ -49,7 +49,7 @@ Prioritize information that _contradicts_ current understanding. Disconfirming e
 **Rule [EXT-04]: Atomic Decomposition**
 Complex ideas must be broken down into their smallest indivisible units (atoms). One Note = One Idea. Do not lump disparate concepts into a single "Mega-Note."
 
-**Rule [EXT-06]: Meaning over Syntax**
+**Rule [EXT-05]: Meaning over Syntax**
 Do not capture "housekeeping" chat (e.g., "Hello everyone", "Subscribe to the channel"). Capture only the core semantic meaning.
 
 ---
@@ -92,13 +92,16 @@ Code blocks must never stand alone.
 - Use `[[WikiLinks]]` for internal connections.
 - Use `[Label](URL)` for external sources.
 - Link aggressively to _entities_, _concepts_, and _authors_.
+- put all of them in the `backlinks` frontmatter field, not in the body.
 
 **Rule [STR-07]: Metadata (Frontmatter)**
 Always include standard YAML frontmatter:
 
 - `tags`: Plural, lowercase, topic-based (e.g., `#algorithms` not `#Algo`).
 - `aliases`: Alternative names for searchability.
-- `backlinks`: [] //must include
+- `backlinks`: Populate with `[[wikilinks]]` to all related notes in the vault (e.g., `["[[Note A]]", "[[Note B]]"]`). This field is **required**. If no related notes exist yet, use `[]`.
+
+> **Backlinks Rule:** Related note links belong **ONLY** in the `backlinks` frontmatter field. Never add a "Related Notes", "See Also", or backlinks section anywhere in the note body. The frontmatter is the single source of truth for connections.
 
 ---
 
@@ -114,9 +117,6 @@ Notes are never "finished." They are living documents. We create a "Draft" (v0),
 
 **Rule [WFL-02]: The Anti-Cramming Law**
 Do not try to process an entire library in one go. Process one source, integrate it, then move to the next. Knowledge requires "soak time."
-
-**Rule [WFL-03]: The "Open Loop" Strategy**
-If a concept is unclear or requires more research, explicitly mark it (e.g., `> [!TODO] Research X`). Do not pretend to know. Leaving an open loop is better than writing a hallucination.
 
 **Rule [WFL-04]: Active Review**
 The value of a note is realized only upon _retrieval_. Write notes "for your future self"—assume you have forgotten the context. Would this note still make sense 6 months from now?
@@ -189,3 +189,15 @@ We are a silent engine.
 
 - **Ban:** Do not capture "housekeeping" chat (e.g., "Hello everyone", "Subscribe", "Sponsors").
 - **Rule:** If the input is purely housekeeping with no signal, output a trivial empty note or error.
+
+**Constraint [C-11]: Open Loop Mandate**
+
+- **Rule:** If a concept is referenced but undefined/unclear in the source, DO NOT hallucinate a definition.
+- **Action:** Use an explicit callout: `> [!TODO] Research <Concept>`
+
+**Constraint [C-12]: Backlinks in Frontmatter Only**
+
+- **Rule:** Related note links MUST appear ONLY in the `backlinks:` frontmatter field as `[[wikilinks]]`.
+- **Ban:** Do NOT add a "Related Notes", "See Also", "Backlinks", or any equivalent section anywhere in the note body.
+- **Ban:** Do NOT add wikilinks to related notes at the bottom or end of the note body.
+- **Enforcement:** Scan the final note before writing. If any backlinks section exists in the body, remove it and move those links to the `backlinks:` frontmatter field.
