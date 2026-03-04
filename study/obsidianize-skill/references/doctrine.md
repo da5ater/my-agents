@@ -26,6 +26,12 @@ Information in the wild is trapped in "source context" (e.g., "In this video, I 
 **Principle 5: Connectivity is Understanding**
 An isolated note is a lost thought. Understanding is defined by the density of connections. We prioritize linking to existing knowledge ("Docking Points") and defining relationships (supports, contradicts, extends).
 
+**Principle 6: Project-Anchored Relevance**
+Capture and refine knowledge in service of an active question, project, or real problem. Avoid speculative stockpiling of facts with no active context of use.
+
+**Principle 7: Cognitive-Model First**
+Every extraction and structure choice must be justified by an explicit model of how understanding is built (attention, retrieval, transfer). Reject passive transmission assumptions.
+
 ---
 
 ## 2. Extraction Rules (The What)
@@ -51,6 +57,16 @@ Complex ideas must be broken down into their smallest indivisible units (atoms).
 
 **Rule [EXT-05]: Meaning over Syntax**
 Do not capture "housekeeping" chat (e.g., "Hello everyone", "Subscribe to the channel"). Capture only the core semantic meaning.
+
+**Rule [EXT-06]: Multi-Pass Ingestion**
+Do not extract in one pass for dense sources.
+
+- **Pass 1 (Scan):** Rapidly identify key entities, claims, and procedures.
+- **Pass 2 (Map):** Build a coarse model of how major ideas connect.
+- **Pass 3 (Extract):** Convert high-value signals into atomic notes.
+
+**Rule [EXT-07]: Overview Before Atomization**
+Before decomposing details, capture a concise model of the whole. Then break it into atomic notes.
 
 ---
 
@@ -103,6 +119,12 @@ Always include standard YAML frontmatter:
 
 > **Backlinks Rule:** Related note links belong **ONLY** in the `backlinks` frontmatter field. Never add a "Related Notes", "See Also", or backlinks section anywhere in the note body. The frontmatter is the single source of truth for connections.
 
+**Rule [STR-08]: Anti-Orphan Clustering**
+Avoid isolated captures. A new topic should usually produce a small linked cluster (2-3 connected notes) or be skipped.
+
+**Rule [STR-09]: Convention Stability**
+Standardize naming, property keys, and template skeletons. Keep conventions stable to reduce low-value micro-decisions.
+
 ---
 
 ## 4. Workflow Rules (The When)
@@ -123,6 +145,18 @@ The value of a note is realized only upon _retrieval_. Write notes "for your fut
 
 **Rule [WFL-05]: Emergent Structure**
 Do not force a top-down folder structure. Let structure emerge from the bottom up via clusters of related notes. Use "Maps of Content" (MOCs) only when a topic has critical mass (10+ notes).
+
+**Rule [WFL-06]: Interference Detection and Repair**
+When two notes or prompts are repeatedly confused, treat that as a structural bug.
+
+- **Action:** Immediately disambiguate wording, scope, or examples.
+- **Action:** Split or relabel items until retrieval becomes unambiguous.
+
+**Rule [WFL-07]: Single-Mode Work Blocks**
+Work in one cognitive mode at a time (read, extract, link, draft, edit). Avoid mode-switching multitask blocks.
+
+**Rule [WFL-08]: Evidence-Guided Iteration**
+Adjust workflows based on observed retrieval and transfer outcomes, not subjective "felt progress" alone.
 
 ---
 
