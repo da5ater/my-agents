@@ -15,11 +15,11 @@ Generate Anki flashcards from any source material. Produces TSV files ready for 
 
 ## Reference Files
 
-| File | Read When |
-|------|-----------|
-| `references/card-design-rules.md` | Default: card construction, anti-patterns, bidirectional rules |
-| `references/tsv-format-spec.md` | Formatting output as TSV |
-| `references/difficulty-calibration.md` | Applying difficulty and quantity settings |
+| File                                   | Read When                                                      |
+| -------------------------------------- | -------------------------------------------------------------- |
+| `references/card-design-rules.md`      | Default: card construction, anti-patterns, bidirectional rules |
+| `references/tsv-format-spec.md`        | Formatting output as TSV                                       |
+| `references/difficulty-calibration.md` | Applying difficulty and quantity settings                      |
 
 ## Parameters
 
@@ -27,19 +27,19 @@ Ask the user for these before generating. Default to Standard / Medium if not sp
 
 ### Number of cards
 
-| Setting | Cards | Strategy |
-|---------|-------|----------|
-| Fewer | 15-25 | High-priority concepts only. Every card earns its place. |
-| Standard | 30-50 | Balanced coverage. Core concepts plus important supporting detail. |
-| More | 60-100+ | Comprehensive. Includes nuance, edge cases, and worked examples. |
+| Setting  | Cards   | Strategy                                                           |
+| -------- | ------- | ------------------------------------------------------------------ |
+| Fewer    | 15-25   | High-priority concepts only. Every card earns its place.           |
+| Standard | 30-50   | Balanced coverage. Core concepts plus important supporting detail. |
+| More     | 60-100+ | Comprehensive. Includes nuance, edge cases, and worked examples.   |
 
 ### Difficulty
 
-| Level | Cognitive task | Card style |
-|-------|---------------|------------|
-| Easy | Recognition, definition, identification | "What is X?", "Define X", single-fact cloze |
-| Medium | Application, comparison, analysis | "Why does X matter?", "Compare X and Y", multi-cloze |
-| Hard | Synthesis, evaluation, multi-step reasoning | "How would you apply X to Y?", scenario-based, chained cloze |
+| Level  | Cognitive task                              | Card style                                                   |
+| ------ | ------------------------------------------- | ------------------------------------------------------------ |
+| Easy   | Recognition, definition, identification     | "What is X?", "Define X", single-fact cloze                  |
+| Medium | Application, comparison, analysis           | "Why does X matter?", "Compare X and Y", multi-cloze         |
+| Hard   | Synthesis, evaluation, multi-step reasoning | "How would you apply X to Y?", scenario-based, chained cloze |
 
 ## Workflow
 
@@ -67,6 +67,9 @@ Ask the user for card count and difficulty if not specified. Default to Standard
 
 Extract core facts, definitions, relationships, formulas, benchmarks, and frameworks from the source. Group by topic.
 
+- If the note has a “### Notes” section: treat each top-level bullet as one theory item → generate 1 theory card per bullet (sub-bullets are supporting detail only).
+- Code cards do not replace theory cards.
+
 ### 4. Assign topics and priorities
 
 Map each concept to a topic tag (kebab-case). Assign priority levels:
@@ -80,15 +83,18 @@ Map each concept to a topic tag (kebab-case). Assign priority levels:
 Select the card type based on what is being tested:
 
 **Basic** — Direct Q&A for explanations, reasoning, comparisons, processes.
+
 - Front: A specific question. Never yes/no. Never vague ("Tell me about X").
 - Back: Concise answer with `<b>bold</b>` on the key phrase the learner must recall.
 
 **Reversed (bidirectional)** — For terminology, translations, concept ↔ example pairs.
+
 - Generate two separate Basic cards: Term → Definition AND Definition → Term.
 - Only reverse when both directions produce useful recall. Do NOT reverse explanatory or reasoning cards.
 - Tag both cards with `reversed` modifier.
 
 **Cloze** — For port numbers, specific values, command syntax, formulas, numeric benchmarks.
+
 - Text: Complete sentence with `{{c1::blanks}}` replacing key values.
 - Use multiple deletions (c1, c2, c3...) when values belong to one coherent fact.
 - Tag with `formulas` for formulas, `benchmarks` for numeric thresholds.
@@ -131,9 +137,7 @@ Every card must pass all of these:
 - [ ] **Difficulty-appropriate** — Matches the requested difficulty level.
 - [ ] **Front MUST NOT contain the final code lines required in Back.**
 - [ ] **code blocks questions front are like leetcode questions, front is the question and back is the solution where the solution is the code block itself.**
-
-
-Below is a **copy/paste section** you can drop into **SKILL.md**. It’s written to (1) force “lead-code / leetcode-style” prompts, (2) prevent **answer leakage**, and (3) make the process **mechanical** (apply to any note with code blocks, minimal discretion).
+- [ ] Theory coverage: _if “### Notes” exists, every top-level bullet produced at least 1 theory card (code cards don’t count)._
 
 ---
 
@@ -141,18 +145,18 @@ Below is a **copy/paste section** you can drop into **SKILL.md**. It’s written
 
 ### 0) When this section applies
 
-If a source note contains **any code block**, you MUST generate **≥ 1 constructive code-context card** for that note. 
-Code blocks are **not** AIUs; extract the highest-signal AIU(s) from the code and test those. 
+If a source note contains **any code block**, you MUST generate **≥ 1 constructive code-context card** for that note.
+Code blocks are **not** AIUs; extract the highest-signal AIU(s) from the code and test those.
 
 ---
 
 ### 1) Definitions (use these terms consistently)
 
-**Lead-code prompt**
+**Leet-code prompt**
 A leetcode-style problem statement where the learner can answer **without seeing the note**, because the prompt contains all needed constraints/spec.
 
 **Code witness**
-A minimal runnable artifact included in the prompt: signature, data shapes, invariants, small trace/example, and the expected output shape. Coding prompts MUST include this. 
+A minimal runnable artifact included in the prompt: signature, data shapes, invariants, small trace/example, and the expected output shape. Coding prompts MUST include this.
 
 **Leakage**
 Any content on the Front that contains the solution (or near-solution) for what the learner must produce. This is forbidden.
@@ -162,19 +166,18 @@ Any content on the Front that contains the solution (or near-solution) for what 
 ### 2) Non-negotiable constraints (hard gates)
 
 **Self-contained Front**
-The Front MUST be understandable alone: no “in the note…”, no filename references, no “see above”.  
+The Front MUST be understandable alone: no “in the note…”, no filename references, no “see above”.
 
 **TSV-safe code formatting**
 
-* No literal newlines in any field; use `<br>` for line breaks. 
-* Escape `< > &` as `&lt; &gt; &amp;`. 
-* Only allowed HTML tags: `<b>` and `<br>` (NO `<code>`). 
+- No literal newlines in any field; use `<br>` for line breaks.
+- Escape `< > &` as `&lt; &gt; &amp;`.
+- Only allowed HTML tags: `<b>` and `<br>` (NO `<code>`).
 
 **Output shape is mandatory**
-Every code prompt must explicitly state what the output looks like (return value / mutation / printed output). 
+Every code prompt must explicitly state what the output looks like (return value / mutation / printed output).
 
 ---
-
 
 ### 3) The “Lead-Code” card types (choose exactly one per selected code block)
 
@@ -192,22 +195,22 @@ Every code prompt must explicitly state what the output looks like (return value
 
 **Leakage limits for Hard full-block cards**
 
-* Front MAY include: signature + data types + a skeleton with `TODO` placeholders.
-* Front MUST NOT include any finished helper logic, loop bodies, condition bodies, recursion bodies, or the key algorithmic lines that appear in the Back.
-* If Back is the entire code block, the Front must contain **0 solution lines** beyond the signature / placeholder skeleton.
+- Front MAY include: signature + data types + a skeleton with `TODO` placeholders.
+- Front MUST NOT include any finished helper logic, loop bodies, condition bodies, recursion bodies, or the key algorithmic lines that appear in the Back.
+- If Back is the entire code block, the Front must contain **0 solution lines** beyond the signature / placeholder skeleton.
 
-This aligns with the “answer is the actual code block” contract. 
+This aligns with the “answer is the actual code block” contract.
 
 #### B) Medium — Patch / Fill / Debug (preferred when full synthesis is too big)
 
 Use a **small code witness** and force one precise production action:
 
-* “Write the missing line(s) that update X”
-* “Complete the base case”
-* “Add the accumulator update”
-* “Fix the bug and name one concrete failure mode if unfixed”
+- “Write the missing line(s) that update X”
+- “Complete the base case”
+- “Add the accumulator update”
+- “Fix the bug and name one concrete failure mode if unfixed”
 
-(Keep it atomic: one action + one expected output or failure). 
+(Keep it atomic: one action + one expected output or failure).
 
 ---
 
@@ -221,38 +224,38 @@ For each note that contains code blocks:
 
 **Step 2 — Choose card type**
 
-- leetcode style question for each code block in given note 
+- leetcode style question for each code block in given note
 
 **Step 3 — Build the code witness (Front)**
 Include only:
 
-* Language + function signature
-* Data shapes (e.g., “list of ints”, “tree node has left/right”)
-* Invariants / rules
-* 1 short example or trace (optional but strongly recommended)
-* Explicit output shape 
+- Language + function signature
+- Data shapes (e.g., “list of ints”, “tree node has left/right”)
+- Invariants / rules
+- 1 short example or trace (optional but strongly recommended)
+- Explicit output shape
 
 **Step 4 — Write the Task line**
 
-* Hard: “Write the full code block that satisfies the spec.”
-* Medium: “Write the missing line(s) and state one concrete failure if done incorrectly.”
+- Hard: “Write the full code block that satisfies the spec.”
+- Medium: “Write the missing line(s) and state one concrete failure if done incorrectly.”
 
 **Step 5 — Write the Back**
 
-* Hard: include the full final code block (TSV-safe: `<br>` lines, escaped chars).
-* Medium: include only the exact line(s) + 1–2 sentence explanation with `<b>` on the recall target. 
+- Hard: include the full final code block (TSV-safe: `<br>` lines, escaped chars).
+- Medium: include only the exact line(s) + 1–2 sentence explanation with `<b>` on the recall target.
 
 **Step 6 — Run the leakage test (must pass)**
 Fail the card and rewrite if any of these are true:
 
-* The Front contains the same non-trivial solution lines that appear in the Back (beyond signature/skeleton).
-* The Front includes complete algorithmic bodies (loop/recursion/condition bodies) for a “write full code” task.
-* The prompt says “refer to the note / file / above”.
+- The Front contains the same non-trivial solution lines that appear in the Back (beyond signature/skeleton).
+- The Front includes complete algorithmic bodies (loop/recursion/condition bodies) for a “write full code” task.
+- The prompt says “refer to the note / file / above”.
 
 **Step 7 — Final quality gates**
 
-* Front is unambiguous + single-target; Back is univocal. 
-* TSV rules enforced: no tabs/newlines, `<br>` for line breaks, escape entities, only `<b>`/`<br>`. 
+- Front is unambiguous + single-target; Back is univocal.
+- TSV rules enforced: no tabs/newlines, `<br>` for line breaks, escape entities, only `<b>`/`<br>`.
 
 ---
 
@@ -290,7 +293,6 @@ Constraints / expected output shape: ____<br>
 Task: Write the missing line(s) marked TODO, and name one concrete failure mode if the TODO is implemented incorrectly.
 ```
 
-
 ## Tag Syntax
 
 Tags are space-separated within the Tags field. Order: topic tag, then priority, then modifiers.
@@ -321,5 +323,3 @@ Text with {{c1::blanks}} for key values		topic-tag priority::level formulas
 ```
 
 Note: Cloze cards have an empty second field (two consecutive tabs).
-
-
