@@ -47,6 +47,7 @@ The exception: when the set itself is the atomic fact (e.g., a formula with name
 A learner who knows the material should produce the answer in under 8 seconds. If the answer requires more than 2-3 sentences of recall, the card is too big. Break it down or convert to cloze.
 
 Signs a card violates this rule:
+
 - Answer is longer than 3 sentences
 - Learner needs to mentally enumerate items
 - Answer requires chaining multiple reasoning steps
@@ -54,6 +55,7 @@ Signs a card violates this rule:
 ## Bidirectional cards
 
 Create reversed pairs for:
+
 - **Terminology** — Term → Definition AND Definition → Term
 - **Translations** — Source language → Target language AND back
 - **Concept ↔ Example** — Concept → Concrete example AND Example → Concept name
@@ -61,6 +63,7 @@ Create reversed pairs for:
 Generate as two separate Basic cards. Tag both with the `reversed` modifier.
 
 **Do NOT reverse:**
+
 - Explanatory cards ("Why does X matter?")
 - Reasoning cards ("How does X work?")
 - Comparison cards ("How does X differ from Y?")
@@ -80,20 +83,22 @@ Back: A function <b>passed as an argument</b> to another function, invoked after
 
 ## Card construction patterns
 
-| Pattern | Front template | Back template |
-|---------|---------------|---------------|
-| Definition | "What is X?" / "What does X mean?" | "X is `<b>`key definition`</b>`" |
-| Comparison | "How does X differ from Y?" | "X does `<b>`A`</b>` while Y does `<b>`B`</b>`" |
-| Application | "When would you use X instead of Y?" | "Use X when `<b>`condition`</b>`" |
-| Cause-effect | "Why does X lead to Y?" | "Because `<b>`mechanism/reason`</b>`" |
-| Context cue | Prefix with topic area when ambiguous: "In [domain], what does..." | Same rules apply |
+| Pattern      | Front template                                                     | Back template                                   |
+| ------------ | ------------------------------------------------------------------ | ----------------------------------------------- |
+| Definition   | "What is X?" / "What does X mean?"                                 | "X is `<b>`key definition`</b>`"                |
+| Comparison   | "How does X differ from Y?"                                        | "X does `<b>`A`</b>` while Y does `<b>`B`</b>`" |
+| Application  | "When would you use X instead of Y?"                               | "Use X when `<b>`condition`</b>`"               |
+| Cause-effect | "Why does X lead to Y?"                                            | "Because `<b>`mechanism/reason`</b>`"           |
+| Context cue  | Prefix with topic area when ambiguous: "In [domain], what does..." | Same rules apply                                |
 
 **Bold highlighting:**
+
 - Always bold the exact phrase the learner must recall
 - Bold 1-3 key phrases per answer, not entire sentences
 - Use `<b>bold</b>` HTML tags (not Markdown)
 
 **HTML rules:**
+
 - `<b>` for bold key terms
 - `<br>` for line breaks within a field
 - No other HTML tags (`<i>`, `<ul>`, `<p>`, etc.)
@@ -101,6 +106,7 @@ Back: A function <b>passed as an argument</b> to another function, invoked after
 ## Cloze-specific rules
 
 Use cloze deletion for:
+
 - **Port numbers** — `SSH runs on port {{c1::22}}`
 - **Specific values** — `TCP/IP has {{c1::4}} layers`
 - **Command syntax** — `To stage all changes: {{c1::git add .}}`
@@ -108,6 +114,7 @@ Use cloze deletion for:
 - **Numeric benchmarks** — `HTTP status {{c1::404}} means resource not found`
 
 Rules:
+
 - Multiple deletions (c1, c2, c3...) are fine when values belong to one coherent fact
 - Each deletion generates a separate review card in Anki
 - Never blank more than 30% of the text — the surrounding context must provide enough cue
@@ -128,17 +135,17 @@ BMI = {{c1::weight (kg)}} / {{c2::height (m)}}²
 
 ## Anti-patterns
 
-| Anti-pattern | Problem | Fix |
-|-------------|---------|-----|
-| Kiddie card | Trivially easy, zero learning value | Skip it entirely — not everything deserves a card |
-| Midterm essay | Answer is 5+ sentences, takes 30s+ to recall | Split into 2-3 atomic cards |
-| Shopping list | "List the 7 types of..." tests rote sequence | One card per item, or use overlapping cloze |
-| Yes/no question | Binary answer, tests recognition not recall | Reframe: "Is X a debt?" → "How is X classified?" |
-| Life hack card | Generic advice, not testable knowledge | Only create cards for testable, specific facts |
-| Vague prompt | "Tell me about DNS" — no specific recall target | Ask a precise question with one expected answer |
-| Trivial fact | Tests something obvious or self-evident | Focus on knowledge that requires effort to retain |
-| Overly long answer | Buries the key point in paragraphs | Trim to 1-3 sentences with bold on the key phrase |
-| Example trap | "Give an example of X" — which example? | Pin down the specific example: "What is X's example of Y?" |
+| Anti-pattern       | Problem                                         | Fix                                                        |
+| ------------------ | ----------------------------------------------- | ---------------------------------------------------------- |
+| Kiddie card        | Trivially easy, zero learning value             | Skip it entirely — not everything deserves a card          |
+| Midterm essay      | Answer is 5+ sentences, takes 30s+ to recall    | Split into 2-3 atomic cards                                |
+| Shopping list      | "List the 7 types of..." tests rote sequence    | One card per item, or use overlapping cloze                |
+| Yes/no question    | Binary answer, tests recognition not recall     | Reframe: "Is X a debt?" → "How is X classified?"           |
+| Life hack card     | Generic advice, not testable knowledge          | Only create cards for testable, specific facts             |
+| Vague prompt       | "Tell me about DNS" — no specific recall target | Ask a precise question with one expected answer            |
+| Trivial fact       | Tests something obvious or self-evident         | Focus on knowledge that requires effort to retain          |
+| Overly long answer | Buries the key point in paragraphs              | Trim to 1-3 sentences with bold on the key phrase          |
+| Example trap       | "Give an example of X" — which example?         | Pin down the specific example: "What is X's example of Y?" |
 
 ## Progressive difficulty
 
@@ -158,7 +165,6 @@ Easy cards lean toward cued recall. Hard cards lean toward free recall. Medium c
 
 These rules replace all abstract/philosophical mandates during generation. Cards must comply with TSV: `Front<TAB>Back<TAB>URL`, and **Front/Back must contain only the question and answer** (no metadata, prefixes, or labels).
 
-
 ### 1) Card Quality Checklist (Must Pass)
 
 - Specific target (no generic "Explain X").
@@ -177,7 +183,6 @@ These rules replace all abstract/philosophical mandates during generation. Cards
 - Front must be self-contained (no undeclared local symbols).
 - If front claims context, include explicit snippet/state content.
 
-
 ### 2) Anti-Bloat Filters
 
 - If two cards differ only by wording, keep one.
@@ -194,14 +199,6 @@ These rules replace all abstract/philosophical mandates during generation. Cards
 - If prompt is source-bound ("book/note said"), rewrite to concept-use framing.
 - Never use heuristic code-generation scripts to author cards; generation must be doctrine-driven from note understanding.
 
-
-## Atomic Information Unit (AIU) Budgeting
-
-**Rule**: An AIU is a single discrete idea (fact, mechanism, distinction, or procedure).
-**Rule**: Each AIU gets one card by default.
-**Rule**: A second card is allowed only if the AIU is hard (multi-step, error-prone, counter-intuitive, or frequently confused).
-**Rule**: If a note contains 1–2 AIUs, cap the note at 1–2 total cards; skip trigger expansion.
-**Rule**: Code blocks are not AIUs. Extract AIUs from code and keep only the highest-signal ones.
 
 ## 1. The Mandates (The Core Philosophy)
 
@@ -514,20 +511,5 @@ These rules replace all abstract/philosophical mandates during generation. Cards
 - **Directive**: Personalize prompts by framing them in the context of the user's specific life situations.
 
 
-## How to ask about a code block
+# how-to-ask-about-a-code-block
 
-### Programming Card Contract
-
-- At least one constructive card for code-heavy notes.
-- Preferred hard tasks:
-  - synthesize a qustions with enough context so the answer of it is the actuall code block 
-
-### Required Full-Context Example
-
-Front (TSV-safe):
-
-`Given this JavaScript code block:<br>function sameHouseAsParent(root) {<br>  const todo = [[root, ""]];<br>  const result = [];<br>  while (todo.length > 0) {<br>    const [currentWizard, parentHouse] = todo.shift();<br>    if (parentHouse !== "" && currentWizard.house === parentHouse) {<br>      result.push(currentWizard.name);<br>    }<br>    for (const child of currentWizard.kids) {<br>      todo.unshift([child, currentWizard.house]);<br>    }<br>  }<br>  return result;<br>}<br>Task: write the enqueue line and state one concrete failure if `child.house` is used instead of `currentWizard.house`.`
-
-Back:
-
-`todo.unshift([child, currentWizard.house]);<br>Failure: parent-context is corrupted, so same-house matches can be lost or misclassified.`

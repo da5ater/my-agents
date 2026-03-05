@@ -25,11 +25,13 @@ When the skill is activated, the **very first action** is to load and fully inte
 > **Doctrine Priority:** The doctrine is the supreme authority. ALL 5 sections are mandatory and equally binding. The Hard Constraints (Section 5) are the floor — not the ceiling. Sections 1–4 are not optional background reading; they are active rules applied to every decision.
 
 **If invoked with no target** (e.g., `/obsidianize` alone):
+
 - Complete the three reads above silently.
 - Respond in chat only: **"Ready. Give me your source."**
 - Do nothing else. Wait for input.
 
 **If invoked with a target** (e.g., `/obsidianize "some text"`):
+
 - Complete the three reads silently, then proceed immediately to Phase 1.
 
 ---
@@ -37,6 +39,7 @@ When the skill is activated, the **very first action** is to load and fully inte
 ## Phase 1: Execution
 
 ### Create New Notes
+
 ```bash
 obsidianize "path/to/file.txt"
 obsidianize "path/to/file.md"
@@ -45,12 +48,14 @@ obsidianize "here is some raw text..."
 ```
 
 ### Reprocess Existing Notes (Override Mode)
+
 ```bash
 obsidianize --override "path/to/existing/note.md"
 obsidianize --override "path/to/existing/folder/"
 ```
 
 **Override Mode Behavior:**
+
 - **Single file**: Read the existing note, extract its core content, reprocess through the workflow, overwrite with updated version
 - **Folder**: Recursively process all `.md` files, apply doctrine rules, overwrite each note
 - **Preserves**: Original filename, location in vault
@@ -58,7 +63,7 @@ obsidianize --override "path/to/existing/folder/"
 
 ### Workflow Steps
 
-1. **Doctrine Active (Phase 0 complete):** All rules from all 5 doctrine sections are loaded and binding.
+1. **Doctrine Active (Phase 0 complete):** All rules from all  doctrine sections are loaded and binding.
 2. **Analyze Input:** Identify signal types per EXT-01. Gate with Principle 2 (10-Minute Gate). Discard housekeeping (EXT-05 / C-10).
 3. **Plan Atomic Notes (EXT-04):** One concept = one note. Decide how many notes the input warrants and what atomic section each covers. Do not merge disparate ideas into one note.
 4. **Structure Each Note:** Apply STR-01 through STR-07. Use `references/output-structure.md` as the skeleton.
@@ -72,7 +77,7 @@ obsidianize --override "path/to/existing/folder/"
 
 ## References
 
-> references are in the CWD of the skill itself which is in `/home/mohamed/.config/opencode/skills/obsidianize-skill/references`
+> references are in the CWD of the skill itself which is in `/home/mohamed/.agents/skills/obsidianize-skill/references`
 > Must be loaded in Phase 0 before any action.
 
 - `references/doctrine.md` — The Mind (Philosophy), Law (Constraints), and Process. **Supreme Authority — read all 5 sections.**
