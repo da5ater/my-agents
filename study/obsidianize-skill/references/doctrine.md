@@ -224,11 +224,6 @@ We are a silent engine.
 - **Ban:** Do not capture "housekeeping" chat (e.g., "Hello everyone", "Subscribe", "Sponsors").
 - **Rule:** If the input is purely housekeeping with no signal, output a trivial empty note or error.
 
-**Constraint [C-11]: Open Loop Mandate**
-
-- **Rule:** If a concept is referenced but undefined/unclear in the source, DO NOT hallucinate a definition.
-- **Action:** Use an explicit callout: `> [!TODO] Research <Concept>`
-
 **Constraint [C-12]: Backlinks in Frontmatter Only**
 
 - **Rule:** Related note links MUST appear ONLY in the `backlinks:` frontmatter field as `[[wikilinks]]`.

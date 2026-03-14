@@ -36,42 +36,53 @@ When the skill is activated, the **very first action** is to load and fully inte
 
 ---
 
+## Usage
+
+```bash
+obsidianize "path/to/file.txt"       # Any text/md/pdf file
+obsidianize "here is some raw text…" # Inline text
+obsidianize --override "note.md"     # Reprocess existing note
+obsidianize --override "folder/"     # Reprocess entire folder
+```
+
+> [!IMPORTANT] NO SPECIAL PROMPTING NEEDED
+> You do NOT need to say "follow the doctrine" or "do atomization." The skill enforces this automatically via the gates below. Just provide your source.
+
+**Override Mode:** Reads existing note(s), extracts core content, reprocesses through full pipeline, overwrites with updated version. Preserves filename and location; regenerates structure, frontmatter, and links.
+
+---
+
 ## Phase 1: Execution
-
-### Create New Notes
-
-```bash
-obsidianize "path/to/file.txt"
-obsidianize "path/to/file.md"
-obsidianize "path/to/file.pdf"
-obsidianize "here is some raw text..."
-```
-
-### Reprocess Existing Notes (Override Mode)
-
-```bash
-obsidianize --override "path/to/existing/note.md"
-obsidianize --override "path/to/existing/folder/"
-```
-
-**Override Mode Behavior:**
-
-- **Single file**: Read the existing note, extract its core content, reprocess through the workflow, overwrite with updated version
-- **Folder**: Recursively process all `.md` files, apply doctrine rules, overwrite each note
-- **Preserves**: Original filename, location in vault
-- **Regenerates**: Content structure per current doctrine, frontmatter, links, formatting
 
 ### Workflow Steps
 
-1. **Doctrine Active (Phase 0 complete):** All rules from all  doctrine sections are loaded and binding.
+1. **Doctrine Active (Phase 0 complete):** All rules from all 5 doctrine sections are loaded and binding.
+
 2. **Analyze Input:** Identify signal types per EXT-01. Gate with Principle 2 (10-Minute Gate). Discard housekeeping (EXT-05 / C-10).
-3. **Plan Atomic Notes (EXT-04):** One concept = one note. Decide how many notes the input warrants and what atomic section each covers. Do not merge disparate ideas into one note.
-4. **Structure Each Note:** Apply STR-01 through STR-07. Use `references/output-structure.md` as the skeleton.
-5. **Silent Write (C-03 / C-04):**
-   - Synthesize content — never transcribe (Principle 1).
+
+3. **Signal Scan (GATE):** For each signal type in EXT-01 (Models, Definitions, Procedures, Arguments, Counter-Evidence, Insights), explicitly scan the input and mark which signals are present. The result is the **Activation Set** — a list of confirmed signal types in this source. If the Activation Set is empty, the input has no signal; stop and report.
+
+4. **Section Palette Scan (GATE):** Walk every H3 in `references/output-structure.md`. For each conditional H3, check if its **Trigger** condition is met by the input. Build a **Section Plan** — a list of which H3 sections will appear under which H2 atomic notes. Every signal in the Activation Set must map to at least one H3 section. If a signal has no section, you have a gap.
+
+5. **Plan Atomic Notes (EXT-04):** One concept = one note. Using the Section Plan, decide how many notes the input warrants. Do not merge disparate ideas into one note.
+
+6. **Structure Each Note:** Apply STR-01 through STR-09. Use `references/output-structure.md` as the skeleton. Populate each H2 with the H3 sections from the Section Plan.
+
+7. **Doctrine Compliance Check (GATE — pre-write):** Before writing, verify against this checklist. **Do not write until all pass:**
+   - [ ] Every signal from the Activation Set has a corresponding section in the output
+   - [ ] Every section passes the Section Necessity Test (no empty filler)
+   - [ ] All code blocks from input are preserved in output (C-02)
+   - [ ] No H1 in note body (STR-02)
+   - [ ] Backlinks in frontmatter only, never in body (C-12)
+   - [ ] Open loops marked with `> [!TODO] Research <X>` (C-11)
+   - [ ] Every bullet uses Rule-Based Patterning: `**Name:** Explanation` (STR-04)
+   - [ ] Every code block has file path context + language tag (STR-05 / C-07)
+   - [ ] Content is synthesized, not transcribed (Principle 1)
+
+8. **Silent Write + Report (C-03 / C-04):**
    - Write each note in a single atomic `write_file` operation.
-   - Do NOT output note content to chat. Only write the file.
-6. **Report:** After writing, report only: filenames created + one-line status. Nothing else in chat.
+   - Do NOT output note content to chat.
+   - After writing, report only: filenames created + one-line status.
 
 ---
 

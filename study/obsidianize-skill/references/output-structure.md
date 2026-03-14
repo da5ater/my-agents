@@ -87,15 +87,6 @@ Break the content into logical sections. Apply this structure only to concepts s
 
 > Enforces: **STR-01** (Atomic Note), **STR-02** (No H1 in body)
 
-###### Overview (H3 - CONDITIONAL)
-
-> Enforces: **EXT-07** (Overview Before Atomization) | **EXT-02** (Feynman Test)
-
-- **Trigger:** If the source covers a complex topic with multiple interconnected sub-concepts
-- **Position:** Should appear as the **first H3** within an H2 section when used
-- **Format:** 2–4 sentence prose summary of the whole concept before atomic breakdown
-- **Goal:** Provide a mental scaffold before details — "the forest before the trees"
-- **Constraint:** Must be a synthesis, not a transcription. Pass the Feynman Test (EXT-02).
 
 ###### Models & Mental Frameworks (H3)
 
@@ -136,15 +127,6 @@ Break the content into logical sections. Apply this structure only to concepts s
 - **Goal:** Capture the argument structure — what is being claimed and *why* it should be believed
 - **Distinction from Counter-Evidence:** This section captures *affirmative* arguments; Counter-Evidence captures *disconfirming* ones
 
-###### Counter-Evidence & Disconfirmations (H3 - CONDITIONAL)
-
-> **Signal Type:** Counter-Evidence (EXT-01) | Enforces: **EXT-03** (Darwin's Golden Rule)
-
-- **Trigger:** If the text contradicts common wisdom, previous notes, or itself
-- **Goal:** Prioritize capturing contradictions to prevent confirmation bias
-- **Format:** `**Contradiction:** [What it contradicts] → [The counter-evidence]`
-- **Requirement:** Never suppress friction—capture what challenges current understanding
-
 ###### Insights & Novel Connections (H3 - CONDITIONAL)
 
 > **Signal Type:** Insights (EXT-01)
@@ -165,15 +147,6 @@ Break the content into logical sections. Apply this structure only to concepts s
   - Historical context or background that aids understanding
 - **Format:** Unstructured bullets — each should be a self-contained observation
 - **Constraint:** Must still pass the 10-Minute Gate (Principle 2). No filler.
-
-###### Open Loops (H3 - CONDITIONAL)
-
-> Enforces: **C-11** (Open Loop Mandate)
-
-- **Trigger:** If the text references a concept, tool, or term that is **not defined or explained** in the source
-- **Format:** `> [!TODO] Research <Concept>` callouts
-- **Goal:** Explicitly mark knowledge gaps instead of hallucinating definitions
-- **Constraint:** Only for genuinely unresolved references — not for terms the reader is expected to know
 
 ###### Procedures & Workflows (H3 - CONDITIONAL)
 
@@ -198,6 +171,7 @@ Break the content into logical sections. Apply this structure only to concepts s
   2.  **Packages:** List specific libraries with versions.
   3.  **Environment Variables:** ALL required env vars (Names and Values).
   4.  **Source Origin:** Where these values came from.
+
 
 ###### Code Implementation (H3 - CONDITIONAL)
 
