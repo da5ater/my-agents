@@ -61,12 +61,15 @@ Do not capture "housekeeping" chat (e.g., "Hello everyone", "Subscribe to the ch
 **Rule [EXT-06]: Multi-Pass Ingestion**
 Do not extract in one pass for dense sources.
 
+- **Trigger:** Input is >~2000 words, or multiple sources are provided (e.g., multiple transcripts + lecture notes for the same topic).
 - **Pass 1 (Scan):** Rapidly identify key entities, claims, and procedures.
 - **Pass 2 (Map):** Build a coarse model of how major ideas connect.
 - **Pass 3 (Extract):** Convert high-value signals into atomic notes.
 
 **Rule [EXT-07]: Overview Before Atomization**
 Before decomposing details, capture a concise model of the whole. Then break it into atomic notes.
+
+- **Trigger:** Always, but especially critical when EXT-06 applies. The overview model guides how atomic notes are scoped.
 
 ---
 
@@ -140,22 +143,22 @@ Notes are never "finished." They are living documents. We create a "Draft" (v0),
 **Rule [WFL-02]: The Anti-Cramming Law**
 Do not try to process an entire library in one go. Process one source, integrate it, then move to the next. Knowledge requires "soak time."
 
-**Rule [WFL-04]: Active Review**
+**Rule [WFL-03]: Active Review**
 The value of a note is realized only upon _retrieval_. Write notes "for your future self"—assume you have forgotten the context. Would this note still make sense 6 months from now?
 
-**Rule [WFL-05]: Emergent Structure**
+**Rule [WFL-04]: Emergent Structure**
 Do not force a top-down folder structure. Let structure emerge from the bottom up via clusters of related notes. Use "Maps of Content" (MOCs) only when a topic has critical mass (10+ notes).
 
-**Rule [WFL-06]: Interference Detection and Repair**
+**Rule [WFL-05]: Interference Detection and Repair**
 When two notes or prompts are repeatedly confused, treat that as a structural bug.
 
 - **Action:** Immediately disambiguate wording, scope, or examples.
 - **Action:** Split or relabel items until retrieval becomes unambiguous.
 
-**Rule [WFL-07]: Single-Mode Work Blocks**
+**Rule [WFL-06]: Single-Mode Work Blocks**
 Work in one cognitive mode at a time (read, extract, link, draft, edit). Avoid mode-switching multitask blocks.
 
-**Rule [WFL-08]: Evidence-Guided Iteration**
+**Rule [WFL-07]: Evidence-Guided Iteration**
 Adjust workflows based on observed retrieval and transfer outcomes, not subjective "felt progress" alone.
 
 ---
@@ -224,7 +227,7 @@ We are a silent engine.
 - **Ban:** Do not capture "housekeeping" chat (e.g., "Hello everyone", "Subscribe", "Sponsors").
 - **Rule:** If the input is purely housekeeping with no signal, output a trivial empty note or error.
 
-**Constraint [C-12]: Backlinks in Frontmatter Only**
+**Constraint [C-11]: Backlinks in Frontmatter Only**
 
 - **Rule:** Related note links MUST appear ONLY in the `backlinks:` frontmatter field as `[[wikilinks]]`.
 - **Ban:** Do NOT add a "Related Notes", "See Also", "Backlinks", or any equivalent section anywhere in the note body.

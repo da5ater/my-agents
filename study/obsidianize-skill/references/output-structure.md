@@ -1,21 +1,19 @@
-# Output Structure (Compressed)
-# ═══════════════════════════════════════════════════════════════════════════════
+# Output Structure
 
 **Objective:** Generate structured notes by executing the Rule Activation Plan.
 
-## Output Objectives (References)
+> [!CAUTION] DOCTRINE ANCHORS — Do Not Skip
+> These are the rules you are statistically most likely to violate. Re-read before generating.
+> 1. **Atomicity (EXT-04):** One concept = one note. Do NOT merge multiple concepts into a mega-note.
+> 2. **Code Preservation (C-02):** Every code block from input MUST appear in output. No exceptions.
+> 3. **Signal-Based Reality (Principle 3):** Only structure what exists. Do not fabricate sections.
+> Full doctrine: `references/doctrine.md`
 
-> **See `references/doctrine.md` for the Supreme Doctrine.**
--   **High-Signal Synthesis**: (Principle 1)
--   **Atomicity**: (Rule EXT-04)
--   **De-contextualization**: (Principle 4)
--   **10-Minute Gate**: (Principle 2)
-
-### OUTPUT STRUCTURE (Required Template)
+## Note Template (Required)
 
 Generate an Obsidian note in this order. Omit sections that lack signal or fail the Section Necessity Test.
 
-#### Document Header
+### Document Header
 
 - **Title Selection:** Choose a descriptive, link-friendly title (e.g., "State Management in React" rather than "React Tutorial"). Use this title as the **filename**, not as an H1 in the body.
 - **YAML Frontmatter:** YAML at the very top delimited by `---`, e.g.
@@ -26,16 +24,11 @@ Generate an Obsidian note in this order. Omit sections that lack signal or fail 
   backlinks: ["[[Related Note A]]", "[[Related Note B]]"]
   ---
   ```
-- **Backlinks Rule:** The `backlinks` field is **required**. Populate it with `[[wikilinks]]` to all related notes. If no related notes exist yet, use `[]`. **This is the ONLY place backlinks or related-note links should appear — never in the note body (C-12).**
+- **Backlinks Rule:** The `backlinks` field is **required**. Populate it with `[[wikilinks]]` to all related notes. If no related notes exist yet, use `[]`. **This is the ONLY place backlinks or related-note links should appear — never in the note body (C-11).**
 - **File Start:** After frontmatter, start immediately with the first Atomic Section (H2). No meta sections in the file.
 
-#### Pre-Generation Artifacts (Silent Execution)
 
-- **Strict Silence:** Do NOT emit any planning artifacts, tables, or summaries in the chat.
-- **Output:** The ONLY output allowed is the final `.md` file creation.
-- **Process:** Perform all Signal Gating and Budgeting internally.
-
-### EXAMPLES (Few-Shot)
+### Examples (Few-Shot)
 
 > [!TIP] PATTERN MATCHING
 > Use these examples to understand the transformation from Raw Input to Atomic Section.
@@ -69,7 +62,9 @@ Generate an Obsidian note in this order. Omit sections that lack signal or fail 
 3. **Define Schema:** Create a schema object prior to validation.
 ```
 
-#### Atomic Sections
+
+
+### Atomic Sections
 
 Break the content into logical sections. Apply this structure only to concepts selected in the Activation Set and within the Budgeted Section Plan.
 
@@ -77,21 +72,11 @@ Break the content into logical sections. Apply this structure only to concepts s
 > The H3 sections below are a **suggested palette** of section types derived from the doctrine's signal types. Use whichever sections the source signal demands — do not force sections that lack signal (Principle 3: Signal-Based Reality). Omit any that fail the Section Necessity Test.
 
 > These sections MUST enforce `references/doctrine.md` rules:
-> - **EXT-01 (Signal Types)**: Each section maps to a signal type
-> - **EXT-02 (Feynman Test)**: Explain simply, no jargon without definition
-> - **EXT-04 (Atomic Decomposition)**: One note = one idea, one bullet = one rule
-> - **STR-04 (Rule-Based Patterning)**: Every bullet starts with bold rule name
-> - **STR-05 (Code Contextualization)**: All code blocks require context
 
-##### [Section Title] (H2)
+> **In the output note, each section title below becomes an H3 under the parent H2 atomic section.**
 
-> Enforces: **STR-01** (Atomic Note), **STR-02** (No H1 in body)
-
-
-###### Models & Mental Frameworks (H3)
-
+#### Models & Mental Frameworks (H3)
 > **Signal Type:** Models (EXT-01)
-
 - **Goal:** Extract mental models, frameworks, or "ways of seeing" the domain
 - **Style:** Use **Rule-Based Patterning** (STR-04). Each bullet must:
   - Start with a **bolded model name** followed by a colon
@@ -100,16 +85,17 @@ Break the content into logical sections. Apply this structure only to concepts s
 - **Requirement:** Answer: _"What is the transferable principle here?"_
 - **Format:** `**Model Name:** Explanation including when to apply it.`
 
-###### Definitions (H3 - CONDITIONAL)
+
+#### Definitions (H3 - CONDITIONAL)
 
 > **Signal Type:** Definitions (EXT-01) | Enforces: **EXT-02** (Feynman Test)
 
 - **Trigger:** Only if the text introduces **CRITICAL** domain-specific jargon (EXT-01)
 - **Constraint:** Do not define common words. Only define terms that would block understanding if unknown.
 - **Format:** **Term:** Precise definition explained simply (Feynman Test)
-- **Requirement:** If you cannot explain it simply, mark as `> [!TODO] Research <Term>`
+- **Requirement:** If you cannot explain it simply, revisit the source and rewrite until it is clear.
 
-###### Distinctions & Negations (H3 - CONDITIONAL)
+#### Distinctions & Negations (H3 - CONDITIONAL)
 
 > **Signal Type:** Arguments (EXT-01) | Enforces: **EXT-03** (Darwin's Golden Rule)
 
@@ -118,7 +104,7 @@ Break the content into logical sections. Apply this structure only to concepts s
 - **Goal:** Explicitly define boundaries of the concept
 - **Requirement:** Capture disconfirming evidence—what this concept is NOT
 
-###### Arguments & Evidence (H3 - CONDITIONAL)
+#### Arguments & Evidence (H3 - CONDITIONAL)
 
 > **Signal Type:** Arguments (EXT-01)
 
@@ -127,7 +113,7 @@ Break the content into logical sections. Apply this structure only to concepts s
 - **Goal:** Capture the argument structure — what is being claimed and *why* it should be believed
 - **Distinction from Counter-Evidence:** This section captures *affirmative* arguments; Counter-Evidence captures *disconfirming* ones
 
-###### Insights & Novel Connections (H3 - CONDITIONAL)
+#### Insights & Novel Connections (H3 - CONDITIONAL)
 
 > **Signal Type:** Insights (EXT-01)
 
@@ -135,7 +121,7 @@ Break the content into logical sections. Apply this structure only to concepts s
 - **Format:** `**Insight:** [The connection] → [Why it matters]`
 - **Goal:** Capture moments of synthesis that restructure understanding
 
-###### Notes (H3 - CONDITIONAL)
+#### Notes (H3 - CONDITIONAL)
 
 > Enforces: **Principle 5** (Connectivity), **Principle 6** (Project-Anchored Relevance), **STR-08** (Anti-Orphan Clustering)
 
@@ -148,7 +134,7 @@ Break the content into logical sections. Apply this structure only to concepts s
 - **Format:** Unstructured bullets — each should be a self-contained observation
 - **Constraint:** Must still pass the 10-Minute Gate (Principle 2). No filler.
 
-###### Procedures & Workflows (H3 - CONDITIONAL)
+#### Procedures & Workflows (H3 - CONDITIONAL)
 
 > **Signal Type:** Procedures (EXT-01)
 
@@ -161,7 +147,7 @@ Break the content into logical sections. Apply this structure only to concepts s
   2. **Step Name:** Action to take
   ```
 
-###### Configuration (H3 - CONDITIONAL)
+#### Configuration (H3 - CONDITIONAL)
 
 > **Signal Type:** Procedures (EXT-01) | Enforces: **STR-05** (Code Contextualization)
 
@@ -173,7 +159,7 @@ Break the content into logical sections. Apply this structure only to concepts s
   4.  **Source Origin:** Where these values came from.
 
 
-###### Code Implementation (H3 - CONDITIONAL)
+#### Code Implementation (H3 - CONDITIONAL)
 
 > Enforces: **STR-05** (Code Contextualization) | **C-07** (Code Context)
 
@@ -197,7 +183,7 @@ Break the content into logical sections. Apply this structure only to concepts s
 > Before creating any conditional H3, ask: "Does this section add information NOT already captured in higher-level sections?"
 > If the answer is NO → skip the section.
 
-#### Code Preservation Rules (Hard Constraints)
+### Code Preservation Rules (Hard Constraints)
 
 > **Enforces:** **C-02** (Signal Sanctity), **C-07** (Code Context), **STR-05** (Code Contextualization)
 
@@ -221,15 +207,4 @@ Every code block discussed in the input MUST be preserved in the final note. Thi
 - [ ] Verify each has file path context
 - [ ] Verify each has language tag
 
-#### Output Rules (References)
-
-> **See `references/doctrine.md` for Hard Limits.**
--   **File Only**: (Constraint C-03)
--   **Structure**: (Constraint C-05)
--   **Code Preservation**: Every code block from input appears in output
-
-> [!WARNING] BACKLINKS BODY BAN (C-12)
-> **Never** add a "Related Notes", "See Also", "Backlinks", or any equivalent section to the note body.
-> Related note links belong **exclusively** in the `backlinks:` YAML frontmatter field.
-> Violation: If you find yourself writing wikilinks at the bottom of a note as a section — stop. Move them to frontmatter.
-
+> Enforces: **C-03** (File-Only Emission), **C-05** (Template Adherence), **C-11** (Backlinks in Frontmatter Only) — see `references/doctrine.md`.
